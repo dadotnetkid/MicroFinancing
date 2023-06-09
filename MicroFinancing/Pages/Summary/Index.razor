@@ -1,0 +1,50 @@
+﻿@page "/Summary"
+@attribute [Authorize]
+<div class="card">
+    <div class="card-header">
+        <div class="float-left">
+            <h5>Summary</h5>
+        </div>
+    </div>
+    <div class="card-body">
+        <SfGrid AllowPaging="true" TValue="LendingSummaryGridDTM" @ref="lendingGrid">
+            <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(LendingSummaryAdaptor)"
+                                                  Adaptor="Adaptors.CustomAdaptor" />
+            <GridColumns>
+                <GridColumn Field=@nameof(LendingSummaryGridDTM.CustomerName) Width="100">
+                    <Template>
+                        @{
+                            var row = (LendingSummaryGridDTM)context;
+                        }
+                        <a href="@($"/Customers/Details/{row.Id}")">@row.CustomerName</a>
+                    </Template>
+                </GridColumn>
+                <GridColumn Field=@nameof(LendingSummaryGridDTM.TotalBalance) Width="100"></GridColumn>
+                <GridColumn Field=@nameof(LendingSummaryGridDTM.DueDate) Width="100">
+                    <Template>
+                        @{
+                            var row = (LendingSummaryGridDTM)context;
+                        }
+                        @if (DateTime.Now>=row.DueDate)
+                        {
+                            <span class="badge badge-danger p-2">@row.DueDate?.ToShortDateString()</span>
+                        }else if ((row.DueDate - DateTime.Now)?.TotalDays <= 10)
+                        {
+                            <span class="badge badge-warning p-2">@row.DueDate?.ToShortDateString()</span>
+                        }
+                        else  
+                        {
+                            <span class="badge badge-primary p-2">@row.DueDate?.ToShortDateString()</span>
+                        }
+                    </Template>
+                </GridColumn>
+            </GridColumns>
+
+        </SfGrid>
+    </div>
+</div>
+
+
+@code {
+    private SfGrid<LendingSummaryGridDTM>? lendingGrid;
+}

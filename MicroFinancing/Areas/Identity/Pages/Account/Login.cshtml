@@ -1,0 +1,39 @@
+﻿@page
+@model MicroFinancing.Areas.Identity.Pages.Account.LoginModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<div class="card-body login-card-body">
+    <p class="login-box-msg">Sign in to start your session</p>
+    <form method="post">
+        <div class="input-group mb-3">
+            <input
+                type="text"
+                class="form-control" placeholder="Email/UserName " 
+                   asp-for="@Model.UserName">
+            <div class="input-group-append">
+                <div class="input-group-text">
+                    <span class="fas fa-envelope"></span>
+                </div>
+            </div>
+        </div>
+        <div class="input-group mb-3">
+            <input type="password" class="form-control" placeholder="Password" asp-for="@Model.Password">
+            <div class="input-group-append">
+                <div class="input-group-text">
+                    <span class="fas fa-lock"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+            </div>
+
+        </div>
+    </form>
+
+    <p class="mb-1">
+        <a href="forgot-password.html">I forgot my password</a>
+    </p>
+  
+</div>

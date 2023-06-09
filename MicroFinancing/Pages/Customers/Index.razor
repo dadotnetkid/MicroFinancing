@@ -1,0 +1,75 @@
+﻿@page "/Customers"
+<div class="card">
+    <div class="card-header">
+        <div class="float-left">
+            <h5>Customers</h5>
+        </div>
+        <div class="float-right">
+            <Syncfusion.Blazor.Buttons.SfButton IconCss="fas fa-user-plus" OnClick="OnAddClick" />
+        </div>
+    </div>
+    <div class="card-body">
+        <SfGrid AllowPaging="true" AllowFiltering="true" TValue="CustomerGridDTM" @ref="customerGrid">
+            <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(CustomerAdaptor)"
+                                                  Adaptor="Adaptors.CustomAdaptor" />
+            <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
+            <GridColumns>
+                <GridColumn Field=@nameof(CustomerGridDTM.FirstName) Width="100">
+                    <Template>
+                        @{
+                            var row = (CustomerGridDTM)context;
+                        }
+                        <a href="@($"/Customers/Details/{row.Id}")">@row.FullName</a>
+                    </Template>
+                </GridColumn>
+                <GridColumn Field=@nameof(CustomerGridDTM.MiddleName) Width="75"></GridColumn>
+                <GridColumn Field=@nameof(CustomerGridDTM.LastName) Width="100"></GridColumn>
+                <GridColumn Field=@nameof(CustomerGridDTM.DateOfBirth) Format="MM/dd/yyy" Width="75"></GridColumn>
+                <GridColumn Field=@nameof(CustomerGridDTM.Address) Width="100"></GridColumn>
+                <GridColumn Width="90" TextAlign="TextAlign.Right" AllowFiltering="false">
+                    <Template>
+
+                        <SfDropDownButton IconCss="fas fa-ellipsis-v">
+                            <DropDownMenuItems>
+                                <DropDownMenuItem Id="@GenericDropdownItem.ViewDetails.ToString()" Text="View Details" IconCss="fas fa-user-edit"></DropDownMenuItem>
+                                <DropDownMenuItem Id="delete" Text="Delete" IconCss="fas fa-trash"></DropDownMenuItem>
+                            </DropDownMenuItems>
+                            <DropDownButtonEvents ItemSelected="@((e)=>OnDropdownSelectedMenu(e,(CustomerGridDTM)context))" />
+                        </SfDropDownButton>
+
+
+                    </Template>
+                </GridColumn>
+            </GridColumns>
+
+        </SfGrid>
+    </div>
+
+</div>
+<CascadingValue Value="this" Name="@nameof(AddCustomer.MainPage)">
+    <AddCustomer @ref="@addCustomer" />
+</CascadingValue>
+@code {
+    private SfGrid<CustomerGridDTM>? customerGrid;
+    private AddCustomer? addCustomer;
+    [Inject] NavigationManager navigationManager { get; set; }
+    public async Task RefreshGrid()
+    {
+        await customerGrid?.Refresh();
+    }
+
+    private void OnDropdownSelectedMenu(MenuEventArgs e, CustomerGridDTM context)
+    {
+        if (e.Item.Id == GenericDropdownItem.ViewDetails.ToString())
+        {
+            navigationManager.NavigateTo($"/Customers/Details/{context.Id}");
+        }
+    }
+
+    private void OnAddClick()
+    {
+        addCustomer?.Show();
+    }
+
+
+}

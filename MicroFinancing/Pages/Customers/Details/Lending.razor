@@ -1,0 +1,53 @@
+﻿@using Syncfusion.Blazor.Data
+<SfGrid AllowPaging="true" TValue="LendingGridDTM" @ref="lendingGrid" Query="queryData">
+    <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(LendingAdaptor)"
+                                          Adaptor="Adaptors.CustomAdaptor"/>
+    <GridColumns>
+        <GridColumn Field=@nameof(LendingGridDTM.CustomerName) Width="100"></GridColumn>
+        <GridColumn Field=@nameof(LendingGridDTM.Category) Width="75">
+            <Template>
+                @{
+
+                    var row = context as LendingGridDTM;
+                }
+                @if (row is {Category: Core.Enumeration.LendingEnumeration.LendingCategory.Cash })
+                {
+                    <span class="badge badge-primary">@row.Category.ToString()</span>
+                }
+                else
+                {
+                    <span class="badge badge-info">@row?.Category.ToString()</span>
+                }
+            </Template>
+        </GridColumn>
+        <GridColumn Field=@nameof(LendingGridDTM.Amount) Width="100"></GridColumn>
+        <GridColumn Field=@nameof(LendingGridDTM.LendingDate) Width="100"></GridColumn>
+        <GridColumn Field=@nameof(LendingGridDTM.DueDate) Width="100"></GridColumn>
+        <GridColumn Field=@nameof(LendingGridDTM.Collector) Width="100"></GridColumn>
+    </GridColumns>
+
+</SfGrid>
+
+
+@code {
+    [CascadingParameter(Name ="MainPage")]public Index MainPage { get; set; }
+    private SfGrid<LendingGridDTM>? lendingGrid;
+    private AddLending? lendingRef;
+    private Query queryData = new();
+    protected override void OnInitialized()
+    {
+        queryData.AddParams("CustomerId", MainPage.Id);
+        base.OnInitialized();
+    }
+
+    private void OnAddClick()
+    {
+        lendingRef?.Show();
+    }
+
+    public async Task RefreshGrid()
+    {
+        await lendingGrid?.Refresh()!;
+    }
+
+}

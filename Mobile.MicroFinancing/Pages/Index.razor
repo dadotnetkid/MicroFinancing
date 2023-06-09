@@ -1,0 +1,42 @@
+﻿@page "/"
+@using System.Text.Json
+@using MauiApp1.Data
+@using MauiApp1.Services
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+<EditForm Model="forecastModel" OnValidSubmit="OnSubmit">
+    <InputText @bind-Value="@forecastModel.Summary"  class="form-control"/>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+@if(forecast is not null){
+    foreach (var i in forecast)
+    {
+        <p>@i.Summary</p>
+    }
+}
+
+
+
+@code {
+    [Inject] private WeatherForecastService service { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        forecast=await service.Get();
+    }
+
+
+    private IList<WeatherForecast> forecast;
+    private WeatherForecast forecastModel=new();
+
+    private async Task OnSubmit()
+    {
+        await service.Insert(forecastModel);
+        forecast=await service.Get();
+        StateHasChanged();
+    }
+
+}

@@ -1,0 +1,68 @@
+﻿@using System.Security.Claims
+@using MicroFinancing.Core.Common
+<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button" @onclick="@(ShowMenu)"><i class="fas fa-bars"></i></a>
+        </li>
+
+    </ul>
+
+    <!-- SEARCH FORM -->
+    <form class="form-inline ml-3">
+        <div class="input-group input-group-sm">
+            <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+            <div class="input-group-append">
+                <button class="btn btn-navbar" type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item dropdown user-menu">
+            <a class="nav-link" data-toggle="dropdown"  aria-expanded="false" style="cursor:pointer" @onclick="ShowDropdown">
+                Hi, @user?.GetUserFullName()
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right @(showDropdown ?"show":string.Empty)">
+            
+
+
+                <div class="dropdown-divider"></div>
+                <form action="/Identity/Account/Logout" id="logoutForm" method="post">
+                    <button id="sign-outlink" class="btn btn-primary btn-rounder dropdown-item">Sign out</button>
+                </form>
+            </div>
+        </li>
+    </ul>
+</nav>
+@code {
+    [Inject] private AuthenticationStateProvider? authenticationState { get; set; }
+    [CascadingParameter(Name ="MainLayout")]public MainLayout MainLayout { get; set; }
+    private ClaimsPrincipal? user;
+    private bool showDropdown;
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authenticationState?.GetAuthenticationStateAsync()!;
+        user = authState.User;
+
+    }
+
+
+
+    private void ShowDropdown()
+    {
+        showDropdown = !showDropdown ;
+        StateHasChanged();
+
+    }
+
+    private void ShowMenu()
+    {
+        MainLayout.ShowMenu = true;
+    }
+
+}

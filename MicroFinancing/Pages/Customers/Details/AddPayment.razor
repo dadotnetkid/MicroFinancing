@@ -1,0 +1,112 @@
+﻿@using Syncfusion.Blazor.Inputs
+<SfDialog Width="500px" ShowCloseIcon="true" @bind-Visible="visibility" CssClass="modal-center-top">
+    <DialogPositionData X="center" />
+    <DialogTemplates>
+        <Header> Add Payment</Header>
+        <Content>
+            <EditForm Model="model">
+                <FluentValidationValidator DisableAssemblyScanning="true" @ref="fluentValidator" />
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <Syncfusion.Blazor.Inputs.SfNumericTextBox @bind-Value="@model.PaymentAmount" Placeholder="Payment Amount" CssClass="e-outline" FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                        <ValidationMessage For="@(()=>model.PaymentAmount)" TValue="decimal?" />
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <Syncfusion.Blazor.Calendars.SfDateTimePicker @bind-Value="@model.PaymentDate" Placeholder="Payment Date" CssClass="e-outline" FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                        <ValidationMessage For="@(()=>model.PaymentDate)" TValue="DateTime" />
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <SfUploader @ref="fileUploadRef" AutoUpload="true" SequentialUpload="true" AllowMultiple="false">
+                            <UploaderEvents ValueChange="OnFileUploadChange" />
+                        </SfUploader>
+                    </div>
+                </div>
+                @if (MainPage != null && MainPage.Permission.CanOverridePayment)
+                {
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <Syncfusion.Blazor.Buttons.SfCheckBox TChecked="bool" @bind-Checked="@model.Override" Label="Override"  />
+                        </div>
+                    </div>
+                }
+                
+                @if (model.Override)
+                {
+                    
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <SfTextBox @bind-Value="@model.Reason" Placeholder="Reason" CssClass="e-outline" FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                            <ValidationMessage For="@(()=>model.Reason)" TValue="string" />
+                        </div>
+                    </div>
+                }
+
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton IsPrimary="true" Content="Submit" OnClick="@OnBtnSubmitClick" />
+        <DialogButton IsPrimary="false" Content="Cancel" OnClick="@OnBtnCancelClick" />
+    </DialogButtons>
+</SfDialog>
+
+@code {
+    [Inject]IUserService userService { get; set; }
+    [Inject] private IPaymentService paymentService { get; set; }
+    [CascadingParameter(Name = nameof(MainPage))] public Index? MainPage { get; set; }
+    [Parameter] public Payments Payments { get; set; }
+    private bool visibility;
+    private FluentValidationValidator? fluentValidator;
+    private CreatePaymentDTM model = new();
+    private SfUploader? fileUploadRef;
+    private UploadFiles? uploadedFile;
+
+    public void Show()
+    {
+        visibility = true;
+        StateHasChanged();
+    }
+
+    public void Hide()
+    {
+        visibility = false;
+        model = new();
+        StateHasChanged();
+    }
+
+    private void OnBtnCancelClick()
+    {
+        Hide();
+    }
+
+    private async Task OnBtnSubmitClick()
+    {
+        var validate = await fluentValidator?.ValidateAsync(x => { })!;
+        if (validate)
+        {
+            if (MainPage != null) model.CustomerId = MainPage.Id;
+            var payment = await paymentService.AddPayment(model);
+            if (uploadedFile is not null)
+            {
+                await paymentService.UploadFile(uploadedFile, payment);
+            }
+            await Payments.Refresh();
+          
+            await MainPage?.GetDetails()!;
+            Hide();
+        }
+    }
+
+
+    private void OnFileUploadChange(UploadChangeEventArgs? arg)
+    {
+        if (arg?.Files is null && !arg.Files.Any()) return;
+
+        uploadedFile = arg.Files[0];
+    }
+
+}

@@ -1,0 +1,75 @@
+﻿@page "/"
+@attribute [Authorize]
+<PageTitle>Dashboard</PageTitle>
+<div class="row">
+    <div class="col col-sm-12 col-md-3">
+        <div class="info-box">
+            <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-users"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Customers</span>
+                <span class="info-box-number">
+                    @(dashboardDTM?.TotalCustomer??0)
+                </span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col col-sm-12 col-md-3">
+        <div class="info-box mb-3">
+            <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-thumbs-up"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Total Loans</span>
+                <span class="info-box-number">₱ @dashboardDTM?.TotalLoans?.ToString("n2")</span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col col-sm-12 col-md-3">
+        <div class="info-box mb-3">
+            <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Total Amount Paid</span>
+                <span class="info-box-number">₱ @dashboardDTM?.TotalAmountPaid?.ToString("n2")</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col col-sm-12 col-md-3">
+        <div class="info-box mb-3">
+            <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text">Total Balance</span>
+                <span class="info-box-number">₱ @dashboardDTM?.TotalBalance.ToString("n2")</span>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+@if (dashboardDTM is not null)
+{
+    <div class="row">
+        <div class="col-lg-6 col-sm-12 ">
+            <MicroFinancing.Pages.Summary.Index/>
+        </div>
+    </div>
+}
+
+@code {
+    [Inject] IDashboardService dashboardService{get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        dashboardDTM = await dashboardService.GetDashboard();
+    }
+
+    private DashboardDTM? dashboardDTM;
+}

@@ -1,0 +1,63 @@
+﻿@page "/clients-by-collector-summary"
+@using System.Dynamic
+<div class="card">
+    <div class="card-header">
+        <div class="float-left">
+            <h5>Clients By Collector Summary</h5>
+        </div>
+
+    </div>
+    <div class="card-body">
+        <SfGrid TValue="ExpandoObject"
+                @ref="grid"
+                Width="100%"
+                DataSource="@_report">
+            <GridEvents QueryCellInfo="CustomizeCell" TValue=" ExpandoObject "></GridEvents>
+            <GridColumns>
+                @if (_report is not null)
+                {
+                    foreach (IDictionary<string, object> i in _report)
+                    {
+
+                        foreach (var col in i.Keys)
+                        {
+                            <GridColumn Field="@(col)" AutoFit="true">
+
+                            </GridColumn>
+                        }
+
+
+                    }
+
+                }
+
+            </GridColumns>
+
+        </SfGrid>
+
+    </div>
+
+</div>
+@code {
+    private SfGrid<ExpandoObject>? grid;
+    private List<ExpandoObject> _report;
+    [Inject] IReportingService reportingService { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        var collectorId = "ac6a7a7c-6df0-4ee5-bf9e-a55b085f3d6f";
+        _report = await reportingService.GetCustomersByCollectorSummaryReport(collectorId, 10, 2022);
+    }
+
+
+    private void CustomizeCell(QueryCellInfoEventArgs<ExpandoObject> obj)
+    {
+        foreach (var i in obj.Data)
+        {
+            if (i.Value is null && obj.Column.Field == i.Key)
+            {
+                obj.Cell.AddClass(new[] { "NotPaying" });
+            }
+        }
+    }
+
+}

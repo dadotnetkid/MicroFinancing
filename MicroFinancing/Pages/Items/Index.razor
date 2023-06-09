@@ -1,0 +1,21 @@
+﻿@page "/Items"
+<SfGrid AllowPaging="true" TValue="CustomerGridDTM" @ref="customerGrid">
+    <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(CustomerAdaptor)"
+                                          Adaptor="Adaptors.CustomAdaptor" />
+    <GridColumns>
+        <GridColumn Field=@nameof(CustomerGridDTM.FirstName) Width="100"></GridColumn>
+        <GridColumn Field=@nameof(CustomerGridDTM.MiddleName) Width="75"></GridColumn>
+        <GridColumn Field=@nameof(CustomerGridDTM.LastName) Width="100"></GridColumn>
+        <GridColumn Field=@nameof(CustomerGridDTM.DateOfBirth) Width="75"></GridColumn>
+        <GridColumn Field=@nameof(CustomerGridDTM.PlaceOfBirth) Width="75"></GridColumn>
+        <GridColumn Field=@nameof(CustomerGridDTM.Address) Width="75"></GridColumn>
+    </GridColumns>
+
+</SfGrid>
+
+
+@code {
+    private SfGrid<CustomerGridDTM>? customerGrid;
+
+
+}

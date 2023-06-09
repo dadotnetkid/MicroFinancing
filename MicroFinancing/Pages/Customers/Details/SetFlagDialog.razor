@@ -1,0 +1,67 @@
+﻿@using MicroFinancing.Core.Enumeration
+<SfDialog Width="500px" ShowCloseIcon="true" @bind-Visible="visibility" CssClass="modal-center-top">
+    <DialogPositionData X="center" />
+    <DialogTemplates>
+        <Header> Set Flag To Customer</Header>
+        <Content>
+
+            <div class="row mt-2">
+                <div class="col-12">
+                    <Syncfusion.Blazor.DropDowns.SfDropDownList TItem="GenericDropItemDTM<CustomerFlag>" TValue="GenericDropItemDTM<CustomerFlag>"
+                                                                @bind-Value="customerFlag" Placeholder="Customer Flag"
+                                                                DataSource="Flags"
+                                                                CssClass="e-outline"
+                                                                FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto">
+                        <Syncfusion.Blazor.DropDowns.DropDownListFieldSettings Text="Text" Value="Value"/>
+                    </Syncfusion.Blazor.DropDowns.SfDropDownList>
+
+                </div>
+            </div>
+
+        </Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton IsPrimary="true" Content="Submit" OnClick="@OnBtnSubmitClick" />
+        <DialogButton IsPrimary="false" Content="Cancel" OnClick="@OnBtnCancelClick" />
+    </DialogButtons>
+    <DialogEvents Closed="OnBtnCancelClick" />
+</SfDialog>
+@code {
+    private bool visibility;
+    private GenericDropItemDTM<CustomerFlag> customerFlag = new();
+    private List<GenericDropItemDTM<CustomerFlag>> Flags { get; set; } =new();
+    [CascadingParameter(Name ="MainPage")]public Index MainPage{get; set; }
+    [Inject]private ICustomerService customerService{get; set; }
+    public void Show()
+    {
+        Flags = Enum.GetValues<CustomerFlag>().Select(x => new GenericDropItemDTM<CustomerFlag>()
+            {
+                Text = x.GetDescription(),
+                Value = x
+            }).ToList();
+        visibility = true;
+        StateHasChanged();
+    }
+
+    public void Hide()
+    {
+        visibility = false;
+        StateHasChanged();
+    }
+
+    private async Task OnBtnSubmitClick()
+    {
+        await customerService.UpdateFlag(MainPage.Id, customerFlag.Value);
+        await MainPage.GetDetails();
+        Hide();
+    }
+
+    private void OnBtnCancelClick()
+    {
+        
+        Hide();
+    }
+
+   
+
+}

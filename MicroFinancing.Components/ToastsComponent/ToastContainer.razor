@@ -1,0 +1,37 @@
+﻿@using Microsoft.JSInterop
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div class="toast" id="@toastId" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">@Title</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            @Message
+        </div>
+    </div>
+</div>
+
+@code {
+
+   
+    [Inject] private IJSRuntime jsRuntime { get; set; }
+    [Inject] private IToasts toastComponent { get; set; }
+    public ToastContainer container { get; set; }
+    internal string Message { get; set; }
+    internal string Title { get; set; }
+    internal string toastId = Guid.NewGuid().ToString();
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            toastComponent.container = this;
+        }
+    }
+    public async Task ShowToast(string title, string message)
+    {
+        Message = message;
+        Title = title;
+        await jsRuntime.InvokeVoidAsync("ShowToast", toastId);
+        StateHasChanged();
+    }
+}

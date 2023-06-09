@@ -1,0 +1,83 @@
+﻿@using Microsoft.AspNetCore.Components
+@using Syncfusion.Blazor.Popups
+@using MicroFinancing.Mobile.DTM
+@using Syncfusion.Blazor.Inputs
+<SfDialog Width="500px" ShowCloseIcon="true" @bind-Visible="visibility" CssClass="modal-center-top">
+    <DialogPositionData X="center" />
+    <DialogTemplates>
+        <Header> Add Payment</Header>
+        <Content>
+              <EditForm Model="model">
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <Syncfusion.Blazor.Inputs.SfNumericTextBox @bind-Value="@model.PaymentAmount" Placeholder="Payment Amount" CssClass="e-outline" FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                        <ValidationMessage For="@(()=>model.PaymentAmount)" TValue="decimal?" />
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <Syncfusion.Blazor.Calendars.SfDateTimePicker @bind-Value="@model.PaymentDate" Placeholder="Payment Date" CssClass="e-outline" FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                        <ValidationMessage For="@(()=>model.PaymentDate)" TValue="DateTime" />
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <SfUploader @ref="fileUploadRef" AutoUpload="true" SequentialUpload="true" AllowMultiple="false">
+                            <UploaderEvents ValueChange="OnFileUploadChange" />
+                        </SfUploader>
+                    </div>
+                </div>
+                
+                @if (model.Override)
+                {
+                    
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <SfTextBox @bind-Value="@model.Reason" Placeholder="Reason" CssClass="e-outline" FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                            <ValidationMessage For="@(()=>model.Reason)" TValue="string" />
+                        </div>
+                    </div>
+                }
+
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton IsPrimary="true" Content="Submit" OnClick="@OnBtnSubmitClick" />
+        <DialogButton IsPrimary="false" Content="Cancel" OnClick="@OnBtnCancelClick" />
+    </DialogButtons>
+</SfDialog>
+@code{
+    [CascadingParameter(Name = nameof(MainPage))] public Index? MainPage { get; set; }
+    private CreatePaymentDTM model = new();
+    private bool visibility;
+    private SfUploader fileUploadRef;
+    public void Show(Customers customers)
+    {
+        visibility = true;
+        StateHasChanged();
+    }
+
+    public void Hide()
+    {
+        visibility = false;
+        StateHasChanged();
+    }
+
+    private void OnBtnSubmitClick()
+    {
+        Hide();
+    }
+
+    private void OnBtnCancelClick()
+    {
+        Hide();
+    }
+
+
+    private void OnFileUploadChange(UploadChangeEventArgs obj)
+    {
+        throw new NotImplementedException();
+    }
+
+}

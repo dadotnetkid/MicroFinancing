@@ -1,0 +1,124 @@
+﻿@page "/Payments"
+@using Syncfusion.Blazor.Data
+@using System.Diagnostics
+@using Syncfusion.Blazor.Buttons
+@attribute [Authorize(Policy = ClaimsConstant.Customer.AddPayment)]
+<div class="card">
+    <div class="card-header">
+        <div class="float-left">
+            <h5>Payments</h5>
+        </div>
+       
+    </div>
+    <div class="card-body">
+        <SfGrid AllowPaging="true" TValue="PaymentGridDTM" @ref="paymentGrid" Query="QueryData" Toolbar="@(ToolBars)" AllowTextWrap="true">
+            <GridEditSettings AllowAdding="true" AllowDeleting="false" AllowEditing="false" Mode="EditMode.Normal"></GridEditSettings>
+            <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(PaymentAdaptor)"
+                                                  Adaptor="Adaptors.CustomAdaptor" />
+            <GridColumns>
+                <GridColumn Field=@nameof(PaymentGridDTM.CustomerName) Width="23.3%" HeaderText="Customer Name">
+                    <EditTemplate>
+                        @{
+                            var item = (context as PaymentGridDTM) ?? new();
+                        }
+                        <Syncfusion.Blazor.DropDowns.SfComboBox TValue="long" TItem="CustomerGridDTM"
+                                                                AllowFiltering="true"
+                                                                @bind-Value="@item.CustomerId" Placeholder="Customer Name">
+                            <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(CustomerComboBoxAdaptor)"
+                                                                  Adaptor="Adaptors.CustomAdaptor" />
+                            <Syncfusion.Blazor.DropDowns.ComboBoxFieldSettings Value="Id" Text="FullName" />
+                        </Syncfusion.Blazor.DropDowns.SfComboBox>
+                    </EditTemplate>
+                </GridColumn>
+                <GridColumn Field=@nameof(PaymentGridDTM.PaymentAmount) Width="23.3%" HeaderText="Payment Amout">
+                    <EditTemplate>
+                        @{
+                            var item = (context as PaymentGridDTM) ?? new();
+                        }
+                        <Syncfusion.Blazor.Inputs.SfNumericTextBox @bind-Value="@item.PaymentAmount" Placeholder="Payment Amount" />
+                    </EditTemplate>
+                </GridColumn>
+                <GridColumn Field=@nameof(PaymentGridDTM.PaymentDate) Width="23.3%" HeaderText="Payment Date">
+                    <EditTemplate>
+                        @{
+                            var item = (context as PaymentGridDTM) ?? new();
+                        }
+                        <Syncfusion.Blazor.Calendars.SfDatePicker AllowEdit="true" @bind-Value="item.PaymentDate" Placeholder="Payment Date" />
+                    </EditTemplate>
+                </GridColumn>
+                <GridColumn Width="20%" HeaderText="Manage">
+                    <EditTemplate>
+                        @{
+                            var item = context as PaymentGridDTM;
+                        }
+                        <SfButton IsPrimary="true" IconCss="fas fa-save" OnClick="@(() => OnSaveInline(item))">Save</SfButton> &nbsp;
+                        <SfButton IsPrimary="true" IconCss="fas fa-window-close" OnClick="@(() => OnCancelSaveInline(item))">Cancel</SfButton>
+                    </EditTemplate>
+                </GridColumn>
+
+            </GridColumns>
+
+        </SfGrid>
+    </div>
+</div>
+
+
+@code {
+    [Inject] IUserService userService { get; set; }
+    [Inject] IPaymentService paymentService { get; set; }
+    private SfGrid<PaymentGridDTM>? paymentGrid;
+    public Query QueryData { get; set; } = new();
+    public List<string> ToolBars = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (await userService.IsAuthorize(ClaimsConstant.Customer.AddPayment, false))
+            {
+                ToolBars.Add("Add");
+            }
+            QueryData.AddParams("DateToday", DateTime.Now.ToShortDateString());
+            QueryData.AddParams("FilterByUserId", await userService.GetUserId());
+            await paymentGrid?.Refresh()!;
+
+        }
+
+    }
+
+
+    private void OnBatchSave(BeforeBatchSaveArgs<CustomerGridDTM> obj)
+    {
+        try
+        {
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+    }
+
+    private async Task OnSaveInline(PaymentGridDTM item)
+    {
+        await paymentService.AddPayment(new()
+        {
+            CreatedAt = DateTime.Now,
+            CreatedBy = await userService.GetUserId(),
+            CustomerId = item.CustomerId,
+            PaymentAmount = item.PaymentAmount,
+            PaymentDate = item.PaymentDate,
+            PaymentType = Core.Enumeration.PaymentEnum.PaymentType.Cash
+        });
+        await paymentGrid.CloseEditAsync();
+        await paymentGrid?.Refresh()!;
+    }
+
+    private async Task OnCancelSaveInline(PaymentGridDTM item)
+    {
+        await paymentGrid.CloseEditAsync();
+        await paymentGrid?.Refresh()!;
+    }
+
+}

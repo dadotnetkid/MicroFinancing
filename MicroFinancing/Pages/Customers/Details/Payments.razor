@@ -1,0 +1,59 @@
+﻿@using Syncfusion.Blazor.Data
+<SfGrid AllowPaging="true" TValue="PaymentGridDTM" @ref="paymentGrid" Query="queryData">
+    <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(PaymentAdaptor)"
+                                          Adaptor="Adaptors.CustomAdaptor" />
+    <GridColumns>
+        <GridColumn Field=@nameof(PaymentGridDTM.CreatedBy) Width="100">
+            <Template>
+                @{
+                    var row = context as PaymentGridDTM;
+                }
+                @if (row.Override)
+                {
+                    <span>@row.CreatedBy (Override)</span>
+                    <br/>
+                    <small class="text-muted">@row.Reason</small>
+                }
+                else
+                {
+                    <span>@row.CreatedBy</span>
+                }
+            </Template>
+        </GridColumn>
+        <GridColumn Field=@nameof(PaymentGridDTM.PaymentAmount) Width="75">
+            <Template>
+                @{
+                    var row = context as PaymentGridDTM;
+                }
+                @if (row.Override)
+                {
+                    <span class="badge badge-danger p-1">@row.PaymentAmount?.ToString("n2")</span>
+                }
+                else
+                {
+                    <span>@row.PaymentAmount?.ToString("n2")</span>
+                }
+            </Template>
+        </GridColumn>
+        <GridColumn Field=@nameof(PaymentGridDTM.PaymentDate) Width="100"></GridColumn>
+    </GridColumns>
+
+</SfGrid>
+@code {
+    private SfGrid<PaymentGridDTM>? paymentGrid;
+    private Query queryData = new();
+
+    [CascadingParameter(Name = "MainPage")] public Index MainPage { get; set; }
+    protected override void OnInitialized()
+    {
+        queryData.AddParams("CustomerId", MainPage.Id);
+        base.OnInitialized();
+    }
+    public async Task Refresh()
+    {
+
+        await paymentGrid.Refresh();
+    }
+
+
+}

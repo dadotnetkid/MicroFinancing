@@ -1,0 +1,213 @@
+﻿@page "/Customers/Details/{Id:long}"
+@using MicroFinancing.Components.ToastsComponent
+@attribute [Authorize(Policy = ClaimsConstant.Customer.View)]
+<PageTitle>Details</PageTitle>
+<CascadingValue Name="MainPage" Value="this">
+    @if (model == null)
+    {
+
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-1 mr-1">
+                        <div class="symbol symbol-circle symbol-60 ">
+                            <span class="symbol-label font-size-h6">
+                                @model.FirstName[0] @model.LastName[0]
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col mr-1">
+                        <div class="row">
+                            <div class="col">
+                                <a style="cursor:pointer" class="text-dark font-weight-bold text-hover-primary font-size-h4 mb-0">@model.FullName</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <small class="text-muted font-weight-bold">@model.Address</small>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col mr-1">
+                        <div class="float-right">
+                            <button type="button" class="btn btn-@model.CustomerFlag.GetColor() btn-sm" @onclick="SetFlag">
+                                <i class="fab fa-font-awesome-flag"></i> @model.CustomerFlag.GetDescription()
+                            </button>
+                            <SfDropDownButton IconCss="fas fa-ellipsis-v" CssClass="">
+                                <DropDownMenuItems>
+                                    <DropDownMenuItem Id="@GenericDropdownItem.PrintReport.ToString()" Text="@GenericDropdownItem.PrintReport.GetDescription()" IconCss="fas fa-print"></DropDownMenuItem>
+                                </DropDownMenuItems>
+                                <DropDownButtonEvents ItemSelected="OnDropdownSelect" />
+                            </SfDropDownButton>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+                <div class="row pr-5 pl-5">
+                    <div class=" col-sm-12  col-lg-4 ">
+                        <div class="row">
+                            <div class="col-2">
+                                <i class="fas fa-money-bill fa-2x mt-1 mr-1"></i>
+                            </div>
+                            <div class="col">
+                                <h5 class="text-muted mb-1 font-weight-bolder">
+                                    Total Balance
+                                </h5>
+                                <b class="text-muted">₱ @model.TotalBalance?.ToString("n2")</b>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12  col-lg-4">
+                        <div class="row">
+                            <div class="col-2 ">
+                                <i class="far fa-credit-card fa-2x mt-1"></i>
+                            </div>
+                            <div class="col">
+                                <h5 class="text-muted mb-1 font-weight-bolder">
+                                    Total Loan
+                                </h5>
+                                <b class="text-muted">₱ @model.TotalDebt?.ToString("n2")</b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12  col-lg-4">
+                        <div class="row">
+                            <div class="col-2 "><i class="fas fa-cash-register fa-2x mt-1"></i></div>
+                            <div class="col">
+                                <h5 class="text-muted mb-1 font-weight-bolder">
+                                    Total Amount Paid
+                                </h5>
+                                <b class="text-muted">₱ @model.TotalAmountPaid?.ToString("n2")</b>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        /*cards*/
+        <div class="row mt-2">
+            <div class="col-lg-6 col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="float-left">
+                            <b class="text-muted">Loan</b>
+                        </div>
+                        <div class="float-right">
+
+                            <Syncfusion.Blazor.Buttons.SfButton IconCss="fas fa-plus" OnClick="OnAddLendingClick" Disabled="@(model.TotalBalance>0)" />
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <Lending @ref="lendingRef" />
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-6 col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="float-left">
+                            <b class="text-muted">Payments</b>
+                        </div>
+                        <div class="float-right">
+                            @if (model.TotalBalance > 0 || model.HasActiveLoan)
+                            {
+                                <Syncfusion.Blazor.Buttons.SfButton IconCss="fas fa-plus" OnClick="OnAddClick" />
+                            }
+                            
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <Payments @ref="paymentRef" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+    <AddPayment @ref="addPaymentRef" Payments="paymentRef" />
+    <AddLending @ref="addLendingRef" Lending="lendingRef" />
+    <SetFlagDialog @ref="setFlagRef" />
+</CascadingValue>
+
+@code {
+    [Inject] ICustomerService customerService { get; set; }
+    [Inject] NavigationManager navigationManager { get; set; }
+    [Inject] IAuthorizationService authorizationService { get; set; }
+    [Inject] IToasts toast { get; set; }
+    [Inject] IUserService userService { get; set; }
+    [Parameter] public long Id { get; set; }
+    private Payments? paymentRef;
+    private AddPayment? addPaymentRef;
+    private Lending? lendingRef;
+    private AddLending? addLendingRef;
+    private SetFlagDialog? setFlagRef;
+    private CustomerDetailDTM? model;
+    public BaseAuthorizePermissionDTM Permission { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        await GetDetails();
+        await GetPermission();
+    }
+
+    private async Task GetPermission()
+    {
+        Permission = await customerService.GetPermission();
+    }
+
+    
+
+    public async Task GetDetails()
+    {
+        model = await customerService.GetCustomerDetail(Id);
+
+        StateHasChanged();
+    }
+
+    private async Task OnAddClick()
+    {
+        var res = await userService.IsAuthorize(ClaimsConstant.Customer.AddPayment);
+        if (!res)
+        {
+            await toast.ShowToast("No Permission", "You are not Allowed to do this action");
+            return;
+        };
+        addPaymentRef?.Show();
+    }
+
+
+    private async Task OnAddLendingClick()
+    {
+        var res = await userService.IsAuthorize(ClaimsConstant.Customer.AddLoan);
+        if (!res) return;
+        addLendingRef.Show();
+    }
+
+    private async Task SetFlag()
+    {
+        var res = await userService.IsAuthorize(ClaimsConstant.Customer.SetFlag);
+        if (!res) return;
+        setFlagRef.Show();
+    }
+
+
+    private async Task OnDropdownSelect(MenuEventArgs obj)
+    {
+        if (obj.Item.Id == GenericDropdownItem.PrintReport.ToString())
+        {
+            var res = await userService.IsAuthorize(ClaimsConstant.Customer.Print);
+            if (!res) return;
+            navigationManager.NavigateTo($"/api/reporting/download?customerId={Id}", true);
+        }
+    }
+
+}

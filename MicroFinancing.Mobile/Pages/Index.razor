@@ -1,0 +1,91 @@
+﻿@page "/"
+@using MicroFinancing.Mobile.DTM
+@using MicroFinancing.Mobile.Services
+@layout LoginLayout
+<div class="card-body login-card-body">
+    <p class="login-box-msg">Sign in to start your session</p>
+    <EditForm Model="LoginModel" OnValidSubmit="OnLoginSubmit">
+        <div class="input-group mb-3">
+            <InputText @bind-Value="@LoginModel.UserName"
+                       type="text"
+                       class="form-control" placeholder="Email/UserName "></InputText>
+            <div class="input-group-append">
+                <div class="input-group-text">
+                    <span class="fas fa-envelope"></span>
+                </div>
+            </div>
+        </div>
+        <div class="input-group mb-3">
+            <InputText @bind-Value="@LoginModel.Password" type="password"
+                       class="form-control" placeholder="Password"></InputText>
+            <div class="input-group-append">
+                <div class="input-group-text">
+                    <span class="fas fa-lock"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-12">
+                <button class="btn btn-primary btn-block">
+                    @if (isLoading)
+                    {
+                        <div class="spinner-grow" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    }
+                    Sign In
+                </button>
+            </div>
+
+        </div>
+    </EditForm>
+
+    <p class="mb-1">
+        <a href="forgot-password.html">I forgot my password</a>
+    </p>
+
+</div>
+@code {
+    SecurityDTM.LoginModel LoginModel { get; set; } = new();
+    [Inject] SecurityService securityService { get; set; }
+    [Inject] UserService userService{ get; set; }
+    [Inject]NavigationManager navigationManager { get; set; }
+    [Inject]SQLite.SQLiteAsyncConnection db{get; set; }
+    private bool isLoading;
+    private async Task OnLoginSubmit(EditContext arg)
+    {
+        isLoading = true;
+        if (await securityService.Login(LoginModel.UserName, LoginModel.Password))
+        {
+
+            navigationManager.NavigateTo("/customers");
+        }
+        isLoading = false;
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        await CreateTable();
+        var isExpired =await userService.IsExpired();
+        if (!isExpired)
+        {
+            navigationManager.NavigateTo("/customers");
+        }
+    }
+
+    private async Task CreateTable()
+    {
+        try
+        {
+            await db.CreateTableAsync<Users>();
+            await  db.CreateTableAsync<Customers>();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+
+}

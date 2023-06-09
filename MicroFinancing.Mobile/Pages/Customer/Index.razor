@@ -1,0 +1,42 @@
+﻿@page "/customers"
+@using MicroFinancing.Mobile.Services
+<div class="row mt-2">
+    <div class="col-sm-12">
+    </div>
+</div>
+@foreach (var i in CustomerLists)
+{
+    <div class="row mt-1">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5>@i.Fullname</h5>
+                    <p>@i.Address</p>
+                    <p>Total Balance: <b>₱ @i.TotalBalance?.ToString("n2")</b></p>
+                    <button class="btn btn-primary form-control" @onclick="@(()=>AddPaymentModal(i))">Add Payment</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+<AddPayment @ref="paymentRef" />
+
+@code {
+    [Inject] CustomerService service { get; set; }
+    [Inject] NavigationManager navigationManager { get; set; }
+    private AddPayment paymentRef;
+    private IEnumerable<Customers> CustomerLists { get; set; } = Enumerable.Empty<Customers>();
+    protected override async Task OnInitializedAsync()
+    {
+        CustomerLists = await service.GetCustomers(true, navigationManager);
+        StateHasChanged();
+    }
+
+
+    private void AddPaymentModal(Customers customers)
+    {
+        paymentRef.Show(customers);
+    }
+
+}

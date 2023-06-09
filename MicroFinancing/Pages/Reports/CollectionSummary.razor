@@ -1,0 +1,31 @@
+﻿@page "/collection-summary-report"
+<div class="card">
+<div class="card-header">
+    <div class="float-left">
+        <h5>Collection Summary Report</h5>
+    </div>
+  
+</div>
+<div class="card-body">
+    <SfGrid AllowPaging="true" AllowFiltering="true" TValue="CollectionSummaryReportDTM" @ref="customerGrid" >
+        <GridFilterSettings Mode="FilterBarMode.Immediate" Type="FilterType.Excel"/>
+        <GridPageSettings PageSize="500"/>
+        <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(CollectionSummaryReportAdaptor)"
+                                              Adaptor="Adaptors.CustomAdaptor"/>
+        <GridColumns>
+            <GridColumn Field=@nameof(CollectionSummaryReportDTM.EncodedBy) Width="100"></GridColumn>
+            <GridColumn Field=@nameof(CollectionSummaryReportDTM.CustomerName) Width="75"></GridColumn>
+            <GridColumn Field=@nameof(CollectionSummaryReportDTM.PaymentAmount) Width="75"></GridColumn>
+            <GridColumn Field=@nameof(CollectionSummaryReportDTM.PaymentDate) Width="75"></GridColumn>
+        </GridColumns>
+
+    </SfGrid>
+
+</div>
+
+</div>
+@code {
+    private SfGrid<CollectionSummaryReportDTM>? customerGrid;
+
+
+}

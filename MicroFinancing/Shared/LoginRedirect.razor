@@ -1,0 +1,22 @@
+﻿@using System.Web
+@inject NavigationManager navigationManager
+@attribute [Microsoft.AspNetCore.Authorization.AllowAnonymous]
+@code {
+    [Parameter]public AuthenticationState? AuthenticationState{get; set; }
+    protected async override Task OnInitializedAsync()
+    {
+        var returnUrl = $"Identity/Account/Login?returnUrl={navigationManager.ToBaseRelativePath(navigationManager.Uri)}";
+        if (AuthenticationState?.User.Identity is {IsAuthenticated: true })
+        {
+            returnUrl = "/unauthorized";
+        }
+       
+        navigationManager.NavigateTo(returnUrl, forceLoad: true);
+        
+    }
+    protected override void OnAfterRender(bool firstRender)
+    {
+
+        base.OnAfterRender(firstRender);
+    }
+}
