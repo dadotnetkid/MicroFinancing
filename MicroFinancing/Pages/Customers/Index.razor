@@ -4,6 +4,7 @@
         <div class="float-left">
             <h5>Customers</h5>
         </div>
+        
         <div class="float-right">
             <Syncfusion.Blazor.Buttons.SfButton IconCss="fas fa-user-plus" OnClick="OnAddClick" />
         </div>
@@ -53,23 +54,28 @@
     private SfGrid<CustomerGridDTM>? customerGrid;
     private AddCustomer? addCustomer;
     [Inject] NavigationManager navigationManager { get; set; }
+    [Inject] IUserService userService { get; set; }
     public async Task RefreshGrid()
     {
         await customerGrid?.Refresh();
     }
 
-    private void OnDropdownSelectedMenu(MenuEventArgs e, CustomerGridDTM context)
+    private async Task OnDropdownSelectedMenu(MenuEventArgs e, CustomerGridDTM context)
     {
         if (e.Item.Id == GenericDropdownItem.ViewDetails.ToString())
         {
-            navigationManager.NavigateTo($"/Customers/Details/{context.Id}");
+            if (await userService.IsAuthorize(ClaimsConstant.Customer.View))
+            {
+                navigationManager.NavigateTo($"/Customers/Details/{context.Id}");
+            }
         }
     }
 
-    private void OnAddClick()
+    private async Task OnAddClick()
     {
-        addCustomer?.Show();
+        if (await userService.IsAuthorize(ClaimsConstant.Customer.Manage))
+        {
+            addCustomer?.Show();
+        }
     }
-
-
 }

@@ -16,14 +16,14 @@ namespace MicroFinancing.Services
 {
     public sealed class PaymentService : IPaymentService
     {
-        private readonly IRepository<Payment> _repository;
-        private readonly IRepository<Lending> _lendingRepository;
+        private readonly IRepository<Payment, long> _repository;
+        private readonly IRepository<Lending, long> _lendingRepository;
         private readonly IHostEnvironment _hostEnvironment;
         private readonly IUserService _userService;
         private readonly IMediator _mediator;
 
-        public PaymentService(IRepository<Payment> repository,
-            IRepository<Lending> lendingRepository,
+        public PaymentService(IRepository<Payment, long> repository,
+            IRepository<Lending, long> lendingRepository,
             IHostEnvironment hostEnvironment, IUserService userService, IMediator mediator)
         {
             _repository = repository;
@@ -38,7 +38,7 @@ namespace MicroFinancing.Services
             return _repository.Entity.Select(x => new PaymentGridDTM()
             {
                 CreatedAt = x.CreatedAt,
-                CreatedBy = x.CreatedByUser.FirstName + " " + x.CreatedByUser.LastName,
+                CreatedBy = x.Creator.FullName,
                 CustomerName=x.Customers.FullName,
                 CustomerId = x.CustomerId,
                 Id = x.Id,
@@ -47,7 +47,7 @@ namespace MicroFinancing.Services
                 PaymentType = x.PaymentType,
                 Reason = x.Reason,
                 Override = x.Override,
-                CreatedByUserId = x.CreatedBy
+                CreatedByUserId = x.CreatorUserId
             });
         }
 
@@ -58,9 +58,7 @@ namespace MicroFinancing.Services
                 var activeLoan = _lendingRepository.Entity.Where(x => x.CustomerId == model.CustomerId).Max(x => x.Id);
                 var payment = new Payment()
                 {
-                    CreatedBy = await _userService.GetUserId(),
                     PaymentDate = model.PaymentDate,
-                    CreatedAt = DateTime.UtcNow,
                     PaymentAmount = model.PaymentAmount,
                     CustomerId = model.CustomerId,
                     PaymentType = Core.Enumeration.PaymentEnum.PaymentType.Cash,

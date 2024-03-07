@@ -16,11 +16,12 @@ namespace MicroFinancing.Services
 {
     public class CustomerService : ICustomerService
     {
-        private readonly IRepository<Customers> _customerRepository;
-        private readonly IRepository<Lending> _lendingRepository;
+        private readonly IRepository<Customers, long> _customerRepository;
+        private readonly IRepository<Lending, long> _lendingRepository;
         private readonly IUserService _userService;
 
-        public CustomerService(IRepository<Customers> customerRepository, IRepository<Lending> lendingRepository, IUserService userService)
+        public CustomerService(IRepository<Customers, long> customerRepository, 
+            IRepository<Lending, long> lendingRepository, IUserService userService)
         {
             _customerRepository = customerRepository;
             _lendingRepository = lendingRepository;
@@ -69,8 +70,8 @@ namespace MicroFinancing.Services
                 Address = x.Address,
                 Id = x.Id,
                 TotalAmountPaid = x.Payments.Sum(p => p.PaymentAmount),
-                TotalDebt = x.Lending.Sum(l => l.Amount + l.ItemAmount),
-                TotalBalance = x.Lending.Sum(l => l.Amount + l.ItemAmount) - x.Payments.Sum(p => p.PaymentAmount),
+                TotalDebt = x.Lending.Sum(l => l.TotalCredit),
+                TotalBalance = x.Lending.Sum(l => l.TotalCredit) - x.Payments.Sum(p => p.PaymentAmount),
                 CustomerFlag = x.Flag,
                 HasActiveLoan = x.Lending.Any(x => !x.IsPaid && x.IsActive)
             }).FirstOrDefaultAsync();

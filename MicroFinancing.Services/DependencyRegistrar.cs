@@ -16,10 +16,10 @@ public static class DependencyRegistrar
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
         //Repository
-        services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+        services.AddScoped(typeof(IRepository<,>), typeof(BaseRepository<,>));
 
         //Scoped Adaptor
-        services.AddTransient(typeof(BaseAdaptor<>));
+        services.AddTransient(typeof(BaseAdaptor<,>));
         services.AddTransient(typeof(UserAdaptor));
         services.AddTransient(typeof(CustomerAdaptor));
         services.AddTransient(typeof(PermissionAdaptor));
@@ -31,6 +31,8 @@ public static class DependencyRegistrar
         services.AddTransient(typeof(CustomerComboBoxAdaptor));
 
 
+
+
         //Transient
         services.AddTransient<IUserService, UserService>();
         services.AddTransient<ICustomerService, CustomerService>();
@@ -40,6 +42,8 @@ public static class DependencyRegistrar
         services.AddTransient<IReportingService, ReportingService>();
         services.AddTransient<IDashboardService, DashboardService>();
         services.AddTransient<ISecurityService, SecurityService>();
+
+        services.AddTransient<ICurrentUser, CurrentUser>();
 
         //Scopes
         services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();

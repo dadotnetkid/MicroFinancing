@@ -1,10 +1,11 @@
 ﻿using MicroFinancing.DataTransferModel;
+using MicroFinancing.Entities;
 
 namespace MicroFinancing.Interfaces.Services;
 
 public interface IUserService
 {
-    Task CreateUser(CreateUpdateUserDTM item);
+    Task<CreateUpdateUserDTM> CreateUser(CreateUpdateUserDTM item);
     Task UpdateUser(CreateUpdateUserDTM user);
     Task DeleteUser(string? userId);
     Task ResetPassword(ResetPasswordUserDTM resetPasswordUserDtm);

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using MicroFinancing.Components.ToastsComponent;
 using MicroFinancing.Core.Common;
 using MicroFinancing.DataTransferModel;
@@ -23,22 +25,24 @@ namespace MicroFinancing.Services
         private readonly AuthenticationStateProvider _authenticationStateProvider;
         private readonly IAuthorizationService _authorizationService;
         private readonly IToasts _toasts;
+        private readonly IMapper _mapper;
 
         public UserService(UserManager<ApplicationUser> userManager,
             IServiceScopeFactory serviceScopeFactory,
             AuthenticationStateProvider authenticationStateProvider,
-            IAuthorizationService authorizationService, IToasts toasts)
+            IAuthorizationService authorizationService, IToasts toasts, IMapper mapper)
         {
             _userManager = userManager;
             _serviceScopeFactory = serviceScopeFactory;
             _authenticationStateProvider = authenticationStateProvider;
             _authorizationService = authorizationService;
             _toasts = toasts;
+            _mapper = mapper;
         }
 
-        public async Task CreateUser(CreateUpdateUserDTM item)
+        public async Task<CreateUpdateUserDTM> CreateUser(CreateUpdateUserDTM item)
         {
-            await _userManager.CreateAsync(new ApplicationUser()
+            var user = new ApplicationUser()
             {
                 UserName = item.UserName,
                 Email = item.Email,
@@ -47,7 +51,15 @@ namespace MicroFinancing.Services
                 LockoutEnabled = false,
                 EmailConfirmed = true,
                 AccessFailedCount = 0,
-            }, item.Password);
+            };
+
+            await _userManager.CreateAsync(user, item.Password);
+
+            var dtm = _mapper.Map<CreateUpdateUserDTM>(user);
+
+            dtm.UserRole = item.UserRole;
+
+            return dtm;
         }
 
         public async Task UpdateUser(CreateUpdateUserDTM user)

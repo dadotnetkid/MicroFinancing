@@ -12,11 +12,11 @@ namespace MicroFinancing.Mediator
 {
     public class PaymentHandler : AsyncRequestHandler<Payment>
     {
-        private readonly IRepository<Payment> _repository;
-        private readonly IRepository<Lending> _lendingRepository;
+        private readonly IRepository<Payment, long> _repository;
+        private readonly IRepository<Lending, long> _lendingRepository;
 
-        public PaymentHandler(IRepository<Payment> repository,
-            IRepository<Lending> lendingRepository)
+        public PaymentHandler(IRepository<Payment, long> repository,
+            IRepository<Lending, long> lendingRepository)
         {
             _repository = repository;
             _lendingRepository = lendingRepository;

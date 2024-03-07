@@ -11,9 +11,9 @@ namespace MicroFinancing.Services
 {
     public class UserAdaptor : DataAdaptor
     {
-        private readonly IRepository<ApplicationUser> _repository;
+        private readonly IRepository<ApplicationUser, string> _repository;
 
-        public UserAdaptor(IRepository<ApplicationUser> repository)
+        public UserAdaptor(IRepository<ApplicationUser, string> repository)
         {
             _repository = repository;
         }

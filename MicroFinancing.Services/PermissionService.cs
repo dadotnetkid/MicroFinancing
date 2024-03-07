@@ -18,11 +18,13 @@ namespace MicroFinancing.Services
     {
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IServiceScopeFactory _serviceScopeFactory;
-        private readonly IRepository<ApplicationRoleClaims> _roleClaimsRepository;
+        private readonly IRepository<ApplicationRoleClaims, int> _roleClaimsRepository;
         private readonly ClaimsValueModel _claimsValueModel;
 
         public PermissionService(RoleManager<ApplicationRole> roleManager,
-            IServiceScopeFactory serviceScopeFactory, IRepository<ApplicationRoleClaims> roleClaimsRepository, ClaimsValueModel claimsValueModel)
+            IServiceScopeFactory serviceScopeFactory,
+            IRepository<ApplicationRoleClaims,int> roleClaimsRepository,
+            ClaimsValueModel claimsValueModel)
         {
             _roleManager = roleManager;
             _serviceScopeFactory = serviceScopeFactory;

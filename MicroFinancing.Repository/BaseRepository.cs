@@ -2,17 +2,21 @@
 using System.Linq.Expressions;
 using MicroFinancing.Entities;
 using MicroFinancing.Interfaces.Repositories;
+using MicroFinancing.Interfaces.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace MicroFinancing.Repositories
 {
-    public class BaseRepository<T> : IRepository<T> where T : class
+    public class BaseRepository<T, TKey> : IRepository<T, TKey> where T
+        : class
     {
         private readonly MFDbContext _db;
+        private readonly ICurrentUser _currentUser;
 
-        public BaseRepository(MFDbContext db)
+        public BaseRepository(MFDbContext db, ICurrentUser currentUser)
         {
             _db = db;
+            _currentUser = currentUser;
         }
         public DbSet<T> Entity => _db.Set<T>();
 
@@ -22,6 +26,12 @@ namespace MicroFinancing.Repositories
         }
         public async Task<T> AddAsync(T entity)
         {
+            if (typeof(BaseEntity<TKey>).IsAssignableFrom(typeof(T)))
+            {
+                var type = entity.GetType();
+                type.GetProperty(nameof(BaseEntity<TKey>.CreatorUserId)).SetValue(entity,_currentUser.UserId);
+            }
+
             Entity.Add(entity);
             await _db.SaveChangesAsync();
             return entity;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MicroFinancing.Entities;
 using MicroFinancing.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Syncfusion.Blazor;
@@ -11,13 +12,13 @@ using Syncfusion.Blazor.HeatMap.Internal;
 
 namespace MicroFinancing.Repositories
 {
-    public class BaseAdaptor<T> : DataAdaptor
-    where T : class
+    public class BaseAdaptor<T,TKey> : DataAdaptor
+    where T : BaseEntity<TKey>
     {
    
-        private readonly IRepository<T> _repository;
+        private readonly IRepository<T, TKey> _repository;
 
-        public BaseAdaptor(IRepository<T> repository)
+        public BaseAdaptor(IRepository<T, TKey> repository)
         {
             _repository = repository;
         }

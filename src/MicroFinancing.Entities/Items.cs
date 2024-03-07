@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MicroFinancing.Entities;
 
-public sealed class Items
+public sealed class Items : BaseEntity<long>
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public long Id { get; set; }
+    public override long Id { get; set; }
     public string SKU { get; set; }
     public string Barcode { get; set; }
     [MaxLength(255)]

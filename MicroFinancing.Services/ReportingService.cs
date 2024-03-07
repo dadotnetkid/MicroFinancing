@@ -16,14 +16,14 @@ namespace MicroFinancing.Services
 {
     public sealed class ReportingService : IReportingService
     {
-        private readonly IRepository<Customers> _customerRepository;
+        private readonly IRepository<Customers, long> _customerRepository;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IRepository<Lending> _lendingRepository;
-        private readonly IRepository<Payment> _paymentRepository;
+        private readonly IRepository<Lending, long> _lendingRepository;
+        private readonly IRepository<Payment, long> _paymentRepository;
 
-        public ReportingService(IRepository<Customers> customerRepository,
+        public ReportingService(IRepository<Customers, long> customerRepository,
             UserManager<ApplicationUser> userManager,
-            IRepository<Lending> lendingRepository, IRepository<Payment> paymentRepository)
+            IRepository<Lending, long> lendingRepository, IRepository<Payment, long> paymentRepository)
         {
             _customerRepository = customerRepository;
             _userManager = userManager;
@@ -34,6 +34,7 @@ namespace MicroFinancing.Services
         public async Task<List<StatementofAccountDTM>> StatementOfAccount(long customerId)
         {
             var entity = _lendingRepository.Entity.Where(x => x.CustomerId == customerId).OrderByDescending(x => x.Id);
+
             var list = await entity.Select(x => new StatementofAccountDTM()
             {
                 Collector = x.CollectorUser.FirstName + " " + x.CollectorUser.LastName,
@@ -41,24 +42,37 @@ namespace MicroFinancing.Services
                 ItemsAmount = x.ItemAmount,
                 MoneyAmount = x.Amount,
                 ReleaseDate = x.LendingDate,
-                CustomerName = x.Customers.FirstName + " " + x.Customers.LastName
+                CustomerName = x.Customers.FirstName + " " + x.Customers.LastName,
+                TotalCredit = x.TotalCredit,
+                DailyPayment = x.TotalCredit / x.PaymentDays,
+                Interest = x.Interest
             }).FirstOrDefaultAsync();
+
             var payments = _paymentRepository.Entity.Where(x => x.CustomerId == customerId);
-            var currentDate = list.ReleaseDate;
+            var currentDate = list.ReleaseDate.AddDays(1);
+
             while (currentDate <= list.DueDate)
             {
+               
+
                 var dateFrom = Convert.ToDateTime(currentDate.ToShortDateString());
-                var dateTo = dateFrom.AddHours(23).AddMinutes(59).AddSeconds(59);
-                var payment = payments.Where(x => x.PaymentDate >= dateFrom && x.PaymentDate <= dateTo).Sum(x => x.PaymentAmount);
+                var dateTo = dateFrom.AddDays(1).AddHours(-1);
+                var payment = payments.Where(x => x.PaymentDate >= dateFrom && x.PaymentDate <= dateTo)
+                    .Sum(x => x.PaymentAmount);
 
                 list.PaymentDates.Add(new PaymentDateDTM()
                 {
                     PaymentDate = dateFrom,
                     AmountPaid = payment ?? 0,
-                    Notes = currentDate.Month == list.DueDate.Month && currentDate.Day == 3 ? "Adv. Payment" : string.Empty
+                    Notes = currentDate.Month == list.DueDate.Month && currentDate.Day == 3 ?
+                                            "Adv. Payment" :
+                                                dateFrom.DayOfWeek == DayOfWeek.Sunday ?
+                                                "Not Applicable" : string.Empty
                 });
+
                 currentDate = currentDate.AddDays(1);
             }
+
             return new List<StatementofAccountDTM>() { list };
         }
 
@@ -66,7 +80,7 @@ namespace MicroFinancing.Services
         {
             return _paymentRepository.Entity.Select(x => new DataTransferModel.CollectionSummaryReportDTM()
             {
-                EncodedBy = x.CreatedByUser.FirstName + " " + x.CreatedByUser.FirstName,
+                EncodedBy = x.Creator.FullName,
                 CustomerName = x.Customers.FirstName + " " + x.Customers.LastName,
                 PaymentAmount = x.PaymentAmount,
                 PaymentDate = x.PaymentDate,
@@ -102,11 +116,11 @@ namespace MicroFinancing.Services
                     var resValue = customer.Payments
                         .FirstOrDefault(x => x.PaymentDate.ToShortDateString() == curDate)
                         ?.PaymentAmount?.ToString("n2");
-                    if (currentDate < customer.LendingDate&& string.IsNullOrEmpty(resValue))
+                    if (currentDate < customer.LendingDate && string.IsNullOrEmpty(resValue))
                     {
                         resValue = "Not Started";
                     }
-                    expandoDict.Add(curDate,resValue);
+                    expandoDict.Add(curDate, resValue);
                     currentDate = currentDate.AddDays(1);
                 }
                 expandoList.Add((ExpandoObject)expandoDict);

@@ -1,0 +1,59 @@
+﻿@using Syncfusion.Blazor.PdfViewer
+@using MicroFinancing.Reporting
+@using DevExpress.Blazor.Reporting
+
+@if (visibility)
+{
+    <SfDialog Width="950px" ShowCloseIcon="true" @bind-Visible="visibility" CssClass="modal-center-top"
+              EnableResize="true"
+              ResizeHandles="new ResizeDirection[] { ResizeDirection.All }">
+        <DialogButtons>
+            <DialogButton></DialogButton>
+        </DialogButtons>
+        <DialogPositionData X="center" />
+        <DialogTemplates>
+            <Header>Print Preview</Header>
+            <Content>
+
+                <DxReportViewer RootCssClasses="w-100" @ref="Viewer" Report="report" SinglePagePreview="false"></DxReportViewer>
+
+            </Content>
+        </DialogTemplates>
+        <DialogButtons>
+        </DialogButtons>
+    </SfDialog>
+}
+
+
+@code
+{
+    [Parameter] public string DocumentPath { get; set; }
+    [Inject] public NavigationManager NavigationManager { get; set; }
+    [Inject] public IReportingService _reportingService { get; set; }
+    private bool visibility { get; set; }
+
+    public async Task Open(long customerId)
+    {
+        visibility = true;
+
+        report = new rptStatementofAccount()
+            {
+                DataSource = await _reportingService.StatementOfAccount(customerId)
+            };
+
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+
+
+    public void Close()
+    {
+        visibility = false;
+        StateHasChanged();
+    }
+
+    public rptStatementofAccount report { get; set; }
+
+    public DxReportViewer Viewer { get; set; }
+}

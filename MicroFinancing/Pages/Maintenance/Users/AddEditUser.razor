@@ -36,17 +36,17 @@
                         <ValidationMessage For="@(()=>user.UserName)" TValue="string" />
                     </div>
                 </div>
-               
-                    <div class="row mt-2">
-                        <div class="col-12">
 
-                            <SfMultiSelect TValue="string[]" @bind-Value="@user.UserRole" TItem="PermissionGridDTM" CssClass="e-outline" Mode="@VisualMode.Default" Placeholder="User Roles">
-                                <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(PermissionAdaptor)" Adaptor="Adaptors.CustomAdaptor" />
-                                <MultiSelectFieldSettings Text="Name" Value="Name"></MultiSelectFieldSettings>
-                            </SfMultiSelect>
-                            <ValidationMessage For="@(()=>user.UserRole)" TValue="string[]" />
-                        </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+
+                        <SfMultiSelect TValue="string[]" @bind-Value="@user.UserRole" TItem="PermissionGridDTM" CssClass="e-outline" Mode="@VisualMode.Default" Placeholder="User Roles">
+                            <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(PermissionAdaptor)" Adaptor="Adaptors.CustomAdaptor" />
+                            <MultiSelectFieldSettings Text="Name" Value="Name"></MultiSelectFieldSettings>
+                        </SfMultiSelect>
+                        <ValidationMessage For="@(()=>user.UserRole)" TValue="string[]" />
                     </div>
+                </div>
                 @if (string.IsNullOrEmpty(user.UserId))
                 {
                     <div class="row mt-2">
@@ -66,50 +66,3 @@
         <DialogButton IsPrimary="false" Content="Cancel" OnClick="@OnBtnCancelClick" />
     </DialogButtons>
 </SfDialog>
-@code {
-    [CascadingParameter(Name = "MainPage")] Index? MainPage { get; set; }
-    private bool visibility;
-    private FluentValidationValidator? fluentValidator;
-    private CreateUpdateUserDTM user = new();
-    [Inject] private IUserService? userService { get; set; }
-    [Inject]private IToasts toasts { get; set; }
-    public void Show(CreateUpdateUserDTM? createUpdateUserDtm = null)
-    {
-        visibility = true;
-        if (createUpdateUserDtm is not null)
-        {
-            user = createUpdateUserDtm;
-        }
-        StateHasChanged();
-    }
-
-    public void Hide()
-    {
-        visibility = false;
-        user = new();
-        StateHasChanged();
-    }
-
-    private void OnBtnCancelClick()
-    {
-        Hide();
-    }
-
-    private async Task OnBtnSubmitClick()
-    {
-        var validate = await fluentValidator?.ValidateAsync(x => { })!;
-        if (validate)
-        {
-            if (string.IsNullOrEmpty(user.UserId))
-                await userService.CreateUser(user);
-            else
-                await userService.UpdateUser(user);
-            await userService.AddRoles(user);
-            await MainPage?.RefreshGrid()!;
-            await toasts.ShowToast("User","Successfully execute action");
-            Hide();
-        }
-    }
-
-
-}

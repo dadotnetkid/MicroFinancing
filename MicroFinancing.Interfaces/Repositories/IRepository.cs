@@ -1,9 +1,10 @@
 ﻿using System.Linq.Expressions;
+using MicroFinancing.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace MicroFinancing.Interfaces.Repositories;
 
-public interface IRepository<T> where T : class
+public interface IRepository<T, TKey> where T : class
 {
     DbSet<T> Entity { get; }
     IQueryable<T> Fetch(Expression<Func<T, bool>> filterExpression);

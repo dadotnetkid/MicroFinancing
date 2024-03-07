@@ -26,10 +26,31 @@ namespace MicroFinancing.Entities
                     .OnDelete(DeleteBehavior.Restrict);
                 entity.HasMany(x => x.Payments).WithOne(x => x.Lending).HasForeignKey(x => x.LendingId)
                     .OnDelete(DeleteBehavior.Restrict);
-                entity.Property(e => e.Interest)
-                    .HasComputedColumnSql("(amount+ItemAmount)*(InterestRate/100)");
-                entity.Property(e => e.TotalCredit)
-                    .HasComputedColumnSql("((amount+ItemAmount)*(InterestRate/100)) + amount +ItemAmount");
+                /* entity.Property(e => e.Interest)
+                     .HasComputedColumnSql("(amount+ItemAmount)*(InterestRate/100)");
+                 entity.Property(e => e.TotalCredit)
+                     .HasComputedColumnSql("((amount)*(InterestRate/100)+(amount*(100/DATEDIFF(dd, LendingDate,DueDate )))) + amount +ItemAmount");*/
+                entity.HasIndex(c => new { c.IsDeleted, c.CustomerId, c.Collector }).IsUnique(false);
+
+                entity.HasQueryFilter(c => !c.IsDeleted);
+
+                entity.Property(c => c.CreatedAt).HasDefaultValueSql("GETUTCDATE");
+
+                entity.HasOne(c => c.Creator).WithMany()
+                    .IsRequired(false)
+                    .HasForeignKey(c => c.CreatorUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(c => c.LastModifier).WithMany()
+                    .IsRequired(false)
+                    .HasForeignKey(c => c.LastModifierUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(c => c.DeleterUser).WithMany()
+                    .IsRequired(false)
+                    .HasForeignKey(c => c.DeleterUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
 
             });
             builder.Entity<Customers>(entity =>
@@ -37,7 +58,74 @@ namespace MicroFinancing.Entities
                 entity.HasMany(x => x.Lending).WithOne(x => x.Customers).HasForeignKey(x => x.CustomerId).OnDelete(DeleteBehavior.Restrict);
                 entity.HasMany(x => x.Payments).WithOne(x => x.Customers).HasForeignKey(x => x.CustomerId).OnDelete(DeleteBehavior.Restrict);
                 entity.Property(e => e.FullName).HasComputedColumnSql("FirstName + ' ' + LastName ");
+
+                entity.HasIndex(c => new { c.IsDeleted }).IsUnique(false);
+                entity.Property(c => c.CreatedAt).HasDefaultValueSql("GETUTCDATE");
+
+                entity.HasQueryFilter(c => !c.IsDeleted);
+
+                entity.HasOne(c => c.Creator).WithMany()
+                    .IsRequired(false)
+                    .HasForeignKey(c => c.CreatorUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(c => c.LastModifier).WithMany()
+                    .IsRequired(false)
+                    .HasForeignKey(c => c.LastModifierUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(c => c.DeleterUser).WithMany()
+                    .IsRequired(false)
+                    .HasForeignKey(c => c.DeleterUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
+
+            builder.Entity<Payment>(entity =>
+            {
+                entity.HasIndex(c => new { c.IsDeleted, c.LendingId, c.CustomerId }).IsUnique(false);
+                entity.Property(c => c.CreatedAt).HasDefaultValueSql("GETUTCDATE");
+
+                entity.HasQueryFilter(c => !c.IsDeleted);
+
+                entity.HasOne(c => c.Creator).WithMany()
+                    .IsRequired(false)
+                    .HasForeignKey(c => c.CreatorUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(c => c.LastModifier).WithMany()
+                    .IsRequired(false)
+                    .HasForeignKey(c => c.LastModifierUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(c => c.DeleterUser).WithMany()
+                    .IsRequired(false)
+                    .HasForeignKey(c => c.DeleterUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            builder.Entity<Items>(entity =>
+            {
+                entity.HasIndex(c => new { c.IsDeleted }).IsUnique(false);
+                entity.Property(c => c.CreatedAt).HasDefaultValueSql("GETUTCDATE");
+
+                entity.HasQueryFilter(c => !c.IsDeleted);
+
+                entity.HasOne(c => c.Creator).WithMany()
+                    .IsRequired(false)
+                    .HasForeignKey(c => c.CreatorUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(c => c.LastModifier).WithMany()
+                    .IsRequired(false)
+                    .HasForeignKey(c => c.LastModifierUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(c => c.DeleterUser).WithMany()
+                    .IsRequired(false)
+                    .HasForeignKey(c => c.DeleterUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
             builder.Entity<ApplicationRoleClaims>(entity =>
             {
                 entity.ToTable("AspNetRoleClaims");
@@ -137,11 +225,15 @@ namespace MicroFinancing.Entities
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.UserTokens)
                     .HasForeignKey(d => d.UserId);
+
             });
 
             builder.Entity<ApplicationUser>(entity =>
             {
-                entity.HasMany(x => x.Payments).WithOne(x => x.CreatedByUser).HasForeignKey(x => x.CreatedBy).OnDelete(DeleteBehavior.Restrict);
+                entity.HasMany(x => x.Payments)
+                    .WithOne(x => x.Creator)
+                    .HasForeignKey(x => x.CreatorUserId).OnDelete(DeleteBehavior.Restrict);
+
                 entity.ToTable("AspNetUsers");
                 entity.HasIndex(e => e.NormalizedEmail, "EmailIndex");
 
@@ -158,6 +250,8 @@ namespace MicroFinancing.Entities
                 entity.Property(e => e.UserName).HasMaxLength(256);
                 entity.Property(e => e.FullName).HasComputedColumnSql("FirstName + ' ' + LastName ");
             });
+
+
         }
 
     }

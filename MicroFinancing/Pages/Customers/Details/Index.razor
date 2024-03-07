@@ -39,7 +39,7 @@
                             </button>
                             <SfDropDownButton IconCss="fas fa-ellipsis-v" CssClass="">
                                 <DropDownMenuItems>
-                                    <DropDownMenuItem Id="@GenericDropdownItem.PrintReport.ToString()" Text="@GenericDropdownItem.PrintReport.GetDescription()" IconCss="fas fa-print"></DropDownMenuItem>
+                                    <DropDownMenuItem Id="@GenericDropdownItem.PrintReport.ToString()" Text="@GenericDropdownItem.PrintReport.GetDescription()" IconCss="@($"fas {(IsPrinting?"fa-spinner fa-spin":"fa-print")}")"></DropDownMenuItem>
                                 </DropDownMenuItems>
                                 <DropDownButtonEvents ItemSelected="OnDropdownSelect" />
                             </SfDropDownButton>
@@ -123,7 +123,7 @@
                             {
                                 <Syncfusion.Blazor.Buttons.SfButton IconCss="fas fa-plus" OnClick="OnAddClick" />
                             }
-                            
+
                         </div>
                     </div>
                     <div class="card-body">
@@ -137,6 +137,7 @@
     <AddPayment @ref="addPaymentRef" Payments="paymentRef" />
     <AddLending @ref="addLendingRef" Lending="lendingRef" />
     <SetFlagDialog @ref="setFlagRef" />
+    <PdfViewModal @ref="printPreview"></PdfViewModal>
 </CascadingValue>
 
 @code {
@@ -151,8 +152,11 @@
     private Lending? lendingRef;
     private AddLending? addLendingRef;
     private SetFlagDialog? setFlagRef;
+    private PdfViewModal printPreview;
     private CustomerDetailDTM? model;
+
     public BaseAuthorizePermissionDTM Permission { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         await GetDetails();
@@ -164,7 +168,7 @@
         Permission = await customerService.GetPermission();
     }
 
-    
+
 
     public async Task GetDetails()
     {
@@ -176,11 +180,12 @@
     private async Task OnAddClick()
     {
         var res = await userService.IsAuthorize(ClaimsConstant.Customer.AddPayment);
+
         if (!res)
         {
-            await toast.ShowToast("No Permission", "You are not Allowed to do this action");
             return;
-        };
+        }
+
         addPaymentRef?.Show();
     }
 
@@ -206,8 +211,21 @@
         {
             var res = await userService.IsAuthorize(ClaimsConstant.Customer.Print);
             if (!res) return;
-            navigationManager.NavigateTo($"/api/reporting/download?customerId={Id}", true);
+
+            IsPrinting = true;
+            await InvokeAsync(StateHasChanged);
+
+            await Task.Factory.StartNew(async () =>
+              {
+                  await printPreview.Open(Id);
+
+                  IsPrinting = false;
+                  await InvokeAsync(StateHasChanged);
+              });
         }
     }
+
+    public bool IsPrinting { get; set; }
+
 
 }

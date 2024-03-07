@@ -12,13 +12,13 @@ namespace MicroFinancing.Services
 {
     public sealed class LendingService : ILendingService
     {
-        private readonly IRepository<Lending> _repository;
-        private readonly IRepository<Customers> _customersRepository;
+        private readonly IRepository<Lending, long> _repository;
+        private readonly IRepository<Customers, long> _customersRepository;
         private readonly ICustomerService _customerService;
         private readonly IUserService _userService;
 
-        public LendingService(IRepository<Lending> repository,
-            IRepository<Customers> customersRepository,
+        public LendingService(IRepository<Lending, long> repository,
+            IRepository<Customers, long> customersRepository,
             ICustomerService customerService,
             IUserService userService)
         {
@@ -50,6 +50,19 @@ namespace MicroFinancing.Services
 
         public async Task AddLending(CreateLendingDTM model)
         {
+            var numberOfDays = (model.DueDate - model.LendingDate)?.Days ?? 0;
+
+            var date = model.DueDate.GetValueOrDefault();
+            var dayss = Enumerable
+                .Range(0, numberOfDays+1)
+                .Select(n => new { date = model.LendingDate.GetValueOrDefault().AddDays(n) });
+            var sundays = dayss
+                 .Count(c => c.date.DayOfWeek == DayOfWeek.Sunday);
+
+            var interestRate = (numberOfDays * (10.0M / 30.0M));
+
+            var interestValue = model.Amount * (interestRate / 100M);
+
             await _repository.AddAsync(new Lending()
             {
                 Amount = model.Amount,
@@ -61,9 +74,14 @@ namespace MicroFinancing.Services
                 DueDate = model.DueDate.Value,
                 LendingDate = model.LendingDate.Value,
                 Collector = model.Collector ?? string.Empty,
+                Interest = interestValue,
+                TotalCredit = interestValue + model.Amount + model.ItemAmount,
+                InterestRate = interestRate,
                 IsDeleted = false,
                 IsActive = true,
                 IsPaid = false,
+                NumberOfDays = numberOfDays,
+                PaymentDays = numberOfDays - sundays,
             });
         }
 

@@ -15,21 +15,13 @@ using Microsoft.EntityFrameworkCore;
 using Syncfusion.Blazor;
 using Syncfusion.Blazor.Data;
 using System.Net;
-using System.Text;
 using MicroFinancing.Core.Common;
 using MicroFinancing.Interfaces.Services;
 using MicroFinancing.Providers;
 using MicroFinancing.Validators;
 using MicroFinancing.Components;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using DevExpress.XtraCharts;
-using Microsoft.Extensions.Options;
-using DevExpress.Data.TreeList;
 using MicroFinancing.Mediator;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Net.Http.Headers;
+using DevExpress.Blazor.Reporting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,17 +35,22 @@ builder.Services.AddDbContext<MFDbContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddDefaultUI()
+    .AddDefaultTokenProviders()
+    .AddEntityFrameworkStores<MFDbContext>();
+builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ClaimsPrincipalFactory>();
 
 
-
+builder.Services.AddScoped(typeof(IRepository<,>), typeof(BaseRepository<,>));
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-builder.Services.AddSyncfusionBlazor(options => { options.IgnoreScriptIsolation = true; });
+builder.Services.AddSyncfusionBlazor();
 
 /*Registration of Services*/
 builder.Services.AddServices();
-
+builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 
 /*Registration of Validators*/
 builder.Services.AddValidators();
@@ -61,65 +58,70 @@ builder.Services.AddValidators();
 /*Registration of Component*/
 builder.Services.AddComponents();
 
+builder.WebHost.UseWebRoot("wwwroot");
+builder.WebHost.UseStaticWebAssets();
+
+builder.Services.AddDevExpressBlazor();
+builder.Services.AddDevExpressServerSideBlazorReportViewer();
+
+/*Registration of Policy*/
+builder.Services.AddAuthorization(options =>
+{
+    //View Permission
+    options.AddPolicy(ClaimsConstant.Users.View,
+        policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Users.View));
+    //Manage User
+    options.AddPolicy(ClaimsConstant.Users.Manage,
+        policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Users.Manage));
+
+    options.AddPolicy(ClaimsConstant.Roles.View,
+        policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Roles.View));
+    //Manage Permission
+    options.AddPolicy(ClaimsConstant.Roles.Manage,
+        policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Roles.Manage));
 
 
-builder.Services.AddOptions();
-builder.Services.Configure<JwtSetting>(builder.Configuration.GetSection("Jwt"));
+    //Manage Customer
+    options.AddPolicy(ClaimsConstant.Customer.Manage,
+        policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.Manage));
+    //View Customer
+    options.AddPolicy(ClaimsConstant.Customer.View,
+        policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.View));
+    //Print SOA
+    options.AddPolicy(ClaimsConstant.Customer.Print,
+        policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.Print));
+    //Print Manage Loan
+    options.AddPolicy(ClaimsConstant.Customer.ManageLoan,
+        policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.ManageLoan));
+    //Print Add Loan
+    options.AddPolicy(ClaimsConstant.Customer.AddLoan,
+        policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.AddLoan));
+    //Print Manage Payment
+    options.AddPolicy(ClaimsConstant.Customer.ManagePayment,
+        policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.ManagePayment));
+    //Print Override Payment
+    options.AddPolicy(ClaimsConstant.Customer.OverridePayment,
+        policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.OverridePayment));
+    //Print Add Loan
+    options.AddPolicy(ClaimsConstant.Customer.AddPayment,
+        policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.AddPayment));
+    //Print Set Flag
+    options.AddPolicy(ClaimsConstant.Customer.SetFlag,
+        policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.SetFlag));
+    //Print Print
+    options.AddPolicy(ClaimsConstant.Customer.Print,
+        policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.Print));
+});
 
 
 /*Registration of Singleton*/
-
+builder.Services.AddSingleton(x => new ClaimsValueModel());
 builder.Services.AddControllers();
-/*Registration of Authentication of Cookies*/
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme = $"{JwtBearerDefaults.AuthenticationScheme}/{IdentityConstants.ApplicationScheme}";
-    options.DefaultChallengeScheme = $"{JwtBearerDefaults.AuthenticationScheme}/{IdentityConstants.ApplicationScheme}";
-}).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme,o =>
-{
-    o.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey
-            (Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = false,
-        ValidateIssuerSigningKey = true
-    };
-}).AddCookie(IdentityConstants.ApplicationScheme, o =>
-{
-    o.ExpireTimeSpan = TimeSpan.FromMinutes(30); // optional
-}).AddPolicyScheme($"{JwtBearerDefaults.AuthenticationScheme}/{IdentityConstants.ApplicationScheme}", $"{JwtBearerDefaults.AuthenticationScheme}/{IdentityConstants.ApplicationScheme}",
-    options =>
-    {
-        options.ForwardDefaultSelector = context =>
-        {
-            // filter by auth type
-            string authorization = context.Request.Headers[HeaderNames.Authorization];
-            if (!string.IsNullOrEmpty(authorization) && authorization.StartsWith(JwtBearerDefaults.AuthenticationScheme))
-                return "Bearer";
-
-            // otherwise always check for cookie auth
-            return IdentityConstants.ApplicationScheme;
-        };
-    });
-
-/*Registration of Policy*/
-builder.Services.AddPolicy();
-/*Registration of Identity*/
-builder.Services
-    .AddIdentityCore<ApplicationUser>()
-    .AddRoles<ApplicationRole>()
-    .AddDefaultTokenProviders()
-    .AddDefaultUI()
-    .AddUserManager<UserManager<ApplicationUser>>()
-    .AddSignInManager<SignInManager<ApplicationUser>>()
-    .AddEntityFrameworkStores<MFDbContext>();
-builder.Services.AddSession();
 
 builder.Services.RegisterMediatR();
+
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -133,8 +135,7 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
-/*app.UseHttpsRedirection();*/
+app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 

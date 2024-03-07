@@ -12,12 +12,12 @@ public sealed class StatementofAccountDTM
     public string Collector { get; set; }
     public DateTime ReleaseDate { get; set; }
     public DateTime DueDate { get; set; }
-    public decimal DailyPayment => TotalCredit / (DueDate - ReleaseDate).Days;
+    public decimal DailyPayment { get; set; }
 
     public decimal MoneyAmount { get; set; }
     public decimal ItemsAmount { get; set; }
-    public decimal Interest => (MoneyAmount + ItemsAmount) * 0.1M;
-    public decimal TotalCredit => MoneyAmount + Interest + ItemsAmount;
+    public decimal Interest { get; set; }
+    public decimal TotalCredit { get; set; }
     public List<PaymentDateDTM> PaymentDates { get; set; } = new();
     public string CustomerName { get; set; }
 }

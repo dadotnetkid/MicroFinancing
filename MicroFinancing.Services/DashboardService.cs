@@ -12,9 +12,9 @@ namespace MicroFinancing.Services
 {
     public class DashboardService : IDashboardService
     {
-        private readonly IRepository<Customers> _customerRepository;
+        private readonly IRepository<Customers,long> _customerRepository;
 
-        public DashboardService(IRepository<Customers> customerRepository)
+        public DashboardService(IRepository<Customers, long> customerRepository)
         {
             _customerRepository = customerRepository;
         }

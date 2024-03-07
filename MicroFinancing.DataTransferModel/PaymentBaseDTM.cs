@@ -10,7 +10,7 @@ public class PaymentBaseDTM
     public string CustomerName { get; set; }
     public virtual PaymentEnum.PaymentType PaymentType { get; set; }
     public decimal? PaymentAmount { get; set; }
-    public DateTime CreatedAt { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
 
     public bool Override { get; set; }
     public string Reason { get; set; }

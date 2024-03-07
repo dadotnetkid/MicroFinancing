@@ -32,22 +32,6 @@ namespace MicroFinancing.DataTransferModel
         public  string? ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
     }
 
-    public sealed class CreateUpdateUserDTM
-    {
-        public CreateUpdateUserDTM()
-        {
-
-        }
-        public string? UserId { get; set; }
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
-        public string? Email { get; set; }
-        public string? UserName { get; set; }
-        public string? Password { get; set; }
-        public string[] UserRole { get; set; }
-
-    }
-
     public sealed class ResetPasswordUserDTM
     {
         public string? UserId { get; set; }
