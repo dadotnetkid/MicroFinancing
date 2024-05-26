@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using System.Reflection.Emit;
 
 namespace MicroFinancing.Entities
@@ -18,114 +19,11 @@ namespace MicroFinancing.Entities
         public virtual DbSet<Lending> Lendings { get; set; }
         public virtual DbSet<Payment> Payments { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Lending>(entity =>
-            {
-                entity.HasOne(x => x.CollectorUser).WithMany().IsRequired().HasForeignKey(x => x.Collector)
-                    .OnDelete(DeleteBehavior.Restrict);
-                entity.HasMany(x => x.Payments).WithOne(x => x.Lending).HasForeignKey(x => x.LendingId)
-                    .OnDelete(DeleteBehavior.Restrict);
-                /* entity.Property(e => e.Interest)
-                     .HasComputedColumnSql("(amount+ItemAmount)*(InterestRate/100)");
-                 entity.Property(e => e.TotalCredit)
-                     .HasComputedColumnSql("((amount)*(InterestRate/100)+(amount*(100/DATEDIFF(dd, LendingDate,DueDate )))) + amount +ItemAmount");*/
-                entity.HasIndex(c => new { c.IsDeleted, c.CustomerId, c.Collector }).IsUnique(false);
-
-                entity.HasQueryFilter(c => !c.IsDeleted);
-
-                entity.Property(c => c.CreatedAt).HasDefaultValueSql("GETUTCDATE");
-
-                entity.HasOne(c => c.Creator).WithMany()
-                    .IsRequired(false)
-                    .HasForeignKey(c => c.CreatorUserId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasOne(c => c.LastModifier).WithMany()
-                    .IsRequired(false)
-                    .HasForeignKey(c => c.LastModifierUserId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasOne(c => c.DeleterUser).WithMany()
-                    .IsRequired(false)
-                    .HasForeignKey(c => c.DeleterUserId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
-
-            });
-            builder.Entity<Customers>(entity =>
-            {
-                entity.HasMany(x => x.Lending).WithOne(x => x.Customers).HasForeignKey(x => x.CustomerId).OnDelete(DeleteBehavior.Restrict);
-                entity.HasMany(x => x.Payments).WithOne(x => x.Customers).HasForeignKey(x => x.CustomerId).OnDelete(DeleteBehavior.Restrict);
-                entity.Property(e => e.FullName).HasComputedColumnSql("FirstName + ' ' + LastName ");
-
-                entity.HasIndex(c => new { c.IsDeleted }).IsUnique(false);
-                entity.Property(c => c.CreatedAt).HasDefaultValueSql("GETUTCDATE");
-
-                entity.HasQueryFilter(c => !c.IsDeleted);
-
-                entity.HasOne(c => c.Creator).WithMany()
-                    .IsRequired(false)
-                    .HasForeignKey(c => c.CreatorUserId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasOne(c => c.LastModifier).WithMany()
-                    .IsRequired(false)
-                    .HasForeignKey(c => c.LastModifierUserId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasOne(c => c.DeleterUser).WithMany()
-                    .IsRequired(false)
-                    .HasForeignKey(c => c.DeleterUserId)
-                    .OnDelete(DeleteBehavior.Restrict);
-            });
-
-            builder.Entity<Payment>(entity =>
-            {
-                entity.HasIndex(c => new { c.IsDeleted, c.LendingId, c.CustomerId }).IsUnique(false);
-                entity.Property(c => c.CreatedAt).HasDefaultValueSql("GETUTCDATE");
-
-                entity.HasQueryFilter(c => !c.IsDeleted);
-
-                entity.HasOne(c => c.Creator).WithMany()
-                    .IsRequired(false)
-                    .HasForeignKey(c => c.CreatorUserId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasOne(c => c.LastModifier).WithMany()
-                    .IsRequired(false)
-                    .HasForeignKey(c => c.LastModifierUserId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasOne(c => c.DeleterUser).WithMany()
-                    .IsRequired(false)
-                    .HasForeignKey(c => c.DeleterUserId)
-                    .OnDelete(DeleteBehavior.Restrict);
-            });
-
-            builder.Entity<Items>(entity =>
-            {
-                entity.HasIndex(c => new { c.IsDeleted }).IsUnique(false);
-                entity.Property(c => c.CreatedAt).HasDefaultValueSql("GETUTCDATE");
-
-                entity.HasQueryFilter(c => !c.IsDeleted);
-
-                entity.HasOne(c => c.Creator).WithMany()
-                    .IsRequired(false)
-                    .HasForeignKey(c => c.CreatorUserId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasOne(c => c.LastModifier).WithMany()
-                    .IsRequired(false)
-                    .HasForeignKey(c => c.LastModifierUserId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasOne(c => c.DeleterUser).WithMany()
-                    .IsRequired(false)
-                    .HasForeignKey(c => c.DeleterUserId)
-                    .OnDelete(DeleteBehavior.Restrict);
-            });
-
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            
             builder.Entity<ApplicationRoleClaims>(entity =>
             {
                 entity.ToTable("AspNetRoleClaims");

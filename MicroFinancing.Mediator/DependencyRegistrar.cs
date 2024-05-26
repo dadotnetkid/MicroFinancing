@@ -7,7 +7,10 @@ namespace MicroFinancing.Mediator
     {
         public static IServiceCollection RegisterMediatR(this IServiceCollection services)
         {
-            services.AddMediatR(typeof(DependencyRegistrar));
+            services.AddMediatR(c =>
+            {
+                c.RegisterServicesFromAssemblies(typeof(DependencyRegistrar).Assembly);
+            });
             return services;
         }
 

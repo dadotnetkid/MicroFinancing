@@ -46,7 +46,6 @@ namespace MicroFinancing.DataMigrations.Migrations
                         new
                         {
                             Id = "B461BCC5-BEDD-41DA-B137-5CCA0E50E2A6",
-                            ConcurrencyStamp = "05173d69-6ae8-41bb-827c-306434789f4d",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -244,6 +243,125 @@ namespace MicroFinancing.DataMigrations.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("MicroFinancing.Entities.Batch", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                    b.Property<string>("AdministratingUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatorUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("DeleterUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTimeOffset?>("DeletionAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifierUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Participants")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("StartAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long>("TermId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset?>("UpdateAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdministratingUserId");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("DeleterUserId");
+
+                    b.HasIndex("LastModifierUserId");
+
+                    b.HasIndex("TermId");
+
+                    b.ToTable("Batch");
+                });
+
+            modelBuilder.Entity("MicroFinancing.Entities.BatchInCustomer", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                    b.Property<long>("BatchId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatorUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<long>("CustomerId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("DeleterUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTimeOffset?>("DeletionAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Index")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifierUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTimeOffset?>("UpdateAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BatchId");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("DeleterUserId");
+
+                    b.HasIndex("LastModifierUserId");
+
+                    b.ToTable("BatchInCustomer");
                 });
 
             modelBuilder.Entity("MicroFinancing.Entities.Customers", b =>
@@ -555,6 +673,57 @@ namespace MicroFinancing.DataMigrations.Migrations
                     b.ToTable("Payments");
                 });
 
+            modelBuilder.Entity("MicroFinancing.Entities.Term", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatorUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("DeleterUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTimeOffset?>("DeletionAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifierUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("Number")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("TermEnum")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("UpdateAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("DeleterUserId");
+
+                    b.HasIndex("LastModifierUserId");
+
+                    b.ToTable("Term");
+                });
+
             modelBuilder.Entity("MicroFinancing.Entities.ApplicationRoleClaims", b =>
                 {
                     b.HasOne("MicroFinancing.Entities.ApplicationRole", "Role")
@@ -616,6 +785,86 @@ namespace MicroFinancing.DataMigrations.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MicroFinancing.Entities.Batch", b =>
+                {
+                    b.HasOne("MicroFinancing.Entities.ApplicationUser", "AdministratingUser")
+                        .WithMany()
+                        .HasForeignKey("AdministratingUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MicroFinancing.Entities.ApplicationUser", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MicroFinancing.Entities.ApplicationUser", "DeleterUser")
+                        .WithMany()
+                        .HasForeignKey("DeleterUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MicroFinancing.Entities.ApplicationUser", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MicroFinancing.Entities.Term", "Term")
+                        .WithMany("Batch")
+                        .HasForeignKey("TermId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AdministratingUser");
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("DeleterUser");
+
+                    b.Navigation("LastModifier");
+
+                    b.Navigation("Term");
+                });
+
+            modelBuilder.Entity("MicroFinancing.Entities.BatchInCustomer", b =>
+                {
+                    b.HasOne("MicroFinancing.Entities.Batch", "Batch")
+                        .WithMany("Customers")
+                        .HasForeignKey("BatchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MicroFinancing.Entities.ApplicationUser", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MicroFinancing.Entities.Customers", "Customers")
+                        .WithMany("Batch")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MicroFinancing.Entities.ApplicationUser", "DeleterUser")
+                        .WithMany()
+                        .HasForeignKey("DeleterUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MicroFinancing.Entities.ApplicationUser", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Batch");
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("Customers");
+
+                    b.Navigation("DeleterUser");
+
+                    b.Navigation("LastModifier");
                 });
 
             modelBuilder.Entity("MicroFinancing.Entities.Customers", b =>
@@ -746,6 +995,30 @@ namespace MicroFinancing.DataMigrations.Migrations
                     b.Navigation("Lending");
                 });
 
+            modelBuilder.Entity("MicroFinancing.Entities.Term", b =>
+                {
+                    b.HasOne("MicroFinancing.Entities.ApplicationUser", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MicroFinancing.Entities.ApplicationUser", "DeleterUser")
+                        .WithMany()
+                        .HasForeignKey("DeleterUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MicroFinancing.Entities.ApplicationUser", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("DeleterUser");
+
+                    b.Navigation("LastModifier");
+                });
+
             modelBuilder.Entity("MicroFinancing.Entities.ApplicationRole", b =>
                 {
                     b.Navigation("RoleClaims");
@@ -766,8 +1039,15 @@ namespace MicroFinancing.DataMigrations.Migrations
                     b.Navigation("UserTokens");
                 });
 
+            modelBuilder.Entity("MicroFinancing.Entities.Batch", b =>
+                {
+                    b.Navigation("Customers");
+                });
+
             modelBuilder.Entity("MicroFinancing.Entities.Customers", b =>
                 {
+                    b.Navigation("Batch");
+
                     b.Navigation("Lending");
 
                     b.Navigation("Payments");
@@ -776,6 +1056,11 @@ namespace MicroFinancing.DataMigrations.Migrations
             modelBuilder.Entity("MicroFinancing.Entities.Lending", b =>
                 {
                     b.Navigation("Payments");
+                });
+
+            modelBuilder.Entity("MicroFinancing.Entities.Term", b =>
+                {
+                    b.Navigation("Batch");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-MicroFinancing-4297407B-3C91-4356-9FCA-5E544B3F39AC</UserSecretsId>
@@ -15,6 +15,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\Customers\Details\Paluwagan.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\Customers\Details\Paluwagan.razor" />
     <None Include="wwwroot\lib\keen\dist\assets\js\pages\builder.js" />
     <None Include="wwwroot\lib\keen\dist\assets\js\pages\components\base\popovers.js" />
     <None Include="wwwroot\lib\keen\dist\assets\js\pages\components\base\popovers.min.js" />
@@ -163,7 +168,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
-    <PackageReference Include="Blazored.FluentValidation" Version="2.1.0-preview.2" />
+    <PackageReference Include="Blazored.FluentValidation" Version="2.1.0" />
     <PackageReference Include="DevExpress.AspNetCore.Reporting" Version="23.1.5" />
     <PackageReference Include="DevExpress.Blazor.Reporting.JSBasedControls.BlazorServer" Version="23.1.5" />
     <PackageReference Include="DevExpress.Blazor.Reporting.Viewer" Version="23.1.5" />
@@ -177,13 +182,14 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.9" />
-    <PackageReference Include="Syncfusion.Blazor" Version="20.2.0.48" />
+    <PackageReference Include="Syncfusion.Blazor" Version="21.1.41" />
+    <PackageReference Include="Syncfusion.Blazor.Themes" Version="21.1.35" />
+
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MicroFinancing.Components\MicroFinancing.Components.csproj" />
     <ProjectReference Include="..\MicroFinancing.Interfaces\MicroFinancing.Interfaces.csproj" />
-    <ProjectReference Include="..\MicroFinancing.Mediator\MicroFinancing.Mediator.csproj" />
     <ProjectReference Include="..\MicroFinancing.Providers\MicroFinancing.Providers.csproj" />
     <ProjectReference Include="..\MicroFinancing.Reporting\MicroFinancing.Reporting.csproj" />
     <ProjectReference Include="..\MicroFinancing.Repository\MicroFinancing.Repositories.csproj" />
@@ -192,6 +198,14 @@
     <ProjectReference Include="..\src\MicroFinancing.Core\MicroFinancing.Core.csproj" />
     <ProjectReference Include="..\src\MicroFinancing.Entities\MicroFinancing.Entities.csproj" />
     <ProjectReference Include="..\src\MicroFinancing.Migrations\MicroFinancing.DataMigrations.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\Customers\Details\Paluwagan.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\Customers\Details\Paluwagan.razor" />
   </ItemGroup>
 
 </Project>

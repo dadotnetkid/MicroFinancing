@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MicroFinancing.Mediator
 {
-    public class PaymentHandler : AsyncRequestHandler<Payment>
+    public class PaymentHandler : IRequestHandler<Payment>
     {
         private readonly IRepository<Payment, long> _repository;
         private readonly IRepository<Lending, long> _lendingRepository;
@@ -22,8 +22,10 @@ namespace MicroFinancing.Mediator
             _lendingRepository = lendingRepository;
         }
 
-        protected override async Task Handle(Payment request, CancellationToken cancellationToken)
+
+        public async Task Handle(Payment request, CancellationToken cancellationToken)
         {
+
             var getTotalPayment = _repository.Entity.AsNoTracking().Where(x => x.CustomerId == request.CustomerId).Sum(x => x.PaymentAmount);
             var getActiveLoanWithBalance = _lendingRepository.Entity
                 .FirstOrDefault(x => x.Id == request.LendingId);

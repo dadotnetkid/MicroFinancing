@@ -29,9 +29,8 @@ public static class DependencyRegistrar
         services.AddTransient(typeof(CollectionSummaryReportAdaptor));
         services.AddTransient(typeof(CustomerByCollectorSummaryReportAdaptor));
         services.AddTransient(typeof(CustomerComboBoxAdaptor));
-
-
-
+        services.AddTransient<BatchAdaptor>();
+        services.AddTransient<TermAdaptor>();
 
         //Transient
         services.AddTransient<IUserService, UserService>();
@@ -42,6 +41,8 @@ public static class DependencyRegistrar
         services.AddTransient<IReportingService, ReportingService>();
         services.AddTransient<IDashboardService, DashboardService>();
         services.AddTransient<ISecurityService, SecurityService>();
+        services.AddTransient<IBatchService, BatchService>();
+        services.AddTransient<ITermService, TermService>();
 
         services.AddTransient<ICurrentUser, CurrentUser>();
 

@@ -14,6 +14,6 @@ public class PermissionAdaptor : DataAdaptor
     }
     public override Task<object> ReadAsync(DataManagerRequest dataManagerRequest, string key = null)
     {
-        return _permissionService.GetPermissions().ToDatResult(dataManagerRequest);
+        return _permissionService.GetPermissions().ToDataResult(dataManagerRequest);
     }
 }

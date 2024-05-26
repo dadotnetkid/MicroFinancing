@@ -16,7 +16,7 @@ public sealed class CollectionSummaryReportAdaptor:DataAdaptor
     }
     public override Task<object> ReadAsync(DataManagerRequest dataManagerRequest, string key = null)
     {
-        return _reportingService.GetCollectionSummaryReports().ToDatResult(dataManagerRequest);
+        return _reportingService.GetCollectionSummaryReports().ToDataResult(dataManagerRequest);
     }
 }
 public sealed class CustomerByCollectorSummaryReportAdaptor:DataAdaptor
@@ -29,6 +29,6 @@ public sealed class CustomerByCollectorSummaryReportAdaptor:DataAdaptor
     }
     public override Task<object> ReadAsync(DataManagerRequest dataManagerRequest, string key = null)
     {
-        return _reportingService.GetCollectionSummaryReports().ToDatResult(dataManagerRequest);
+        return _reportingService.GetCollectionSummaryReports().ToDataResult(dataManagerRequest);
     }
 }

@@ -20,12 +20,12 @@ using MicroFinancing.Interfaces.Services;
 using MicroFinancing.Providers;
 using MicroFinancing.Validators;
 using MicroFinancing.Components;
-using MicroFinancing.Mediator;
 using DevExpress.Blazor.Reporting;
+using MicroFinancing.Services.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NzE4MTMxQDMyMzAyZTMyMmUzMFFhSjB6TThEUFgxV3JJWDBFVGZPZmJDdjg5cUVDQWRobzlKSXRwNFdpVUU9");
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(builder.Configuration.GetValue<string>("Syncfusion:Licensing"));
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");

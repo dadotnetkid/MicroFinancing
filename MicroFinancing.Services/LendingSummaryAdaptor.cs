@@ -15,6 +15,6 @@ public sealed class LendingSummaryAdaptor : DataAdaptor
     public override async Task<object> ReadAsync(DataManagerRequest dm, string? key = null)
     {
         var query = _lendingService.GetSummary();
-        return await query.ToDatResult(dm);
+        return await query.ToDataResult(dm);
     }
 }

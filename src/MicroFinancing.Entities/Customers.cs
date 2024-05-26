@@ -29,4 +29,5 @@ public sealed class Customers : BaseEntity<long>
 
     public ICollection<Lending> Lending { get; set; }
     public ICollection<Payment> Payments { get; set; }
+    public ICollection<BatchInCustomer>? Batch { get; set; } = new HashSet<BatchInCustomer>();
 }

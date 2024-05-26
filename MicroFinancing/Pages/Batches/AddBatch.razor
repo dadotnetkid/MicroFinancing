@@ -1,0 +1,83 @@
+﻿@using Syncfusion.Blazor.Calendars
+@using Syncfusion.Blazor.Inputs
+<SfDialog Width="500px" ShowCloseIcon="true" @bind-Visible="visibility" CssClass="modal-center-top">
+    <DialogPositionData X="center" />
+    <DialogTemplates>
+        <Header> Create New Batch</Header>
+        <Content>
+            <EditForm Model="model">
+                <FluentValidationValidator DisableAssemblyScanning="true" @ref="fluentValidator" />
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@model.Name" Placeholder="Name"
+                                                            CssClass="e-outline"
+                                                            FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                        <ValidationMessage For="@(()=>model.Name)" TValue="string" />
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <SfNumericTextBox @bind-Value="@model.Participants" Placeholder="Participants"
+                                          CssClass="e-outline"
+                                          FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                        <ValidationMessage For="@(()=>model.Participants)" TValue="int" />
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <SfNumericTextBox @bind-Value="@model.Amount" Placeholder="Amount"
+                                          CssClass="e-outline"
+                                          FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                        <ValidationMessage For="@(() => model.Amount)" TValue="decimal" />
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <SfDatePicker @bind-Value="@model.StartAt" Placeholder="StartAt"
+                                      CssClass="e-outline"
+                                      FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                        <ValidationMessage For="@(() => model.StartAt)" TValue="DateTimeOffset?" />
+                    </div>
+                </div>
+
+
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <Syncfusion.Blazor.DropDowns.SfComboBox TItem="TermDto"
+                                                                TValue="long"
+                                                                @bind-Value="@model.Term"
+                                                                Placeholder="Term"
+                                                                CssClass="e-outline"
+                                                                FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto">
+                            <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="@typeof(TermAdaptor)" Adaptor="Adaptors.CustomAdaptor" />
+                            <Syncfusion.Blazor.DropDowns.ComboBoxFieldSettings Text="Name" Value="Id" />
+                        </Syncfusion.Blazor.DropDowns.SfComboBox>
+
+                        <ValidationMessage For="@(() => model.Term)" TValue="long" />
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <Syncfusion.Blazor.DropDowns.SfComboBox TItem="UserGridDTM"
+                                                                TValue="string"
+                                                                @bind-Value="@model.AdministeringUser"
+                                                                Placeholder="Administrating User"
+                                                                CssClass="e-outline"
+                                                                FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto">
+                            <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="@typeof(UserAdaptor)" Adaptor="Adaptors.CustomAdaptor" />
+                            <Syncfusion.Blazor.DropDowns.ComboBoxFieldSettings Text="FullName" Value="Id" />
+                        </Syncfusion.Blazor.DropDowns.SfComboBox>
+
+                        <ValidationMessage For="@(() => model.AdministeringUser)" TValue="string" />
+                    </div>
+                </div>
+
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton IsPrimary="true" Content="Submit" OnClick="@OnBtnSubmitClick" />
+        <DialogButton IsPrimary="false" Content="Cancel" OnClick="@OnBtnCancelClick" />
+    </DialogButtons>
+</SfDialog>

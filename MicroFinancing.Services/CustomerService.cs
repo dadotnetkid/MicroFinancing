@@ -1,113 +1,106 @@
-﻿using MicroFinancing.DataTransferModel;
+﻿using MicroFinancing.Core.Common;
+using MicroFinancing.Core.Enumeration;
+using MicroFinancing.DataTransferModel;
 using MicroFinancing.Entities;
 using MicroFinancing.Interfaces.Repositories;
 using MicroFinancing.Interfaces.Services;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MicroFinancing.Core.Enumeration;
-using Microsoft.AspNetCore.Authorization;
-using MicroFinancing.Core.Common;
 
-namespace MicroFinancing.Services
+namespace MicroFinancing.Services;
+
+public class CustomerService : ICustomerService
 {
-    public class CustomerService : ICustomerService
+    private readonly IRepository<Customers, long> _customerRepository;
+    private readonly IRepository<Lending, long> _lendingRepository;
+    private readonly IUserService _userService;
+
+    public CustomerService(IRepository<Customers, long> customerRepository,
+        IRepository<Lending, long> lendingRepository, IUserService userService)
     {
-        private readonly IRepository<Customers, long> _customerRepository;
-        private readonly IRepository<Lending, long> _lendingRepository;
-        private readonly IUserService _userService;
+        _customerRepository = customerRepository;
+        _lendingRepository = lendingRepository;
+        _userService = userService;
+    }
 
-        public CustomerService(IRepository<Customers, long> customerRepository, 
-            IRepository<Lending, long> lendingRepository, IUserService userService)
+    public IQueryable<CustomerGridDTM> GetCustomer()
+    {
+        return _customerRepository.Entity.Select(x => new CustomerGridDTM
         {
-            _customerRepository = customerRepository;
-            _lendingRepository = lendingRepository;
-            _userService = userService;
-        }
-        public IQueryable<CustomerGridDTM> GetCustomer()
+            FirstName = x.FirstName,
+            MiddleName = x.MiddleName,
+            LastName = x.LastName,
+            DateOfBirth = x.DateOfBirth,
+            PlaceOfBirth = x.PlaceOfBirth,
+            Address = x.Address,
+            Id = x.Id,
+            TotalAmountPaid = x.Payments.Sum(x => x.PaymentAmount),
+            FullName = x.FullName
+        });
+    }
+
+    public async Task AddCustomer(CreateCustomerDTM model)
+    {
+        await _customerRepository.AddAsync(new Customers
         {
-            return _customerRepository.Entity.Select(x => new CustomerGridDTM()
+            Address = model.Address,
+            DateOfBirth = model.DateOfBirth,
+            FirstName = model.FirstName,
+            LastName = model.LastName,
+            MiddleName = model.MiddleName,
+            PlaceOfBirth = model.PlaceOfBirth ?? string.Empty,
+            IsDeleted = false
+        });
+    }
+
+    public async Task<CustomerDetailDTM?> GetCustomerDetail(long id)
+    {
+        return await _customerRepository.Entity.Where(x => x.Id == id).Select(x => new CustomerDetailDTM
+        {
+            FirstName = x.FirstName,
+            MiddleName = x.MiddleName,
+            LastName = x.LastName,
+            DateOfBirth = x.DateOfBirth,
+            PlaceOfBirth = x.PlaceOfBirth,
+            Address = x.Address,
+            Id = x.Id,
+            TotalAmountPaid = x.Payments.Sum(p => p.PaymentAmount),
+            TotalDebt = x.Lending.Sum(l => l.TotalCredit),
+            TotalBalance = x.Lending.Sum(l => l.TotalCredit) - x.Payments.Sum(p => p.PaymentAmount),
+            CustomerFlag = x.Flag,
+            HasActiveLoan = x.Lending.Any(x => !x.IsPaid && x.IsActive)
+        }).FirstOrDefaultAsync();
+    }
+
+    public async Task UpdateFlag(long customerId, CustomerFlag customerFlagValue)
+    {
+        var customer = _customerRepository.Entity.AsNoTracking().FirstOrDefault(x => x.Id == customerId);
+        customer.Flag = customerFlagValue;
+        await _customerRepository.UpdateAsync(customer);
+    }
+
+    public async Task<BaseAuthorizePermissionDTM> GetPermission()
+    {
+        return new BaseAuthorizePermissionDTM
+        {
+            CanAddLoan = await _userService.IsAuthorize(ClaimsConstant.Customer.AddLoan, false),
+            CanAddPayment = await _userService.IsAuthorize(ClaimsConstant.Customer.AddPayment, false),
+            CanOverridePayment = await _userService.IsAuthorize(ClaimsConstant.Customer.AddLoan, false),
+            CanSetFlag = await _userService.IsAuthorize(ClaimsConstant.Customer.SetFlag, false),
+            CanPrint = await _userService.IsAuthorize(ClaimsConstant.Customer.Print, false)
+        };
+    }
+
+    public IQueryable<CustomerBaseDTM> GetCustomerByCollector(string collectorId)
+    {
+        var customer = _lendingRepository.Entity.Where(x => x.Collector == collectorId && x.IsActive && !x.IsPaid)
+            .Select(x => x.CustomerId)
+            .Distinct().ToList();
+        var customers = _customerRepository.Entity.Where(x => customer.Contains(x.Id))
+            .Select(x => new CustomerBaseDTM
             {
-                FirstName = x.FirstName,
-                MiddleName = x.MiddleName,
-                LastName = x.LastName,
-                DateOfBirth = x.DateOfBirth,
-                PlaceOfBirth = x.PlaceOfBirth,
-                Address = x.Address,
                 Id = x.Id,
-                TotalAmountPaid = x.Payments.Sum(x => x.PaymentAmount),
                 FullName = x.FullName
-
             });
-        }
-
-        public async Task AddCustomer(CreateCustomerDTM model)
-        {
-            await _customerRepository.AddAsync(new Customers()
-            {
-                Address = model.Address,
-                DateOfBirth = model.DateOfBirth,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                MiddleName = model.MiddleName,
-                PlaceOfBirth = model.PlaceOfBirth ?? string.Empty,
-                IsDeleted = false
-            });
-        }
-
-        public async Task<CustomerDetailDTM?> GetCustomerDetail(long id)
-        {
-            return await _customerRepository.Entity.Where(x => x.Id == id).Select(x => new CustomerDetailDTM()
-            {
-                FirstName = x.FirstName,
-                MiddleName = x.MiddleName,
-                LastName = x.LastName,
-                DateOfBirth = x.DateOfBirth,
-                PlaceOfBirth = x.PlaceOfBirth,
-                Address = x.Address,
-                Id = x.Id,
-                TotalAmountPaid = x.Payments.Sum(p => p.PaymentAmount),
-                TotalDebt = x.Lending.Sum(l => l.TotalCredit),
-                TotalBalance = x.Lending.Sum(l => l.TotalCredit) - x.Payments.Sum(p => p.PaymentAmount),
-                CustomerFlag = x.Flag,
-                HasActiveLoan = x.Lending.Any(x => !x.IsPaid && x.IsActive)
-            }).FirstOrDefaultAsync();
-        }
-
-        public async Task UpdateFlag(long customerId, CustomerFlag customerFlagValue)
-        {
-            var customer = _customerRepository.Entity.AsNoTracking().FirstOrDefault(x => x.Id == customerId);
-            customer.Flag = customerFlagValue;
-            await _customerRepository.UpdateAsync(customer);
-        }
-
-        public async Task<BaseAuthorizePermissionDTM> GetPermission()
-        {
-            return new()
-            {
-                CanAddLoan = await _userService.IsAuthorize(ClaimsConstant.Customer.AddLoan, false),
-                CanAddPayment = await _userService.IsAuthorize(ClaimsConstant.Customer.AddPayment, false),
-                CanOverridePayment = await _userService.IsAuthorize(ClaimsConstant.Customer.AddLoan, false),
-                CanSetFlag = await _userService.IsAuthorize(ClaimsConstant.Customer.SetFlag, false),
-                CanPrint = await _userService.IsAuthorize(ClaimsConstant.Customer.Print, false),
-            };
-        }
-
-        public IQueryable<CustomerBaseDTM> GetCustomerByCollector(string collectorId)
-        {
-            var customer = _lendingRepository.Entity.Where(x => x.Collector == collectorId && x.IsActive && !x.IsPaid).Select(x => x.CustomerId)
-                .Distinct().ToList();
-            var customers = _customerRepository.Entity.Where(x => customer.Contains(x.Id))
-                    .Select(x => new CustomerBaseDTM()
-                    {
-                        Id = x.Id,
-                        FullName = x.FullName
-                    });
-            return customers;
-
-        }
+        return customers;
     }
 }

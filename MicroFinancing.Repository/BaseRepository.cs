@@ -29,7 +29,7 @@ namespace MicroFinancing.Repositories
             if (typeof(BaseEntity<TKey>).IsAssignableFrom(typeof(T)))
             {
                 var type = entity.GetType();
-                type.GetProperty(nameof(BaseEntity<TKey>.CreatorUserId)).SetValue(entity,_currentUser.UserId);
+                type.GetProperty(nameof(BaseEntity<TKey>.CreatorUserId)).SetValue(entity, _currentUser.UserId);
             }
 
             Entity.Add(entity);
@@ -50,6 +50,11 @@ namespace MicroFinancing.Repositories
 
         public async Task<bool> UpdateAsync(T entity)
         {
+            if (Exists(entity))
+            {
+                _db.Entry(entity).State = EntityState.Detached;
+            }
+
             Entity.Update(entity);
             await _db.SaveChangesAsync();
             return true;
@@ -77,6 +82,11 @@ namespace MicroFinancing.Repositories
             _db.Remove<T>(entity);
             await _db.SaveChangesAsync();
             return true;
+        }
+
+        private bool Exists(T entity)
+        {
+            return Entity.Local.Any(e => e == entity);
         }
     }
 }

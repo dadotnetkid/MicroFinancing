@@ -19,30 +19,7 @@ namespace MicroFinancing.Services
         }
         public override async Task<object> ReadAsync(DataManagerRequest dm, string? key = null)
         {
-            return await _customerService.GetCustomer().ToDatResult(dm);
-        }
-    }
-    public sealed class CustomerComboBoxAdaptor : DataAdaptor
-    {
-        private readonly IUserService _userService;
-        private readonly ICustomerService _customerService;
-
-        public CustomerComboBoxAdaptor(ICustomerService customerService, IUserService userService)
-        {
-            _customerService = customerService;
-            _userService = userService;
-        }
-        public override async Task<object> ReadAsync(DataManagerRequest dm, string? key = null)
-        {
-
-            try
-            {
-                return await _customerService.GetCustomerByCollector(await _userService.GetUserId()).ToDatResult(dm);
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
+            return await _customerService.GetCustomer().ToDataResult(dm);
         }
     }
 }

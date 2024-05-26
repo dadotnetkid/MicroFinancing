@@ -1,0 +1,41 @@
+﻿@using MicroFinancing.Infrastructure.Common
+@using MicroFinancing.Infrastructure.Enums
+@using Syncfusion.Blazor.DropDowns
+<SfDialog Width="500px" ShowCloseIcon="true" @bind-Visible="visibility" CssClass="modal-center-top">
+    <DialogPositionData X="center" />
+    <DialogTemplates>
+        <Header> Add/Edit Term</Header>
+        <Content>
+            <EditForm Model="term">
+                <FluentValidationValidator DisableAssemblyScanning="true" @ref="fluentValidator" />
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@term.Name" Placeholder="Name" CssClass="e-outline" FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                        <ValidationMessage For="@(()=>term.Name)" TValue="string" />
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <SfNumericTextBox @bind-Value="@term.Number" Placeholder="Cycles" CssClass="e-outline" FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                        <ValidationMessage For="@(()=>term.Number)" TValue="long" />
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <SfDropDownList TItem="KeyValuePair<TermEnum, string>" TValue="TermEnum" DataSource="TermTypes" @bind-Value="@term.TermEnum"
+                                        Placeholder="Term"
+                                        CssClass="e-outline"
+                                        FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto">
+                            <DropDownListFieldSettings Value="Key" Text="Value"></DropDownListFieldSettings>
+                        </SfDropDownList>
+                    </div>
+                </div>
+
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton IsPrimary="true" Content="Submit" OnClick="@OnBtnSubmitClick" />
+        <DialogButton IsPrimary="false" Content="Cancel" OnClick="@OnBtnCancelClick" />
+    </DialogButtons>
+</SfDialog>

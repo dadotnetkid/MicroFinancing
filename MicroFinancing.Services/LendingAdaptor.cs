@@ -25,7 +25,7 @@ namespace MicroFinancing.Services
                 var customerId=dm.Params.FirstOrDefault(x => x.Key == "CustomerId").Value.ToTypeOf<long>();
                 query = query.Where(x => x.CustomerId == customerId);
             }
-            return await query.ToDatResult(dm);
+            return await query.ToDataResult(dm);
         }
     }
 }

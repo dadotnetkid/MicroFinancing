@@ -11,7 +11,7 @@ namespace MicroFinancing.Core.Common
 {
     public static class GridHelper
     {
-        public static Task<object> ToDatResult<T>(this IQueryable<T> source, DataManagerRequest dm)
+        public static Task<object> ToDataResult<T>(this IQueryable<T> source, DataManagerRequest dm)
         {
             if (dm.Search is { Count: > 0 })
             {

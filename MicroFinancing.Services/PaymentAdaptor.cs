@@ -28,7 +28,7 @@ namespace MicroFinancing.Services
             {
                 var id = Convert.ToInt64(customerId);
 
-                return await _paymentService.Get().Where(x => x.CustomerId == id).ToDatResult(dataManagerRequest);
+                return await _paymentService.Get().Where(x => x.CustomerId == id).ToDataResult(dataManagerRequest);
             }
             else if (dataManagerRequest.Params.Any(x => x.Key == "DateToday") && dataManagerRequest.Params.Any(x => x.Key == "FilterByUserId"))
             {
@@ -39,7 +39,7 @@ namespace MicroFinancing.Services
                 return await _paymentService.Get()
                     .Where(x => x.CreatedAt >= dateStart && x.CreatedAt <= dateEnd)
                     .Where(x => x.CreatedByUserId == filterByUserId)
-                    .ToDatResult(dataManagerRequest);
+                    .ToDataResult(dataManagerRequest);
             }
             return  Task.CompletedTask;
         }

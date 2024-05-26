@@ -34,7 +34,7 @@ namespace MicroFinancing.Services
                     Name = ur.Role.Name,
                     NormalizedName = ur.Role.NormalizedName,
                 })
-            }).ToDatResult(dataManagerRequest);
+            }).ToDataResult(dataManagerRequest);
         }
     }
 }

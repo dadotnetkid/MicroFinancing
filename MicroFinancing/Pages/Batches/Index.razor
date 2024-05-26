@@ -1,0 +1,31 @@
+﻿@page "/Batches"
+<div class="card">
+    <div class="card-header">
+        <div class="float-left">
+            <h5>Batch(Paluwagan)</h5>
+        </div>
+
+        <div class="float-right">
+            <Syncfusion.Blazor.Buttons.SfButton IconCss="fas fa-user-plus" OnClick="OnAddClick" />
+        </div>
+    </div>
+    <div class="card-body">
+        <SfGrid AllowPaging="true" AllowFiltering="true" TValue="BatchDto" @ref="BatchGrid">
+            <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(BatchAdaptor)"
+                                                  Adaptor="Adaptors.CustomAdaptor" />
+            <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
+            <GridColumns>
+                <GridColumn Field=@nameof(BatchDto.Name) Width="75"></GridColumn>
+                <GridColumn Field=@nameof(BatchDto.Amount) Width="75"></GridColumn>
+                <GridColumn Field=@nameof(BatchDto.Term) Width="75"></GridColumn>
+                <GridColumn Field=@nameof(BatchDto.Participants) Width="75"></GridColumn>
+                <GridColumn Field=@nameof(BatchDto.AdministeringUser) Width="75"></GridColumn>
+                <GridColumn Field=@nameof(BatchDto.TotalAddedParticipants) HeaderText="Added Participants" Width="75"></GridColumn>
+            </GridColumns>
+
+        </SfGrid>
+    </div>
+
+</div>
+
+<AddBatch @ref="addBatchRef" OnSuccess="OnSuccess"></AddBatch>
