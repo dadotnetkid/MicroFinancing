@@ -1,35 +1,13 @@
 ﻿@using Syncfusion.Blazor.Data
-<SfGrid AllowPaging="true" TValue="LendingGridDTM" @ref="ParticipantGridRef" Query="queryData">
-    <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(LendingAdaptor)"
+<SfGrid AllowPaging="true" TValue="ParticipantsInBatchDto" @ref="ParticipantGridRef" Query="queryData">
+    <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(ParticipantInBatchAdaptor)"
                                           Adaptor="Adaptors.CustomAdaptor"/>
     <GridColumns>
-        <GridColumn Field=@nameof(LendingGridDTM.CustomerName) Width="100"></GridColumn>
-        <GridColumn Field=@nameof(LendingGridDTM.Category) Width="75">
-            <Template>
-                @{
-
-                    var row = context as LendingGridDTM;
-                }
-                @if (row is {Category: Core.Enumeration.LendingEnumeration.LendingCategory.Cash })
-                {
-                    <span class="badge badge-primary">@row.Category.ToString()</span>
-                }
-                else
-                {
-                    <span class="badge badge-info">@row?.Category.ToString()</span>
-                }
-            </Template>
-        </GridColumn>
-        <GridColumn Field=@nameof(LendingGridDTM.Amount) Width="100"></GridColumn>
-        <GridColumn Field=@nameof(LendingGridDTM.LendingDate) Width="100"></GridColumn>
-        <GridColumn Field=@nameof(LendingGridDTM.DueDate) Width="100"></GridColumn>
-        <GridColumn Field=@nameof(LendingGridDTM.Collector) Width="100"></GridColumn>
+        <GridColumn Field=@nameof(ParticipantsInBatchDto.Index) Width="100"></GridColumn>
+        
+        <GridColumn Field=@nameof(ParticipantsInBatchDto.Name) Width="100"></GridColumn>
+        
     </GridColumns>
 
 </SfGrid>
 
-
-@code {
-   
-
-}

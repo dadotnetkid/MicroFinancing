@@ -9,14 +9,10 @@ public partial class Participants
 {
     private Query queryData = new();
     [Parameter] public long BatchId { get; set; }
-    public SfGrid<LendingGridDTM> ParticipantGridRef { get; set; }
+    public SfGrid<ParticipantsInBatchDto> ParticipantGridRef { get; set; }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override void OnInitialized()
     {
-        if (firstRender)
-        {
-            queryData.AddParams("BatchId", BatchId);
-            await ParticipantGridRef.Refresh();
-        }
+        queryData.AddParams("BatchId", BatchId);
     }
 }

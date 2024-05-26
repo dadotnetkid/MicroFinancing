@@ -8,4 +8,5 @@ public sealed class BatchDto
     public string Term { get; set; }
     public string AdministeringUser { get; set; }
     public int TotalAddedParticipants { get; set; }
+    public long Id { get; set; }
 }

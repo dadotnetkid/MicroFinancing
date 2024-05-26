@@ -16,5 +16,12 @@ public class BatchMapper : Profile
                                                         opt => opt.MapFrom(src => src.AdministratingUser.FullName))
             .ForMember(c => c.TotalAddedParticipants,
                                                                         opt => opt.MapFrom(src => src.Customers.Count()));
+
+        CreateMap<BatchInCustomer, ParticipantsInBatchDto>()
+            .ForMember(dst => dst.Name,
+                opt => opt.MapFrom(src => src.Customers.FullName));
+
+
+
     }
 }

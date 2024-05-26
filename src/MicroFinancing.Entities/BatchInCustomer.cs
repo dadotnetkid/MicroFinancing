@@ -13,7 +13,7 @@ public sealed class BatchInCustomer : BaseEntity<long>
     public long BatchId { get; set; }
 
     [ForeignKey(nameof(BatchId))]
-    public Batch Batch { get; set; } = new();
+    public Batch Batch { get; set; }
     [ForeignKey(nameof(CustomerId))]
-    public Customers Customers { get; set; } = new();
+    public Customers Customers { get; set; }
 }

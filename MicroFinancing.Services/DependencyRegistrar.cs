@@ -31,6 +31,7 @@ public static class DependencyRegistrar
         services.AddTransient(typeof(CustomerComboBoxAdaptor));
         services.AddTransient<BatchAdaptor>();
         services.AddTransient<TermAdaptor>();
+        services.AddTransient<ParticipantInBatchAdaptor>();
 
         //Transient
         services.AddTransient<IUserService, UserService>();

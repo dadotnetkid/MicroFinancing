@@ -1,0 +1,33 @@
+﻿@using MicroFinancing.Core.Enumeration
+<SfDialog Width="500px" ShowCloseIcon="true" @bind-Visible="visibility" CssClass="modal-center-top">
+    <DialogPositionData X="center" />
+    <DialogTemplates>
+        <Header> Add Lending</Header>
+        <Content>
+            <EditForm Model="model">
+                <FluentValidationValidator DisableAssemblyScanning="true" @ref="fluentValidator" />
+
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <Syncfusion.Blazor.DropDowns.SfComboBox TItem="CustomerGridDTM"
+                                                                TValue="long"
+                                                                @bind-Value="@model.CustomerId" Placeholder="Collector"
+                                                                CssClass="e-outline"
+                                                                FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto">
+                            <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="@typeof(CustomerAdaptor)" Adaptor="Adaptors.CustomAdaptor" />
+                            <Syncfusion.Blazor.DropDowns.ComboBoxFieldSettings Text="FullName" Value="Id" />
+                        </Syncfusion.Blazor.DropDowns.SfComboBox>
+
+                        <ValidationMessage For="@(() => model.CustomerId)" TValue="long" />
+                    </div>
+                </div>
+
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton IsPrimary="true" Content="Submit" OnClick="@OnBtnSubmitClick" />
+        <DialogButton IsPrimary="false" Content="Cancel" OnClick="@OnBtnCancelClick" />
+    </DialogButtons>
+    <DialogEvents Closed="OnModalClosed" />
+</SfDialog>

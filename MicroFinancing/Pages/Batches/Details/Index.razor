@@ -71,10 +71,11 @@
                     </div>
                     <div class="float-right">
 
-                        <Syncfusion.Blazor.Buttons.SfButton IconCss="fas fa-plus" />
+                        <Syncfusion.Blazor.Buttons.SfButton IconCss="fas fa-plus" OnClick="OnAddParticipant"/>
                     </div>
                 </div>
                 <div class="card-body">
+                    <Participants BatchId="model.Id" @ref="Participants"></Participants>
                 </div>
             </div>
 
@@ -96,4 +97,5 @@
 
         </div>
     </div>
+    <AddParticipant @ref="AddParticipantRef" BatchId="model.Id" OnSuccessCreateParticipant="OnSuccessCreateParticipant" />
 }
