@@ -18,7 +18,7 @@ public class AddParticipantInBatchCommandHandler : IRequestHandler<AddParticipan
     {
         _repository = repository;
     }
-
+ 
     public async Task<bool> Handle(AddParticipantInBatchCommand request, CancellationToken cancellationToken)
     {
         var query = _repository.Entity.Where(c => c.BatchId == request.BatchId);

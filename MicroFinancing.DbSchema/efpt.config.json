@@ -1,0 +1,346 @@
+﻿{
+   "CodeGenerationMode": 4,
+   "ContextClassName": "OFMIS-UATContext",
+   "ContextNamespace": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "MicroFinancing.DbSchema",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 0,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[dbo].[Actions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ActionTakens]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AIRDetails]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AIReports]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AllotmentLetter]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Allotments]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AOQ]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AOQDetails]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Appropriations]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[APRDetails]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[APRs]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[BACInAOQ]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[BACMembers]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Categories]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ColumnTitles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ControlNumbers]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[DefaultAccounts]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[DefaultSettings]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[DocumentActions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Employees]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[EmployeesInPayee]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Files]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Functions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[FundTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ICS]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ICSDetails]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Items]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ItenaryDetails]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ItenaryofTravels]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Letters]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Liquidations]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Logs]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[LRDetails]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Obligations]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[OBRInLetters]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Offices]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ORDetails]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PAR]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PARDetails]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Payees]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PayrollDetails]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PayrollDifferentialDetails]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PayrollDifferentials]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PayrollOT]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PayrollOTDetails]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Payrolls]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PayrollWageDetails]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PayrollWages]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PIS]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PISDetails]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PODetails]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Positions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PQDetails]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PRDetails]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PriceQuotations]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Provinces]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PurchaseOrders]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PurchaseRequests]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ReAlignments]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[RISDetails]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[RISHeader]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SalarySchedules]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Signatories]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Suppliers]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Templates]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Towns]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TrashBin]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UnitOfMeasurement]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UserClaims]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UserLogins]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UserRoles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UserRolesInFunctions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Users]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UsersInDocumentActions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UsersInRoles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Years]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": null,
+   "UncountableWords": null,
+   "UseAsyncStoredProcedureCalls": true,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDateOnlyTimeOnly": true,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": true,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UsePrefixNavigationNaming": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false
+}
