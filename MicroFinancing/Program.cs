@@ -32,6 +32,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<MFDbContext>(options =>
     options.UseSqlServer(connectionString), ServiceLifetime.Transient);
 
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents()
+    .AddInteractiveWebAssemblyComponents();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -43,8 +46,6 @@ builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ClaimsP
 
 
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(BaseRepository<,>));
-builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
 
 builder.Services.AddSyncfusionBlazor();
 

@@ -184,7 +184,14 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.9" />
     <PackageReference Include="Syncfusion.Blazor" Version="21.1.41" />
     <PackageReference Include="Syncfusion.Blazor.Themes" Version="21.1.35" />
-
+    <PackageReference Include="NSwag.AspNetCore" Version="14.1.0" />
+    <PackageReference Include="NSwag.MSBuild" Version="14.1.0">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.7" />
   </ItemGroup>
 
   <ItemGroup>
@@ -195,6 +202,7 @@
     <ProjectReference Include="..\MicroFinancing.Repository\MicroFinancing.Repositories.csproj" />
     <ProjectReference Include="..\MicroFinancing.Services\MicroFinancing.Services.csproj" />
     <ProjectReference Include="..\MicroFinancing.Validators\MicroFinancing.Validators.csproj" />
+    <ProjectReference Include="..\MicroFinancing.Wasm\MicroFinancing.Wasm.csproj" />
     <ProjectReference Include="..\src\MicroFinancing.Core\MicroFinancing.Core.csproj" />
     <ProjectReference Include="..\src\MicroFinancing.Entities\MicroFinancing.Entities.csproj" />
     <ProjectReference Include="..\src\MicroFinancing.Migrations\MicroFinancing.DataMigrations.csproj" />
@@ -207,5 +215,18 @@
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Pages\Customers\Details\Paluwagan.razor" />
   </ItemGroup>
+	<PropertyGroup>
+		<RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+		<UserSecretsId>c733bd00-6a90-43e5-a1c9-4a3955ad9cb2</UserSecretsId>
+	</PropertyGroup>
 
+	<Target Name="NSwag" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Debug' And '$(SkipNSwag)' != 'True' ">
+		<Exec ConsoleToMSBuild="true" ContinueOnError="true" WorkingDirectory="$(ProjectDir)" EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development" Command="$(NSwagExe_Net80) run config.nswag /variables:Configuration=$(Configuration)">
+			<Output TaskParameter="ExitCode" PropertyName="NSwagExitCode" />
+			<Output TaskParameter="ConsoleOutput" PropertyName="NSwagOutput" />
+		</Exec>
+
+		<Message Text="$(NSwagOutput)" Condition="'$(NSwagExitCode)' == '0'" Importance="low" />
+		<Error Text="$(NSwagOutput)" Condition="'$(NSwagExitCode)' != '0'" />
+	</Target>
 </Project>
