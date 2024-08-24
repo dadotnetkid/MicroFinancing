@@ -53,7 +53,6 @@ namespace MicroFinancing.Core.Common
                 public static string[] SetFlag => new[] { ClaimsConstant.Customer.SetFlag, ClaimsConstant.Customer.Manage, Administrator };
                 public static string[] AddLoan => new[] { ClaimsConstant.Customer.AddLoan, ClaimsConstant.Customer.Manage, ClaimsConstant.Customer.ManageLoan, Administrator };
                 public static string[] AddPayment => new[] { ClaimsConstant.Customer.AddPayment,ClaimsConstant.Customer.ManagePayment, ClaimsConstant.Customer.Manage,  Administrator };
-                
             }
             public static class Users
             {

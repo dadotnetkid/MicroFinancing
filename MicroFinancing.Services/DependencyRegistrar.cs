@@ -61,6 +61,10 @@ public static class DependencyRegistrar
     {
         services.AddAuthorization(options =>
          {
+
+             //Administrator
+             options.AddPolicy(ClaimsConstant.Administrator,
+                               policy => policy.RequireClaim(ClaimsConstant.ClaimType, new []{ ClaimsConstant.Administrator }));
              //View Permission
              options.AddPolicy(ClaimsConstant.Users.View,
                  policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Users.View));

@@ -14,4 +14,6 @@ public interface IRepository<T, TKey> where T : class
     Task<bool> DeleteAsync(Expression<Func<T, bool>> filterExpression);
     Task<bool> DeleteAsync(IEnumerable<T> items);
     Task<bool> DeleteAsync(object? id);
+
+    Task SaveChangesAsync();
 }

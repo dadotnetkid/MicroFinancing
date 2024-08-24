@@ -24,6 +24,20 @@
         <GridColumn Field=@nameof(LendingGridDTM.LendingDate) Width="100"></GridColumn>
         <GridColumn Field=@nameof(LendingGridDTM.DueDate) Width="100"></GridColumn>
         <GridColumn Field=@nameof(LendingGridDTM.Collector) Width="100"></GridColumn>
+        <GridColumn Width="90" TextAlign="TextAlign.Right" AllowFiltering="false">
+            <Template>
+
+                <SfDropDownButton IconCss="fas fa-ellipsis-v">
+                    <DropDownMenuItems>
+                        <DropDownMenuItem Id="@GenericDropdownItem.ViewDetails.ToString()" Text="View Details" IconCss="fas fa-user-edit"></DropDownMenuItem>
+                        <DropDownMenuItem Id="delete" Text="Delete" IconCss="fas fa-trash"></DropDownMenuItem>
+                    </DropDownMenuItems>
+                    <DropDownButtonEvents ItemSelected="@((e)=>OnDropdownSelectedMenu(e,(LendingGridDTM)context))" />
+                </SfDropDownButton>
+
+
+            </Template>
+        </GridColumn>
     </GridColumns>
 
 </SfGrid>

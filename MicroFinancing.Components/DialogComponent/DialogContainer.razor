@@ -1,0 +1,57 @@
+﻿@using MicroFinancing.Components.ToastsComponent
+@using Microsoft.JSInterop
+@using Syncfusion.Blazor.Popups
+<SfDialog Width="250px" @bind-Visible="IsVisible">
+    <DialogTemplates>
+        <Header> @Title </Header>
+        <Content>@Message</Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton Content="OK" IsPrimary="true" OnClick="@OkClick" />
+        <DialogButton Content="Cancel" OnClick="@CancelClick" />
+    </DialogButtons>
+</SfDialog>
+@code {
+
+
+    [Inject] private IJSRuntime jsRuntime { get; set; }
+    [Inject] private IDialogService DialogService { get; set; }
+
+    internal string Message { get; set; }
+    internal string Title { get; set; }
+    public bool IsVisible { get; set; }
+
+    internal string toastId = Guid.NewGuid().ToString();
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            DialogService.container = this;
+        }
+    }
+    public void ShowToast(string title, string message, Action<bool> callBack)
+    {
+        Message = message;
+        Title = title;
+        IsVisible = true;
+        StateHasChanged();
+        Callback = callBack;
+    }
+
+    public Action<bool> Callback { get; set; }
+
+    private void OkClick(MouseEventArgs obj)
+    {
+        IsVisible = false;
+        StateHasChanged();
+        Callback.Invoke(true);
+    }
+
+    private void CancelClick(MouseEventArgs obj)
+    {
+        IsVisible = false;
+        StateHasChanged();
+        Callback.Invoke(false);
+    }
+
+}

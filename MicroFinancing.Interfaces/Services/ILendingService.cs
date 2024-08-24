@@ -7,4 +7,6 @@ public interface ILendingService
     IQueryable<LendingGridDTM> Get();
     Task AddLending(CreateLendingDTM model);
     IQueryable<LendingSummaryGridDTM> GetSummary();
+
+    Task DeleteLending(long id);
 }

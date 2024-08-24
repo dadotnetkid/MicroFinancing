@@ -54,7 +54,7 @@ namespace MicroFinancing.Services
 
             var date = model.DueDate.GetValueOrDefault();
             var dayss = Enumerable
-                .Range(0, numberOfDays+1)
+                .Range(0, numberOfDays + 1)
                 .Select(n => new { date = model.LendingDate.GetValueOrDefault().AddDays(n) });
             var sundays = dayss
                  .Count(c => c.date.DayOfWeek == DayOfWeek.Sunday);
@@ -95,6 +95,21 @@ namespace MicroFinancing.Services
                 DueDate = x.Lending.Max(x => x.DueDate),
             });
 
+        }
+
+        public async Task DeleteLending(long id)
+        {
+            var entity = await _repository.Entity.FindAsync(id);
+
+            if (entity == null)
+            {
+                return;
+            }
+
+            entity.IsDeleted = true;
+            entity.DeletionAt = DateTime.Now;
+
+            await _repository.SaveChangesAsync();
         }
     }
 }

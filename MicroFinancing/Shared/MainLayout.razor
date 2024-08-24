@@ -1,8 +1,9 @@
-﻿@using MicroFinancing.Components.ToastsComponent
+﻿@using MicroFinancing.Components.DialogComponent
+@using MicroFinancing.Components.ToastsComponent
 @inherits LayoutComponentBase
 
 <PageTitle>Micro Financing</PageTitle>
-
+<DialogContainer/>
 <CascadingValue Value="this" Name="MainLayout">
     <NavBar />
 
@@ -31,13 +32,14 @@
 
             @Body
 
-
+         
 
         </section>
         <!-- /.content -->
     </div>
 
     <ToastContainer />
+
 </CascadingValue>
 @code {
     public bool ShowMenu { get; set; }

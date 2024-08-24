@@ -15,7 +15,7 @@ public interface IBaseEntity<TKey>
     ApplicationUser DeleterUser { get; set; }
 }
 
-public class BaseEntity<TKey> : IBaseEntity<TKey>
+public class BaseEntity<TKey> : IBaseEntity<TKey>, ISoftDeletable
 {
     public virtual TKey Id { get; set; }
 
@@ -32,4 +32,11 @@ public class BaseEntity<TKey> : IBaseEntity<TKey>
     public ApplicationUser Creator { get; set; }
     public ApplicationUser LastModifier { get; set; }
     public ApplicationUser DeleterUser { get; set; }
+}
+
+public interface ISoftDeletable
+{
+    public DateTimeOffset? DeletionAt { get; set; }
+
+    public bool IsDeleted { get; set; }
 }

@@ -84,6 +84,11 @@ namespace MicroFinancing.Repositories
             return true;
         }
 
+        public async Task SaveChangesAsync()
+        {
+            await _db.SaveChangesAsync();
+        }
+
         private bool Exists(T entity)
         {
             return Entity.Local.Any(e => e == entity);
