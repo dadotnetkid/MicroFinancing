@@ -1,0 +1,92 @@
+﻿
+<SfDialog Width="900px" ShowCloseIcon="true" @bind-Visible="visibility" CssClass="modal-center-top">
+    <DialogPositionData X="center" />
+    <DialogTemplates>
+        <Header>Edit Customer</Header>
+        <Content>
+            <EditForm Model="model">
+                <FluentValidationValidator DisableAssemblyScanning="true" @ref="fluentValidator" />
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@model.FirstName" Placeholder="First Name"
+                                                            CssClass="e-outline"
+                                                            FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                        <ValidationMessage For="@(()=>model.FirstName)" TValue="string" />
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-12">
+                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@model.MiddleName" Placeholder="Middle Name" CssClass="e-outline" FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                        <ValidationMessage For="@(()=>model.MiddleName)" TValue="string" />
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-12">
+                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@model.LastName" Placeholder="Last Name" CssClass="e-outline" FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                        <ValidationMessage For="@(()=>model.LastName)" TValue="string" />
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-12">
+                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@model.Address" Placeholder="Address" CssClass="e-outline" FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                        <ValidationMessage For="@(()=>model.Address)" TValue="string" />
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-12">
+                        <Syncfusion.Blazor.Calendars.SfDatePicker @bind-Value="@model.DateOfBirth"
+                                                                  ShowTodayButton="false"
+                                                                  Max="MinDateOfBirth"
+                                                                  Placeholder="Date of Birth" CssClass="e-outline" FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                        <ValidationMessage For="@(()=>model.DateOfBirth)" TValue="DateTime?" />
+                    </div>
+                </div>
+
+
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton IsPrimary="true" Content="Submit" OnClick="@OnBtnSubmitClick" />
+        <DialogButton IsPrimary="false" Content="Cancel" OnClick="@OnBtnCancelClick" />
+    </DialogButtons>
+</SfDialog>
+@code {
+    [CascadingParameter(Name = nameof(MainPage))] public Index? MainPage { get; set; }
+    private bool visibility;
+    private FluentValidationValidator? fluentValidator;
+    private EditCustomerDTM? model = new();
+    private DateTime MinDateOfBirth => DateTime.Now.AddYears(-10);
+    [Inject] private ICustomerService customerService { get; set; }
+    public async Task Show(long customerId)
+    {
+        visibility = true;
+        model = await customerService.GetCustomerDetailForEdit(customerId);
+        StateHasChanged();
+    }
+
+    public void Hide()
+    {
+        visibility = false;
+        model = new();
+        StateHasChanged();
+    }
+
+    private void OnBtnCancelClick()
+    {
+        Hide();
+    }
+
+    private async Task OnBtnSubmitClick()
+    {
+        var validate = await fluentValidator?.ValidateAsync(x => { })!;
+        if (validate)
+        {
+            await customerService.EditCustomer(model);
+            await MainPage?.RefreshGrid()!;
+            Hide();
+        }
+    }
+
+
+}

@@ -41,3 +41,8 @@ public sealed class CreateLendingDTM : BaseLendingDTM
 {
 
 }
+
+public sealed class EditLendingDTM : BaseLendingDTM
+{
+
+}

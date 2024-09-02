@@ -2,13 +2,14 @@
 @using Microsoft.JSInterop
 @using Syncfusion.Blazor.Popups
 <SfDialog Width="250px" @bind-Visible="IsVisible">
+    <DialogPositionData X="center" Y="center"></DialogPositionData>
     <DialogTemplates>
         <Header> @Title </Header>
         <Content>@Message</Content>
     </DialogTemplates>
     <DialogButtons>
-        <DialogButton Content="OK" IsPrimary="true" OnClick="@OkClick" />
-        <DialogButton Content="Cancel" OnClick="@CancelClick" />
+        <DialogButton Content="OK" IsPrimary="true" OnClick="@OkClick"/>
+        <DialogButton Content="Cancel" OnClick="@CancelClick"/>
     </DialogButtons>
 </SfDialog>
 @code {

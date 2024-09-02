@@ -1,0 +1,104 @@
+﻿@using MicroFinancing.Core.Enumeration
+
+<SfDialog Width="500px" ShowCloseIcon="true" @bind-Visible="visibility" CssClass="modal-center-top">
+    <DialogPositionData X="center" />
+    <DialogTemplates>
+        <Header> Add Lending</Header>
+        <Content>
+            <EditForm Model="model">
+                <FluentValidationValidator DisableAssemblyScanning="true" @ref="fluentValidator" />
+
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <Syncfusion.Blazor.DropDowns.SfDropDownList TItem="string" TValue="LendingEnumeration.LendingCategory"
+                                                                    @bind-Value="@model.Category" Placeholder="Category"
+                                                                    DataSource="Enum.GetNames(typeof(LendingEnumeration.LendingCategory))"
+                                                                    CssClass="e-outline"
+                                                                    FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+
+                        <ValidationMessage For="@(() => model.Category)" TValue="LendingEnumeration.LendingCategory" />
+                    </div>
+                </div>
+                @if (model.Category == LendingEnumeration.LendingCategory.Cash || model.Category == LendingEnumeration.LendingCategory.Both)
+                {
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <Syncfusion.Blazor.Inputs.SfNumericTextBox @bind-Value="@model.Amount" Placeholder="Cash Amount"
+                                                                       CssClass="e-outline"
+                                                                       FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+
+                            <ValidationMessage For="@(() => model.Amount)" TValue="decimal" />
+                        </div>
+                    </div>
+                }
+                @if (model.Category == LendingEnumeration.LendingCategory.Item || model.Category == LendingEnumeration.LendingCategory.Both)
+                {
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <Syncfusion.Blazor.Inputs.SfNumericTextBox @bind-Value="@model.ItemAmount" Placeholder="Item Amount"
+                                                                   CssClass="e-outline"
+                                                                   FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+
+                            <ValidationMessage For="@(() => model.ItemAmount)" TValue="decimal" />
+                        </div>
+                    </div>
+                }
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <Syncfusion.Blazor.Calendars.SfDatePicker @bind-Value="@model.LendingDate" Placeholder="Lending Date"
+                                                                  CssClass="e-outline"
+                                                                  FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+
+                        <ValidationMessage For="@(() => model.LendingDate)" TValue="DateTime?" />
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <Syncfusion.Blazor.DropDowns.SfDropDownList TItem="string" TValue="LendingEnumeration.Duration"
+                                                                    @bind-Value="@model.Duration" Placeholder="Duration"
+                                                                    DataSource="Enum.GetNames(typeof(LendingEnumeration.Duration))"
+                                                                    CssClass="e-outline"
+                                                                    FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+
+                        <ValidationMessage For="@(() => model.Duration)" TValue="LendingEnumeration.Duration" />
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <Syncfusion.Blazor.Calendars.SfDatePicker @bind-Value="@model.DueDate" Placeholder="Due Date"
+                                                                  CssClass="e-outline"
+                                                                  FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" Enabled="model.Duration==LendingEnumeration.Duration.Custom" />
+
+                        <ValidationMessage For="@(() => model.DueDate)" TValue="DateTime?" />
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <Syncfusion.Blazor.DropDowns.SfComboBox TItem="UserGridDTM"
+                                                                TValue="string"
+                                                                @bind-Value="@model.Collector" Placeholder="Collector"
+                                                                CssClass="e-outline"
+                                                                FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto">
+                            <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="@typeof(UserAdaptor)" Adaptor="Adaptors.CustomAdaptor" />
+                            <Syncfusion.Blazor.DropDowns.ComboBoxFieldSettings Text="FullName" Value="Id" />
+                        </Syncfusion.Blazor.DropDowns.SfComboBox>
+
+                        <ValidationMessage For="@(() => model.Collector)" TValue="string" />
+                    </div>
+                </div>
+
+
+
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton IsPrimary="true" Content="Submit" OnClick="@OnBtnSubmitClick" />
+        <DialogButton IsPrimary="false" Content="Cancel" OnClick="@OnBtnCancelClick" />
+    </DialogButtons>
+    <DialogEvents Closed="OnModalClosed" />
+</SfDialog>
+@code {
+   
+
+}

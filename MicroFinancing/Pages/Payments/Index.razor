@@ -8,11 +8,12 @@
         <div class="float-left">
             <h5>Payments</h5>
         </div>
-       
+
     </div>
     <div class="card-body">
         <SfGrid AllowPaging="true" TValue="PaymentGridDTM" @ref="paymentGrid" Query="QueryData" Toolbar="@(ToolBars)" AllowTextWrap="true">
             <GridEditSettings AllowAdding="true" AllowDeleting="false" AllowEditing="false" Mode="EditMode.Normal"></GridEditSettings>
+
             <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(PaymentAdaptor)"
                                                   Adaptor="Adaptors.CustomAdaptor" />
             <GridColumns>
@@ -23,10 +24,15 @@
                         }
                         <Syncfusion.Blazor.DropDowns.SfComboBox TValue="long" TItem="CustomerGridDTM"
                                                                 AllowFiltering="true"
-                                                                @bind-Value="@item.CustomerId" Placeholder="Customer Name">
+                                                                @bind-Value="@item.CustomerId"
+                                                                Placeholder="Customer Name"
+                                                                EnableVirtualization="true"
+                                                                >
+
                             <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(CustomerComboBoxAdaptor)"
                                                                   Adaptor="Adaptors.CustomAdaptor" />
                             <Syncfusion.Blazor.DropDowns.ComboBoxFieldSettings Value="Id" Text="FullName" />
+                            <Syncfusion.Blazor.DropDowns.ComBoBoxPageSettings PageSize="10" />
                         </Syncfusion.Blazor.DropDowns.SfComboBox>
                     </EditTemplate>
                 </GridColumn>
@@ -103,14 +109,14 @@
     private async Task OnSaveInline(PaymentGridDTM item)
     {
         await paymentService.AddPayment(new()
-        {
-            CreatedAt = DateTime.Now,
-            CreatedBy = await userService.GetUserId(),
-            CustomerId = item.CustomerId,
-            PaymentAmount = item.PaymentAmount,
-            PaymentDate = item.PaymentDate,
-            PaymentType = Core.Enumeration.PaymentEnum.PaymentType.Cash
-        });
+            {
+                CreatedAt = DateTime.Now,
+                CreatedBy = await userService.GetUserId(),
+                CustomerId = item.CustomerId,
+                PaymentAmount = item.PaymentAmount,
+                PaymentDate = item.PaymentDate,
+                PaymentType = Core.Enumeration.PaymentEnum.PaymentType.Cash
+            });
         await paymentGrid.CloseEditAsync();
         await paymentGrid?.Refresh()!;
     }

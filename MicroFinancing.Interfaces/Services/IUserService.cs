@@ -12,4 +12,5 @@ public interface IUserService
     Task<string> GetUserId();
     Task<bool> IsAuthorize(string policy, bool showToast=true);
     Task AddRoles(CreateUpdateUserDTM user);
+    Task<bool> IsInRoleAsync(params string[] roles);
 }

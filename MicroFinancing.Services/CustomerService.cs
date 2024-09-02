@@ -52,6 +52,25 @@ public class CustomerService : ICustomerService
         });
     }
 
+    public async Task EditCustomer(EditCustomerDTM? model)
+    {
+        var customer = await _customerRepository.Entity.FindAsync(model.Id);
+
+        if (customer == null)
+        {
+            throw new Exception("Customer not found");
+        }
+
+        customer.Address = model.Address;
+        customer.DateOfBirth = model.DateOfBirth;
+        customer.FirstName = model.FirstName;
+        customer.LastName = model.LastName;
+        customer.MiddleName = model.MiddleName;
+        customer.PlaceOfBirth = model.PlaceOfBirth ?? string.Empty;
+
+        await _customerRepository.SaveChangesAsync();
+    }
+
     public async Task<CustomerDetailDTM?> GetCustomerDetail(long id)
     {
         return await _customerRepository.Entity.Where(x => x.Id == id).Select(x => new CustomerDetailDTM
@@ -102,5 +121,28 @@ public class CustomerService : ICustomerService
                 FullName = x.FullName
             });
         return customers;
+    }
+
+    public async Task<EditCustomerDTM?> GetCustomerDetailForEdit(long customerId)
+    {
+        var result = await _customerRepository.Entity.Where(x => x.Id == customerId).Select(x => new EditCustomerDTM
+        {
+            Id = x.Id,
+            FirstName = x.FirstName,
+            MiddleName = x.MiddleName,
+            LastName = x.LastName,
+            DateOfBirth = x.DateOfBirth,
+            PlaceOfBirth = x.PlaceOfBirth,
+            Address = x.Address
+        }).FirstOrDefaultAsync();
+
+        return result;
+    }
+
+    public async Task DeleteCustomer(long contextId)
+    {
+        var customer = await _customerRepository.Entity.FindAsync(contextId);
+        customer.IsDeleted = true;
+        await _customerRepository.SaveChangesAsync();
     }
 }

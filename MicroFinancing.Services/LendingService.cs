@@ -111,5 +111,42 @@ namespace MicroFinancing.Services
 
             await _repository.SaveChangesAsync();
         }
+
+        public async Task EditLending(EditLendingDTM model)
+        {
+            var res = _repository.Entity.FirstOrDefault(x => x.Id == model.Id);
+
+            if (res == null)
+            {
+                throw new Exception("Lending not found");
+            }
+
+            res.Amount = model.Amount;
+            res.Category = model.Category;
+            res.Collector = model.Collector;
+            res.DueDate = model.DueDate.GetValueOrDefault();
+            res.ItemAmount = model.ItemAmount;
+            res.LendingDate = model.LendingDate.GetValueOrDefault();
+
+            await _repository.SaveChangesAsync();
+        }
+
+        public EditLendingDTM GetLendingDetailsForEdit(long id)
+        {
+            var res = _repository.Entity.Where(x => x.Id == id).Select(x => new EditLendingDTM
+            {
+                Amount = x.Amount,
+                Category = x.Category,
+                Collector = x.Collector,
+                CustomerId = x.CustomerId,
+                DueDate = x.DueDate,
+                Id = x.Id,
+                ItemAmount = x.ItemAmount,
+                LendingDate = x.LendingDate,
+            }).FirstOrDefault();
+
+            return res;
+        }
+
     }
 }

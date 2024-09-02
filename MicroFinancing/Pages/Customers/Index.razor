@@ -1,12 +1,15 @@
 ﻿@page "/Customers"
+@using MicroFinancing.Components.DialogComponent
+@using Syncfusion.Blazor.Buttons
 <div class="card">
     <div class="card-header">
         <div class="float-left">
             <h5>Customers</h5>
         </div>
-        
+
         <div class="float-right">
             <Syncfusion.Blazor.Buttons.SfButton IconCss="fas fa-user-plus" OnClick="OnAddClick" />
+            @*<Syncfusion.Blazor.Buttons.SfButton IconCss="fas fa-user-plus" OnClick="OnAddInlineClick">Inline</Syncfusion.Blazor.Buttons.SfButton>*@
         </div>
     </div>
     <div class="card-body">
@@ -14,6 +17,7 @@
             <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(CustomerAdaptor)"
                                                   Adaptor="Adaptors.CustomAdaptor" />
             <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
+            <GridEditSettings AllowAdding="true" AllowDeleting="false" AllowEditing="false" Mode="EditMode.Normal"></GridEditSettings>
             <GridColumns>
                 <GridColumn Field=@nameof(CustomerGridDTM.FirstName) Width="100">
                     <Template>
@@ -22,25 +26,77 @@
                         }
                         <a href="@($"/Customers/Details/{row.Id}")">@row.FullName</a>
                     </Template>
+                    <EditTemplate>
+                        @{
+                            var item = (context as CustomerGridDTM) ?? new();
+                        }
+                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@item.FirstName" Placeholder="First Name"
+                                                            CssClass="e-outline"
+                                                            FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                    </EditTemplate>
                 </GridColumn>
-                <GridColumn Field=@nameof(CustomerGridDTM.MiddleName) Width="75"></GridColumn>
-                <GridColumn Field=@nameof(CustomerGridDTM.LastName) Width="100"></GridColumn>
-                <GridColumn Field=@nameof(CustomerGridDTM.DateOfBirth) Format="MM/dd/yyy" Width="75"></GridColumn>
-                <GridColumn Field=@nameof(CustomerGridDTM.Address) Width="100"></GridColumn>
+                <GridColumn Field=@nameof(CustomerGridDTM.MiddleName) Width="75">
+                    <EditTemplate>
+                        @{
+                            var item = (context as CustomerGridDTM) ?? new();
+                        }
+                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@item.MiddleName" Placeholder="First Name"
+                                                            CssClass="e-outline"
+                                                            FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                    </EditTemplate>
+                </GridColumn>
+                <GridColumn Field=@nameof(CustomerGridDTM.LastName) Width="100">
+                    <EditTemplate>
+                        @{
+                            var item = (context as CustomerGridDTM) ?? new();
+                        }
+                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@item.LastName" Placeholder="First Name"
+                                                            CssClass="e-outline"
+                                                            FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                    </EditTemplate>
+                </GridColumn>
+                <GridColumn Field=@nameof(CustomerGridDTM.DateOfBirth) Format="MM/dd/yyy" Width="75">
+                    <EditTemplate>
+                        @{
+                            var item = (context as CustomerGridDTM) ?? new();
+                        }
+                        <Syncfusion.Blazor.Calendars.SfDatePicker AllowEdit="true" @bind-Value="item.DateOfBirth" Placeholder="Date" />
+                    </EditTemplate>
+                </GridColumn>
+                <GridColumn Field=@nameof(CustomerGridDTM.Address) Width="100">
+                    <EditTemplate>
+                        @{
+                            var item = (context as CustomerGridDTM) ?? new();
+                        }
+                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@item.Address" Placeholder="First Name"
+                                                            CssClass="e-outline"
+                                                            FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                    </EditTemplate>
+                </GridColumn>
                 <GridColumn Width="90" TextAlign="TextAlign.Right" AllowFiltering="false">
                     <Template>
 
                         <SfDropDownButton IconCss="fas fa-ellipsis-v">
                             <DropDownMenuItems>
                                 <DropDownMenuItem Id="@GenericDropdownItem.ViewDetails.ToString()" Text="View Details" IconCss="fas fa-user-edit"></DropDownMenuItem>
-                                <DropDownMenuItem Id="delete" Text="Delete" IconCss="fas fa-trash"></DropDownMenuItem>
+                                <DropDownMenuItem Id="@GenericDropdownItem.Edit.ToString()" Text="Edit" IconCss="fas fa-edit"></DropDownMenuItem>
+                                <DropDownMenuItem Id="@GenericDropdownItem.Delete.ToString()" Text="Delete" IconCss="fas fa-trash"></DropDownMenuItem>
                             </DropDownMenuItems>
                             <DropDownButtonEvents ItemSelected="@((e)=>OnDropdownSelectedMenu(e,(CustomerGridDTM)context))" />
                         </SfDropDownButton>
 
 
                     </Template>
+                    <EditTemplate>
+                        @{
+                            var item = context as CustomerGridDTM;
+                        }
+
+                        <SfButton IsPrimary="true" IconCss="fas fa-save" OnClick="@(() => OnSaveInline(item))">Save</SfButton> &nbsp;
+                        <SfButton IsPrimary="true" IconCss="fas fa-window-close" OnClick="@(() => OnCancelSaveInline(item))">Cancel</SfButton>
+                    </EditTemplate>
                 </GridColumn>
+
             </GridColumns>
 
         </SfGrid>
@@ -49,12 +105,16 @@
 </div>
 <CascadingValue Value="this" Name="@nameof(AddCustomer.MainPage)">
     <AddCustomer @ref="@addCustomer" />
+    <EditCustomer @ref="@editCustomer" />
 </CascadingValue>
 @code {
     private SfGrid<CustomerGridDTM>? customerGrid;
     private AddCustomer? addCustomer;
+    private EditCustomer editCustomer;
     [Inject] NavigationManager navigationManager { get; set; }
     [Inject] IUserService userService { get; set; }
+    [Inject] IDialogService dialogService { get; set; }
+    [Inject] ICustomerService customerService { get; set; }
     public async Task RefreshGrid()
     {
         await customerGrid?.Refresh();
@@ -69,6 +129,37 @@
                 navigationManager.NavigateTo($"/Customers/Details/{context.Id}");
             }
         }
+        if (e.Item.Id == GenericDropdownItem.Edit.ToString())
+        {
+            if (await userService.IsAuthorize(ClaimsConstant.Customer.Manage))
+            {
+                await editCustomer?.Show(context.Id);
+            }
+        }
+        if (e.Item.Id == GenericDropdownItem.Delete.ToString())
+        {
+            if (await userService.IsAuthorize(ClaimsConstant.Customer.Manage) )
+            {
+                dialogService.ShowDialog("Delete",
+                                         "Delete this Item",
+                                         async (c) =>
+                                         {
+                                             await DeleteCustomer(c, context);
+                                         });
+            }
+        }
+    }
+
+    private async Task DeleteCustomer(bool b,
+                                      CustomerGridDTM context)
+    {
+        if (!b)
+        {
+            return;
+        }
+
+        await customerService.DeleteCustomer(context.Id);
+        await customerGrid?.Refresh();
     }
 
     private async Task OnAddClick()
@@ -78,4 +169,27 @@
             addCustomer?.Show();
         }
     }
+
+    private async Task OnAddInlineClick(MouseEventArgs obj)
+    {
+        if (!await userService.IsAuthorize(ClaimsConstant.Customer.Manage))
+        {
+            return;
+        }
+
+        await customerGrid.AddRecordAsync(new(), 0);
+
+    }
+
+    private Task OnSaveInline(CustomerGridDTM? item)
+    {
+        return Task.CompletedTask;
+    }
+
+    private async Task OnCancelSaveInline(CustomerGridDTM? item)
+    {
+        await customerGrid.CloseEditAsync();
+        await customerGrid?.Refresh()!;
+    }
+
 }

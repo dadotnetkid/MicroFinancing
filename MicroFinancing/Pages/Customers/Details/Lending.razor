@@ -30,7 +30,7 @@
                 <SfDropDownButton IconCss="fas fa-ellipsis-v">
                     <DropDownMenuItems>
                         <DropDownMenuItem Id="@GenericDropdownItem.ViewDetails.ToString()" Text="View Details" IconCss="fas fa-user-edit"></DropDownMenuItem>
-                        <DropDownMenuItem Id="delete" Text="Delete" IconCss="fas fa-trash"></DropDownMenuItem>
+                        <DropDownMenuItem Id="delete" Text="@GenericDropdownItem.Delete.ToString()" IconCss="fas fa-trash"></DropDownMenuItem>
                     </DropDownMenuItems>
                     <DropDownButtonEvents ItemSelected="@((e)=>OnDropdownSelectedMenu(e,(LendingGridDTM)context))" />
                 </SfDropDownButton>
@@ -41,7 +41,7 @@
     </GridColumns>
 
 </SfGrid>
-
+<EditLending @ref="editLendingRef" OnSubmitSuccess="OnSubmitSuccess" />
 
 @code {
     [CascadingParameter(Name ="MainPage")]public Index MainPage { get; set; }

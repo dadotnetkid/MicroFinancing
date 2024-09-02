@@ -19,6 +19,13 @@ public sealed class CustomerComboBoxAdaptor : DataAdaptor
 
         try
         {
+            var isInRole = await _userService.IsInRoleAsync("Administrator");
+
+            if(isInRole)
+            {
+                return await _customerService.GetCustomer().ToDataResult(dm);
+            }
+
             return await _customerService.GetCustomerByCollector(await _userService.GetUserId()).ToDataResult(dm);
         }
         catch (Exception e)

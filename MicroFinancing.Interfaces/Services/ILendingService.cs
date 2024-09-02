@@ -9,4 +9,8 @@ public interface ILendingService
     IQueryable<LendingSummaryGridDTM> GetSummary();
 
     Task DeleteLending(long id);
+
+    Task EditLending(EditLendingDTM model);
+
+    EditLendingDTM GetLendingDetailsForEdit(long id);
 }

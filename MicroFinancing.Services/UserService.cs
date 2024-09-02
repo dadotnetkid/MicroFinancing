@@ -113,5 +113,22 @@ namespace MicroFinancing.Services
             await userManager.RemoveFromRolesAsync(applicationUser, roles);
             await userManager.AddToRolesAsync(applicationUser, user.UserRole.AsEnumerable());
         }
+
+        public async Task<bool> IsInRoleAsync(params string[] roles)
+        {
+            var state = await _authenticationStateProvider.GetAuthenticationStateAsync();
+
+            foreach (var role in roles)
+            {
+                var result = state.User.IsInRole(role);
+
+                if (result)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

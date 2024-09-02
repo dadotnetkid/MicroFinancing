@@ -43,6 +43,11 @@ public sealed class CreateCustomerDTM : CustomerBaseDTM
 
 
 }
+public sealed class EditCustomerDTM : CustomerBaseDTM
+{
+
+
+}
 public sealed class CustomerDetailDTM : CustomerBaseDTM
 {
     public override string FullName => $"{FirstName} {LastName}";
