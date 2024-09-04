@@ -107,6 +107,13 @@ namespace MicroFinancing.DataTransferModel
                     Value = ClaimsConstant.Customer.AddPayment,
                     Description="Add Payment Customer"
                 },
+                new()
+                {
+                    Name = ClaimsConstant.Customer.Add,
+                    ClaimType = ClaimsConstant.Customer.ClaimType,
+                    Value = ClaimsConstant.Customer.Add,
+                    Description="Add Customer"
+                },
             };
         }
        

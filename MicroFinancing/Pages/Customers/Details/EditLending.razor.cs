@@ -1,4 +1,6 @@
 ﻿using Blazored.FluentValidation;
+
+using MicroFinancing.Core.Enumeration;
 using MicroFinancing.DataTransferModel;
 using MicroFinancing.Interfaces.Services;
 using Microsoft.AspNetCore.Components;
@@ -18,6 +20,12 @@ public partial class EditLending
     public void Show(long id)
     {
         model = lendingService.GetLendingDetailsForEdit(id);
+
+        if (model.Duration == LendingEnumeration.Duration.Fixed)
+        {
+            model.DueDate = model.LendingDate?.AddDays(40);
+        }
+        
         visibility = true;
         StateHasChanged();
     }

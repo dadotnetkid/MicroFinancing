@@ -121,12 +121,29 @@ namespace MicroFinancing.Services
                 throw new Exception("Lending not found");
             }
 
+            var numberOfDays = (model.DueDate - model.LendingDate)?.Days ?? 0;
+
+            var dayss = Enumerable
+                        .Range(0, numberOfDays + 1)
+                        .Select(n => new { date = model.LendingDate.GetValueOrDefault().AddDays(n) });
+            var sundays = dayss
+                .Count(c => c.date.DayOfWeek == DayOfWeek.Sunday);
+
+            var interestRate = (numberOfDays * (10.0M / 30.0M));
+
+            var interestValue = model.Amount * (interestRate / 100M);
+
             res.Amount = model.Amount;
             res.Category = model.Category;
             res.Collector = model.Collector;
             res.DueDate = model.DueDate.GetValueOrDefault();
             res.ItemAmount = model.ItemAmount;
             res.LendingDate = model.LendingDate.GetValueOrDefault();
+            res.Interest = interestValue;
+            res.TotalCredit = interestValue + model.Amount + model.ItemAmount;
+            res.NumberOfDays = numberOfDays;
+            res.InterestRate = interestRate;
+            res.PaymentDays = numberOfDays - sundays;
 
             await _repository.SaveChangesAsync();
         }

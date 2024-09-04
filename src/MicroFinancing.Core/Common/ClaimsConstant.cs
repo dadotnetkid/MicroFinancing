@@ -30,6 +30,7 @@ namespace MicroFinancing.Core.Common
             public const string Print = "Print SOA";
             public const string AddLoan = "Add Loan";
             public const string View = "View Customer";
+            public const string Add = "Add Customer";
             public const string ManageLoan = "Manage Loan";
             public const string ManagePayment = "Manage Payment";
             public const string OverridePayment = "Override Payment";
@@ -50,6 +51,7 @@ namespace MicroFinancing.Core.Common
 
                 public static string[] Print => new[] { ClaimsConstant.Customer.Print, ClaimsConstant.Customer.Manage, Administrator };
                 public static string[] View => new[] { ClaimsConstant.Customer.View, ClaimsConstant.Customer.Manage, ClaimsConstant.Customer.AddPayment, Administrator };
+                public static string[] Add => new[] { ClaimsConstant.Customer.View, ClaimsConstant.Customer.Add, ClaimsConstant.Customer.Manage,  Administrator };
                 public static string[] SetFlag => new[] { ClaimsConstant.Customer.SetFlag, ClaimsConstant.Customer.Manage, Administrator };
                 public static string[] AddLoan => new[] { ClaimsConstant.Customer.AddLoan, ClaimsConstant.Customer.Manage, ClaimsConstant.Customer.ManageLoan, Administrator };
                 public static string[] AddPayment => new[] { ClaimsConstant.Customer.View, ClaimsConstant.Customer.AddPayment,ClaimsConstant.Customer.ManagePayment, ClaimsConstant.Customer.Manage,  Administrator };

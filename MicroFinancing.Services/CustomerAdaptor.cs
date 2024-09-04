@@ -12,14 +12,21 @@ namespace MicroFinancing.Services
     public sealed class CustomerAdaptor : DataAdaptor
     {
         private readonly ICustomerService _customerService;
+        private readonly IUserService _userService;
 
-        public CustomerAdaptor(ICustomerService customerService)
+        public CustomerAdaptor(ICustomerService customerService,IUserService userService)
         {
             _customerService = customerService;
+            _userService = userService;
         }
         public override async Task<object> ReadAsync(DataManagerRequest dm, string? key = null)
         {
-            return await _customerService.GetCustomer().ToDataResult(dm);
+            if (await _userService.IsInRoleAsync("Administrator"))
+            {
+                return await _customerService.GetCustomer().ToDataResult(dm);
+            }
+
+            return await _customerService.GetCustomerByCollector(await _userService.GetUserId()).ToDataResult(dm);
         }
     }
 }

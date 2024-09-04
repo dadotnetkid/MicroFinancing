@@ -79,6 +79,9 @@ builder.Services.AddAuthorization(options =>
     //Manage Permission
     options.AddPolicy(ClaimsConstant.Roles.Manage,
         policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Roles.Manage));
+    //Manage Permission
+    options.AddPolicy(ClaimsConstant.Roles.Manage,
+        policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Roles.Manage));
 
 
     //Manage Customer
@@ -87,6 +90,9 @@ builder.Services.AddAuthorization(options =>
     //View Customer
     options.AddPolicy(ClaimsConstant.Customer.View,
         policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.View));
+    //Add Customer
+    options.AddPolicy(ClaimsConstant.Customer.Add,
+        policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.Add));
     //Print SOA
     options.AddPolicy(ClaimsConstant.Customer.Print,
         policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.Print));

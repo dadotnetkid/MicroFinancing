@@ -8,7 +8,7 @@
             <div class="info-box-content">
                 <span class="info-box-text">Customers</span>
                 <span class="info-box-number">
-                    @(dashboardDTM?.TotalCustomer??0)
+                    @(dashboardDTM?.TotalCustomer ?? 0)
                 </span>
             </div>
 
@@ -59,15 +59,23 @@
 {
     <div class="row">
         <div class="col-lg-6 col-sm-12 ">
-            <MicroFinancing.Pages.Summary.Index/>
+            <MicroFinancing.Pages.Summary.Index />
         </div>
     </div>
 }
 
 @code {
-    [Inject] IDashboardService dashboardService{get; set; }
+    [Inject] IDashboardService dashboardService { get; set; }
+    [Inject] IUserService _service { get; set; }
+    [Inject] NavigationManager NavigationManager { get; set; }
     protected override async Task OnInitializedAsync()
     {
+        if (!await _service.IsInRoleAsync("Administrator"))
+        {
+            NavigationManager.NavigateTo("Customers", true);
+
+            return;
+        }
         dashboardDTM = await dashboardService.GetDashboard();
     }
 

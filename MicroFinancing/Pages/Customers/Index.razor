@@ -164,7 +164,7 @@
 
     private async Task OnAddClick()
     {
-        if (await userService.IsAuthorize(ClaimsConstant.Customer.Manage))
+        if (await userService.IsAuthorize(ClaimsConstant.Customer.Manage) || await userService.IsAuthorize(ClaimsConstant.Customer.Add))
         {
             addCustomer?.Show();
         }

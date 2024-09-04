@@ -3,11 +3,8 @@
 @attribute [Authorize(Policy = ClaimsConstant.Customer.View)]
 <PageTitle>Details</PageTitle>
 <CascadingValue Name="MainPage" Value="this">
-    @if (model == null)
-    {
-
-    }
-    else
+   
+    @if (model != null)
     {
         <div class="card">
             <div class="card-body ">

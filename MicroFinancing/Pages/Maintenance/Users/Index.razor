@@ -11,7 +11,7 @@
     </div>
     <div class="card-body">
         <SfGrid AllowPaging="true" TValue="UserGridDTM" @ref="userGrid">
-            <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(UserAdaptor)" Adaptor="Adaptors.CustomAdaptor"/>
+            <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(UserAdaptor)" Adaptor="Adaptors.CustomAdaptor" />
             <GridColumns>
                 <GridColumn Field=@nameof(UserGridDTM.FirstName) Width="150"></GridColumn>
                 <GridColumn Field=@nameof(UserGridDTM.LastName) Width="150"></GridColumn>
@@ -45,7 +45,7 @@
                                 <DropDownMenuItem Id="delete" Text="Delete" IconCss="fas fa-trash"></DropDownMenuItem>
                                 <DropDownMenuItem Id="reset" Text="Reset Password" IconCss="fas fa-redo"></DropDownMenuItem>
                             </DropDownMenuItems>
-                            <DropDownButtonEvents ItemSelected="@((e) => OnDropdownSelectedMenu(e, context as UserGridDTM))"/>
+                            <DropDownButtonEvents ItemSelected="@((e) => OnDropdownSelectedMenu(e, context as UserGridDTM))" />
                         </SfDropDownButton>
 
 
@@ -78,6 +78,7 @@
                 LastName = context.LastName,
                 UserId = context.Id,
                 UserName = context.UserName,
+                UserRole = context.UserRoles.Select(x => x.Name).ToArray()
             });
     }
     private async Task DeleteUser(UserGridDTM context)

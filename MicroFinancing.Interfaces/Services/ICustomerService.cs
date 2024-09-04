@@ -11,7 +11,7 @@ public interface ICustomerService
     Task<CustomerDetailDTM?> GetCustomerDetail(long id);
     Task UpdateFlag(long customerId, CustomerFlag customerFlagValue);
     Task<BaseAuthorizePermissionDTM> GetPermission();
-    IQueryable<CustomerBaseDTM> GetCustomerByCollector(string collectorId);
+    IQueryable<CustomerGridDTM> GetCustomerByCollector(string collectorId);
 
     Task<EditCustomerDTM?> GetCustomerDetailForEdit(long customerId);
 

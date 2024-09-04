@@ -169,9 +169,9 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Blazored.FluentValidation" Version="2.1.0" />
-    <PackageReference Include="DevExpress.AspNetCore.Reporting" Version="23.1.12" />
-    <PackageReference Include="DevExpress.Blazor.Reporting.JSBasedControls.BlazorServer" Version="23.1.12" />
-    <PackageReference Include="DevExpress.Blazor.Reporting.Viewer" Version="23.1.12" />
+    <PackageReference Include="DevExpress.AspNetCore.Reporting" Version="23.1.5" />
+    <PackageReference Include="DevExpress.Blazor.Reporting.JSBasedControls.BlazorServer" Version="23.1.5" />
+    <PackageReference Include="DevExpress.Blazor.Reporting.Viewer" Version="23.1.5" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.9" />

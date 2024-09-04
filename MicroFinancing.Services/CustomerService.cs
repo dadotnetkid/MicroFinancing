@@ -109,20 +109,26 @@ public class CustomerService : ICustomerService
         };
     }
 
-    public IQueryable<CustomerBaseDTM> GetCustomerByCollector(string collectorId)
+    public IQueryable<CustomerGridDTM> GetCustomerByCollector(string collectorId)
     {
         var customer = _lendingRepository.Entity.Where(x => x.Collector == collectorId && x.IsActive && !x.IsPaid)
             .Select(x => x.CustomerId)
             .Distinct().ToList();
         var customers = _customerRepository.Entity.Where(x => customer.Contains(x.Id))
-            .Select(x => new CustomerBaseDTM
+            .Select(x => new CustomerGridDTM
             {
+                FirstName = x.FirstName,
+                MiddleName = x.MiddleName,
+                LastName = x.LastName,
+                DateOfBirth = x.DateOfBirth,
+                PlaceOfBirth = x.PlaceOfBirth,
+                Address = x.Address,
                 Id = x.Id,
+                TotalAmountPaid = x.Payments.Sum(x => x.PaymentAmount),
                 FullName = x.FullName
             });
         return customers;
     }
-
     public async Task<EditCustomerDTM?> GetCustomerDetailForEdit(long customerId)
     {
         var result = await _customerRepository.Entity.Where(x => x.Id == customerId).Select(x => new EditCustomerDTM
