@@ -12,6 +12,10 @@ using MicroFinancing.Interfaces.Services;
 using Microsoft.AspNetCore.Identity;
 using System.Dynamic;
 
+using MicroFinancing.Core.Common;
+
+using Syncfusion.Blazor;
+
 namespace MicroFinancing.Services
 {
     public sealed class ReportingService : IReportingService
@@ -53,7 +57,7 @@ namespace MicroFinancing.Services
 
             while (currentDate <= list.DueDate)
             {
-               
+
 
                 var dateFrom = Convert.ToDateTime(currentDate.ToShortDateString());
                 var dateTo = dateFrom.AddDays(1).AddHours(-1);
@@ -76,15 +80,38 @@ namespace MicroFinancing.Services
             return new List<StatementofAccountDTM>() { list };
         }
 
-        public IQueryable<DataTransferModel.CollectionSummaryReportDTM> GetCollectionSummaryReports()
+        public async Task<object> GetCollectionSummaryReports(DataManagerRequest dm)
         {
-            return _paymentRepository.Entity.Select(x => new DataTransferModel.CollectionSummaryReportDTM()
+            var dateFrom = dm.GetByKey<DateTime?>("DateFrom");
+            var dateTo = dm.GetByKey<DateTime?>("DateTo");
+            var collector = dm.GetByKey<string>("Collector");
+
+            var query = _paymentRepository
+                        .Entity
+                        .AsQueryable();
+
+            if (dateFrom != null && dateTo != null)
+            {
+                query = query.Where(x => x.PaymentDate >= dateFrom && x.PaymentDate <= dateTo);
+            }
+
+            if (!string.IsNullOrEmpty(collector))
+            {
+                query = query.Where(x => x.Lending.Collector == collector);
+            }
+
+
+            var select = query.Select(x => new DataTransferModel.CollectionSummaryReportDTM()
             {
                 EncodedBy = x.Creator.FullName,
                 CustomerName = x.Customers.FirstName + " " + x.Customers.LastName,
                 PaymentAmount = x.PaymentAmount,
                 PaymentDate = x.PaymentDate,
             });
+
+            var res = await select.ToDataResult(dm);
+
+            return res;
         }
 
         public DataTable GetCustomersByCollectorSummaryReport(string collectorId, string monthName)
