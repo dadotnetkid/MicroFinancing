@@ -90,9 +90,16 @@ namespace MicroFinancing.Services
                         .Entity
                         .AsQueryable();
 
+            if (string.IsNullOrEmpty(collector) || dateFrom is null || dateTo is null)
+            {
+                return Enumerable.Empty<Payment>().AsQueryable().ToDataResult(dm);
+            }
+
             if (dateFrom != null && dateTo != null)
             {
-                query = query.Where(x => x.PaymentDate >= dateFrom && x.PaymentDate <= dateTo);
+                dateTo = dateTo?.AddDays(1);
+
+                query = query.Where(x => x.PaymentDate >= dateFrom && x.PaymentDate < dateTo);
             }
 
             if (!string.IsNullOrEmpty(collector))

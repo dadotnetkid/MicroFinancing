@@ -77,9 +77,10 @@ public static class GridHelper
             {
                 parseValue = (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(value);
             }
+            
             else
             {
-                parseValue = (T)Convert.ChangeType(value, typeof(T));
+                parseValue = (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(value);
             }
             return parseValue;
         }
