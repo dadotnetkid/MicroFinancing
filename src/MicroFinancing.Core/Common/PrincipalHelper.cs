@@ -17,7 +17,7 @@ namespace MicroFinancing.Core.Common
         }
         public static string? GetUserId(this ClaimsPrincipal principal)
         {
-            return principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            return principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
         }
 
     }

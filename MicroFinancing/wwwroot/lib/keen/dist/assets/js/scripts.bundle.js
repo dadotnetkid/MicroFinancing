@@ -1852,7 +1852,7 @@ var KTOffcanvas = function (elementId, options) {
         },
 
         toggle: function () {
-            ;
+            
             Plugin.eventTrigger('toggle');
 
             if (the.state == 'shown') {

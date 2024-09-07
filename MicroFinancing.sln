@@ -39,6 +39,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mobile", "Mobile", "{4F80C9
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroFinancing.Infrastructure", "MicroFinancing.Infrastructure\MicroFinancing.Infrastructure.csproj", "{B38CE7E0-A502-4233-82A8-A970EC8BB69A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroFinancing.WebApi", "MicroFinancing.WebApi\MicroFinancing.WebApi.csproj", "{4BA449D3-91BC-4DB6-B4DD-B899F481933B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,10 @@ Global
 		{B38CE7E0-A502-4233-82A8-A970EC8BB69A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B38CE7E0-A502-4233-82A8-A970EC8BB69A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B38CE7E0-A502-4233-82A8-A970EC8BB69A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BA449D3-91BC-4DB6-B4DD-B899F481933B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BA449D3-91BC-4DB6-B4DD-B899F481933B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BA449D3-91BC-4DB6-B4DD-B899F481933B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BA449D3-91BC-4DB6-B4DD-B899F481933B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -115,6 +121,7 @@ Global
 		{0BF9F666-7818-4AAC-80E6-8A4285EC7337} = {C6265D00-74FB-447C-9BDC-3AF1085337CC}
 		{9B20691A-83ED-4442-A288-1F155F86E382} = {74D4D951-1CF9-40DF-8899-F77BE02CFD1A}
 		{B38CE7E0-A502-4233-82A8-A970EC8BB69A} = {C6265D00-74FB-447C-9BDC-3AF1085337CC}
+		{4BA449D3-91BC-4DB6-B4DD-B899F481933B} = {C6265D00-74FB-447C-9BDC-3AF1085337CC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5D5F73FF-C32E-4A03-8B82-74E397ACD789}

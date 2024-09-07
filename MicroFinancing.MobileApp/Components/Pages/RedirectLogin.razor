@@ -1,0 +1,28 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@inject NavigationManager navigationManager
+
+@attribute [AllowAnonymous]
+
+@code {
+    [Parameter] public AuthenticationState? AuthenticationState { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        var returnUrl = $"Login?returnUrl={navigationManager.ToBaseRelativePath(navigationManager.Uri)}";
+
+        if (AuthenticationState?.User.Identity is { IsAuthenticated: true })
+        {
+            returnUrl = "/unauthorized";
+        }
+
+        navigationManager.NavigateTo(returnUrl, true);
+
+        return Task.CompletedTask;
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+    }
+
+}

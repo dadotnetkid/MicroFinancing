@@ -14,17 +14,14 @@ namespace MicroFinancing.Services
     {
         private readonly IRepository<Lending, long> _repository;
         private readonly IRepository<Customers, long> _customersRepository;
-        private readonly ICustomerService _customerService;
         private readonly IUserService _userService;
 
         public LendingService(IRepository<Lending, long> repository,
             IRepository<Customers, long> customersRepository,
-            ICustomerService customerService,
             IUserService userService)
         {
             _repository = repository;
             _customersRepository = customersRepository;
-            _customerService = customerService;
             _userService = userService;
         }
 

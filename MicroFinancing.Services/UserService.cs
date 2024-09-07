@@ -24,20 +24,21 @@ namespace MicroFinancing.Services
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly AuthenticationStateProvider _authenticationStateProvider;
         private readonly IAuthorizationService _authorizationService;
-        private readonly IToasts _toasts;
         private readonly IMapper _mapper;
+        private readonly IServiceScopeFactory _scopeFactory;
 
         public UserService(UserManager<ApplicationUser> userManager,
-            IServiceScopeFactory serviceScopeFactory,
-            AuthenticationStateProvider authenticationStateProvider,
-            IAuthorizationService authorizationService, IToasts toasts, IMapper mapper)
+                           IServiceScopeFactory serviceScopeFactory,
+                           AuthenticationStateProvider authenticationStateProvider,
+                           IAuthorizationService authorizationService,
+                           IMapper mapper, IServiceScopeFactory scopeFactory)
         {
             _userManager = userManager;
             _serviceScopeFactory = serviceScopeFactory;
             _authenticationStateProvider = authenticationStateProvider;
             _authorizationService = authorizationService;
-            _toasts = toasts;
             _mapper = mapper;
+            _scopeFactory = scopeFactory;
         }
 
         public async Task<CreateUpdateUserDTM> CreateUser(CreateUpdateUserDTM item)
@@ -100,6 +101,8 @@ namespace MicroFinancing.Services
             var res = (await _authorizationService.AuthorizeAsync(state.User, policy)).Succeeded;
             if (!res && showToast)
             {
+                var _toasts = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<IToasts>();
+
                 await _toasts.ShowToast("No Permission", "You are not Authorized to do this action");
             }
             return res;

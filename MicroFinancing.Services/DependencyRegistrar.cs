@@ -59,57 +59,64 @@ public static class DependencyRegistrar
 
     public static IServiceCollection AddPolicy(this IServiceCollection services)
     {
+        /*Registration of Policy*/
         services.AddAuthorization(options =>
-         {
+        {
+            //Administrator
+            options.AddPolicy(ClaimsConstant.Administrator,
+                              policy => policy.RequireClaim(ClaimsConstant.ClaimType, new[] { ClaimsConstant.Administrator }));
 
-             //Administrator
-             options.AddPolicy(ClaimsConstant.Administrator,
-                               policy => policy.RequireClaim(ClaimsConstant.ClaimType, new []{ ClaimsConstant.Administrator }));
-             //View Permission
-             options.AddPolicy(ClaimsConstant.Users.View,
-                 policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Users.View));
-             //Manage User
-             options.AddPolicy(ClaimsConstant.Users.Manage,
-                 policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Users.Manage));
+            //View Permission
+            options.AddPolicy(ClaimsConstant.Users.View,
+                policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Users.View));
+            //Manage User
+            options.AddPolicy(ClaimsConstant.Users.Manage,
+                policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Users.Manage));
 
-             options.AddPolicy(ClaimsConstant.Roles.View,
-                 policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Roles.View));
-             //Manage Permission
-             options.AddPolicy(ClaimsConstant.Roles.Manage,
-                 policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Roles.Manage));
+            options.AddPolicy(ClaimsConstant.Roles.View,
+                policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Roles.View));
+            //Manage Permission
+            options.AddPolicy(ClaimsConstant.Roles.Manage,
+                policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Roles.Manage));
+            //Manage Permission
+            options.AddPolicy(ClaimsConstant.Roles.Manage,
+                policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Roles.Manage));
 
 
-             //Manage Customer
-             options.AddPolicy(ClaimsConstant.Customer.Manage,
-                 policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.Manage));
-             //View Customer
-             options.AddPolicy(ClaimsConstant.Customer.View,
-                 policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.View));
-             //Print SOA
-             options.AddPolicy(ClaimsConstant.Customer.Print,
-                 policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.Print));
-             //Print Manage Loan
-             options.AddPolicy(ClaimsConstant.Customer.ManageLoan,
-                 policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.ManageLoan));
-             //Print Add Loan
-             options.AddPolicy(ClaimsConstant.Customer.AddLoan,
-                 policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.AddLoan));
-             //Print Manage Payment
-             options.AddPolicy(ClaimsConstant.Customer.ManagePayment,
-                 policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.ManagePayment));
-             //Print Override Payment
-             options.AddPolicy(ClaimsConstant.Customer.OverridePayment,
-                 policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.OverridePayment));
-             //Print Add Loan
-             options.AddPolicy(ClaimsConstant.Customer.AddPayment,
-                 policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.AddPayment));
-             //Print Set Flag
-             options.AddPolicy(ClaimsConstant.Customer.SetFlag,
-                 policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.SetFlag));
-             //Print Print
-             options.AddPolicy(ClaimsConstant.Customer.Print,
-                 policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.Print));
-         });
+            //Manage Customer
+            options.AddPolicy(ClaimsConstant.Customer.Manage,
+                policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.Manage));
+            //View Customer
+            options.AddPolicy(ClaimsConstant.Customer.View,
+                policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.View));
+            //Add Customer
+            options.AddPolicy(ClaimsConstant.Customer.Add,
+                policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.Add));
+            //Print SOA
+            options.AddPolicy(ClaimsConstant.Customer.Print,
+                policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.Print));
+            //Print Manage Loan
+            options.AddPolicy(ClaimsConstant.Customer.ManageLoan,
+                policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.ManageLoan));
+            //Print Add Loan
+            options.AddPolicy(ClaimsConstant.Customer.AddLoan,
+                policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.AddLoan));
+            //Print Manage Payment
+            options.AddPolicy(ClaimsConstant.Customer.ManagePayment,
+                policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.ManagePayment));
+            //Print Override Payment
+            options.AddPolicy(ClaimsConstant.Customer.OverridePayment,
+                policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.OverridePayment));
+            //Print Add Loan
+            options.AddPolicy(ClaimsConstant.Customer.AddPayment,
+                policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.AddPayment));
+            //Print Set Flag
+            options.AddPolicy(ClaimsConstant.Customer.SetFlag,
+                policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.SetFlag));
+            //Print Print
+            options.AddPolicy(ClaimsConstant.Customer.Print,
+                policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.Print));
+        });
         return services;
     }
 }

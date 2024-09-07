@@ -2,22 +2,34 @@
 using MicroFinancing.Core.Common;
 using MicroFinancing.Interfaces.Services;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MicroFinancing.Services;
 
 public class CurrentUser : ICurrentUser
 {
-    private readonly AuthenticationStateProvider _authenticationStateProvider;
+    private readonly IServiceScopeFactory _factory;
 
-    public CurrentUser(AuthenticationStateProvider authenticationStateProvider)
+    public CurrentUser(IServiceScopeFactory factory)
     {
-        _authenticationStateProvider = authenticationStateProvider;
+        _factory = factory;
     }
 
-    private AuthenticationState State => _authenticationStateProvider.GetAuthenticationStateAsync()
-        .ConfigureAwait(false).GetAwaiter().GetResult();
+    private AuthenticationState State => _factory.CreateScope().ServiceProvider.GetRequiredService<AuthenticationStateProvider>().GetAuthenticationStateAsync().GetAwaiter().GetResult();
 
-    private ClaimsPrincipal User => State.User;
+    private ClaimsPrincipal User
+    {
+        get
+        {
+            if (State is not null)
+            {
+                return State.User;
+            }
+
+            return _factory.CreateScope().ServiceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext.User;
+        }
+    }
 
 
     private string GetFullName()

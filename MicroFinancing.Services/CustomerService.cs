@@ -34,7 +34,7 @@ public class CustomerService : ICustomerService
             Address = x.Address,
             Id = x.Id,
             TotalAmountPaid = x.Payments.Sum(x => x.PaymentAmount),
-            FullName = x.FullName
+            FullName = x.FullName,
         });
     }
 
@@ -125,7 +125,8 @@ public class CustomerService : ICustomerService
                 Address = x.Address,
                 Id = x.Id,
                 TotalAmountPaid = x.Payments.Sum(x => x.PaymentAmount),
-                FullName = x.FullName
+                FullName = x.FullName,
+                TotalBalance = x.Lending.Sum(c => c.TotalCredit) - x.Payments.Sum(c => c.PaymentAmount)
             });
         return customers;
     }
