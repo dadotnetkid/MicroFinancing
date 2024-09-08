@@ -1,9 +1,12 @@
 ﻿using Blazored.FluentValidation;
 
+using MicroFinancing.Core.Common;
 using MicroFinancing.Core.Enumeration;
 using MicroFinancing.DataTransferModel;
 using MicroFinancing.Interfaces.Services;
 using Microsoft.AspNetCore.Components;
+
+using Syncfusion.Blazor.Calendars;
 
 namespace MicroFinancing.Pages.Customers.Details;
 
@@ -21,7 +24,7 @@ public partial class EditLending
     {
         model = lendingService.GetLendingDetailsForEdit(id);
 
-        if (model.Duration == LendingEnumeration.Duration.Fixed)
+        if (model.Duration == LendingEnumeration.Duration.FortyDays)
         {
             model.DueDate = model.LendingDate?.AddDays(40);
         }
@@ -57,5 +60,17 @@ public partial class EditLending
     private void OnModalClosed()
     {
         visibility = false;
+    }
+
+    private void ChangeLendingDate(ChangedEventArgs<DateTime?> obj)
+    {
+        if (model.Duration == LendingEnumeration.Duration.Custom)
+        {
+            return;
+        }
+
+        var res = model.Duration.GetDefault<int>();
+
+        model.DueDate = Convert.ToDateTime(model.LendingDate?.ToShortDateString()).AddDays(res);
     }
 }

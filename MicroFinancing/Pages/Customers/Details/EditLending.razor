@@ -47,7 +47,9 @@
                     <div class="col-12">
                         <Syncfusion.Blazor.Calendars.SfDatePicker @bind-Value="@model.LendingDate" Placeholder="Lending Date"
                                                                   CssClass="e-outline"
-                                                                  FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                                                                  FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto">
+                            <DatePickerEvents TValue="DateTime?" ValueChange="ChangeLendingDate"></DatePickerEvents>
+                        </Syncfusion.Blazor.Calendars.SfDatePicker>
 
                         <ValidationMessage For="@(() => model.LendingDate)" TValue="DateTime?" />
                     </div>

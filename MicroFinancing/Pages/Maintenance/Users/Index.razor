@@ -10,7 +10,7 @@
         </div>
     </div>
     <div class="card-body">
-        <SfGrid AllowPaging="true" TValue="UserGridDTM" @ref="userGrid">
+        <SfGrid AllowPaging="true" TValue="UserGridDTM" @ref="userGrid" AllowFiltering="true">
             <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(UserAdaptor)" Adaptor="Adaptors.CustomAdaptor" />
             <GridColumns>
                 <GridColumn Field=@nameof(UserGridDTM.FirstName) Width="150"></GridColumn>

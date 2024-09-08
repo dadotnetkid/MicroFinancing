@@ -35,7 +35,16 @@ builder.Services.AddDbContext<MFDbContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+       {
+           options.SignIn.RequireConfirmedAccount = true;
+           options.Password.RequireDigit = false;
+           options.Password.RequireLowercase = false;
+           options.Password.RequireNonAlphanumeric = false;
+           options.Password.RequireUppercase = false;
+           options.Password.RequiredLength = 6;
+           options.Password.RequiredUniqueChars = 0;
+       })
     .AddDefaultUI()
     .AddDefaultTokenProviders()
     .AddEntityFrameworkStores<MFDbContext>();

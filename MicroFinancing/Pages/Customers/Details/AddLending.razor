@@ -1,5 +1,6 @@
 ﻿@using MicroFinancing.Core.Enumeration
 
+
 <SfDialog Width="500px" ShowCloseIcon="true" @bind-Visible="visibility" CssClass="modal-center-top">
     <DialogPositionData X="center" />
     <DialogTemplates>
@@ -36,8 +37,8 @@
                     <div class="row mt-2">
                         <div class="col-12">
                             <Syncfusion.Blazor.Inputs.SfNumericTextBox @bind-Value="@model.ItemAmount" Placeholder="Item Amount"
-                                                                   CssClass="e-outline"
-                                                                   FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                                                                       CssClass="e-outline"
+                                                                       FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
 
                             <ValidationMessage For="@(() => model.ItemAmount)" TValue="decimal" />
                         </div>
@@ -47,18 +48,24 @@
                     <div class="col-12">
                         <Syncfusion.Blazor.Calendars.SfDatePicker @bind-Value="@model.LendingDate" Placeholder="Lending Date"
                                                                   CssClass="e-outline"
-                                                                  FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                                                                  FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto">
+                            <DatePickerEvents TValue="DateTime?" ValueChange="ChangeLendingDate"></DatePickerEvents>
+                        </Syncfusion.Blazor.Calendars.SfDatePicker>
 
                         <ValidationMessage For="@(() => model.LendingDate)" TValue="DateTime?" />
                     </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col-12">
-                        <Syncfusion.Blazor.DropDowns.SfDropDownList TItem="string" TValue="LendingEnumeration.Duration"
-                                                                    @bind-Value="@model.Duration" Placeholder="Duration"
-                                                                    DataSource="Enum.GetNames(typeof(LendingEnumeration.Duration))"
+                        <Syncfusion.Blazor.DropDowns.SfDropDownList TItem="GenericDropItem<LendingEnumeration.Duration>" TValue="LendingEnumeration.Duration"
+                                                                    @bind-Value="@model.Duration"
+                                                                    Placeholder="Duration"
+                                                                    DataSource="Durations"
                                                                     CssClass="e-outline"
-                                                                    FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                                                                    FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto">
+                            <DropDownListEvents TItem="GenericDropItem<LendingEnumeration.Duration>" TValue="LendingEnumeration.Duration" ValueChange="@OnDurationChange"></DropDownListEvents>
+                            <DropDownListFieldSettings Text="Text" Value="Value"></DropDownListFieldSettings>
+                        </Syncfusion.Blazor.DropDowns.SfDropDownList>
 
                         <ValidationMessage For="@(() => model.Duration)" TValue="LendingEnumeration.Duration" />
                     </div>
@@ -112,8 +119,11 @@
     {
         model.CustomerId = MainPage.Id;
         visibility = true;
+        this.Durations = typeof(LendingEnumeration.Duration).GetDropDown<LendingEnumeration.Duration>();
         StateHasChanged();
     }
+
+    public List<GenericDropItem<LendingEnumeration.Duration>> Durations { get; set; } = new();
 
     public void Hide()
     {
@@ -143,6 +153,47 @@
     private void OnModalClosed()
     {
         visibility = false;
+    }
+
+    /*private void OnDurationChange(ChangeEventArgs<LendingEnumeration.Duration, string> obj)
+        {
+        if (obj.Value == LendingEnumeration.Duration.Custom)
+        {
+        return;
+        }
+
+        var res = obj.Value.GetDefault<int>();
+
+        model.DueDate = model.DueDate?.AddDays(res);
+    }*/
+
+    /*private void OnDurationChange(ChangeEventArgs<GenericDropItem, GenericDropItem> obj)
+        {
+        throw new NotImplementedException();
+    }*/
+
+    private void OnDurationChange(ChangeEventArgs<LendingEnumeration.Duration, GenericDropItem<LendingEnumeration.Duration>> obj)
+    {
+        if (obj.Value == LendingEnumeration.Duration.Custom)
+        {
+            return;
+        }
+
+        var res = obj.Value.GetDefault<int>();
+
+        model.DueDate = Convert.ToDateTime(model.LendingDate?.ToShortDateString()).AddDays(res);
+    }
+
+    private void ChangeLendingDate(ChangedEventArgs<DateTime?> obj)
+    {
+        if (model.Duration == LendingEnumeration.Duration.Custom)
+        {
+            return;
+        }
+
+        var res = model.Duration.GetDefault<int>();
+
+        model.DueDate = Convert.ToDateTime(model.LendingDate?.ToShortDateString()).AddDays(res);
     }
 
 }

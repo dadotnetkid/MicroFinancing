@@ -44,4 +44,5 @@ public sealed class Lending : BaseEntity<long>
     public ICollection<Payment> Payments { get; set; }
     public int NumberOfDays { get; set; }
     public int PaymentDays { get; set; }
+    public LendingEnumeration.Duration Duration { get; set; }
 }

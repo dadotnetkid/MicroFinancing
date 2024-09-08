@@ -34,7 +34,7 @@ public static class DependencyRegistrar
         services.AddTransient<ParticipantInBatchAdaptor>();
 
         //Transient
-        services.AddTransient<IUserService, UserService>();
+        services.AddTransient<IUserService, BlazorUserService>();
         services.AddTransient<ICustomerService, CustomerService>();
         services.AddTransient<IPermissionService, PermissionService>();
         services.AddTransient<IPaymentService, PaymentService>();
@@ -45,7 +45,7 @@ public static class DependencyRegistrar
         services.AddTransient<IBatchService, BatchService>();
         services.AddTransient<ITermService, TermService>();
 
-        services.AddTransient<ICurrentUser, CurrentUser>();
+        services.AddTransient<ICurrentUser, BlazorCurrentUser>();
 
         //Scopes
         services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();

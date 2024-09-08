@@ -12,7 +12,14 @@ namespace MicroFinancing.Components.ToastsComponent
         }
         public async Task ShowToast(string title, string message)
         {
-            await container.ShowToast(title, message);
+            try
+            {
+                await container.ShowToast(title, message);
+            }
+            catch (Exception e)
+            {
+                
+            }
         }
     }
 }

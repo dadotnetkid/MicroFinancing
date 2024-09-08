@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using MicroFinancing.Core.Enumeration;
 using MicroFinancing.Interfaces.Services;
 
 namespace MicroFinancing.Services
@@ -47,18 +49,18 @@ namespace MicroFinancing.Services
 
         public async Task AddLending(CreateLendingDTM model)
         {
-            var numberOfDays = (model.DueDate - model.LendingDate)?.Days ?? 0;
+            var numberOfDays = (model.DueDate - Convert.ToDateTime(model.LendingDate?.ToShortDateString()))?.Days ?? 0;
 
-            var date = model.DueDate.GetValueOrDefault();
             var dayss = Enumerable
                 .Range(0, numberOfDays + 1)
                 .Select(n => new { date = model.LendingDate.GetValueOrDefault().AddDays(n) });
+
             var sundays = dayss
                  .Count(c => c.date.DayOfWeek == DayOfWeek.Sunday);
 
-            var interestRate = (numberOfDays * (10.0M / 30.0M));
+            var interestRate = (numberOfDays * 0.003325M) * 100;
 
-            var interestValue = model.Amount * (interestRate / 100M);
+            var interestValue = model.Amount * (interestRate / 100);
 
             await _repository.AddAsync(new Lending()
             {
@@ -69,7 +71,7 @@ namespace MicroFinancing.Services
                 CreatedBy = await _userService.GetUserId(),
                 CustomerId = model.CustomerId,
                 DueDate = model.DueDate.Value,
-                LendingDate = model.LendingDate.Value,
+                LendingDate = Convert.ToDateTime(model.LendingDate.Value.ToShortDateString()),
                 Collector = model.Collector ?? string.Empty,
                 Interest = interestValue,
                 TotalCredit = interestValue + model.Amount + model.ItemAmount,
@@ -78,7 +80,8 @@ namespace MicroFinancing.Services
                 IsActive = true,
                 IsPaid = false,
                 NumberOfDays = numberOfDays,
-                PaymentDays = numberOfDays - sundays,
+                PaymentDays = model.Duration == LendingEnumeration.Duration.FortyDays ? 36 : (numberOfDays - sundays),
+                Duration = model.Duration
             });
         }
 
@@ -126,9 +129,9 @@ namespace MicroFinancing.Services
             var sundays = dayss
                 .Count(c => c.date.DayOfWeek == DayOfWeek.Sunday);
 
-            var interestRate = (numberOfDays * (10.0M / 30.0M));
+            var interestRate = (numberOfDays * 0.003325M) * 100;
 
-            var interestValue = model.Amount * (interestRate / 100M);
+            var interestValue = model.Amount * (interestRate / 100);
 
             res.Amount = model.Amount;
             res.Category = model.Category;
@@ -140,7 +143,9 @@ namespace MicroFinancing.Services
             res.TotalCredit = interestValue + model.Amount + model.ItemAmount;
             res.NumberOfDays = numberOfDays;
             res.InterestRate = interestRate;
-            res.PaymentDays = numberOfDays - sundays;
+            res.PaymentDays = model.Duration == LendingEnumeration.Duration.FortyDays ? 36 : (numberOfDays - sundays);
+            res.Duration = model.Duration;
+            res.UpdateAt = DateTimeOffset.Now;
 
             await _repository.SaveChangesAsync();
         }

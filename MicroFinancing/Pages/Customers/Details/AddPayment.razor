@@ -25,7 +25,7 @@
                         </SfUploader>
                     </div>
                 </div>
-                @if (MainPage != null && MainPage.Permission.CanOverridePayment)
+                @if (MainPage is { Permission.CanOverridePayment: true })
                 {
                     <div class="row mt-2">
                         <div class="col-12">
@@ -74,6 +74,7 @@
     public void Hide()
     {
         visibility = false;
+       
         model = new();
         StateHasChanged();
     }

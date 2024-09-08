@@ -1,49 +1,85 @@
-﻿using MicroFinancing.Core.Attributes;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
-namespace MicroFinancing.Core.Common
+using MicroFinancing.Core.Attributes;
+
+namespace MicroFinancing.Core.Common;
+
+public static class EnumHelper
 {
-    public static class EnumHelper
+    public static string GetDescription(this Enum enumeration)
     {
-        public static string GetDescription(this Enum enumeration)
-        {
-            FieldInfo? fi = enumeration.GetType().GetField(enumeration.ToString());
+        var fi = enumeration.GetType()
+                            .GetField(enumeration.ToString());
 
-            if (fi?.GetCustomAttributes(typeof(DescriptionAttribute), false) is DescriptionAttribute[] attributes && attributes.Any())
-            {
-                return attributes.First().Description;
-            }
-            return string.Empty;
-        }
-        public static string GetColor(this Enum enumeration)
+        if (fi?.GetCustomAttributes(typeof(DescriptionAttribute), false) is DescriptionAttribute[] attributes && attributes.Any())
         {
-            FieldInfo? fi = enumeration.GetType().GetField(enumeration.ToString());
-
-            if (fi?.GetCustomAttributes(typeof(ColorAttribute), false) is ColorAttribute[] attributes && attributes.Any())
-            {
-                return attributes.First().Color;
-            }
-            return string.Empty;
+            return attributes.First()
+                             .Description;
         }
-    } 
-    public static class StringHelper
-    {
-        public static string GetDescription(this string enumeration)
-        {
-            FieldInfo? fi = enumeration.GetType().GetField(enumeration);
 
-            if (fi?.GetCustomAttributes(typeof(DescriptionAttribute), false) is DescriptionAttribute[] attributes && attributes.Any())
-            {
-                return attributes.First().Description;
-            }
-            return string.Empty;
-        }
+        return string.Empty;
     }
+
+    public static T GetDefault<T>(this Enum enumeration)
+    {
+        var fi = enumeration.GetType()
+                            .GetField(enumeration.ToString());
+
+        if (fi?.GetCustomAttributes(typeof(DefaultValueAttribute), false) is DefaultValueAttribute[] attributes && attributes.Any())
+        {
+            return (T)Convert.ChangeType(attributes.First()
+                                                   .Value,
+                                         typeof(T));
+        }
+
+        return default!;
+    }
+
+    public static string GetColor(this Enum enumeration)
+    {
+        var fi = enumeration.GetType()
+                            .GetField(enumeration.ToString());
+
+        if (fi?.GetCustomAttributes(typeof(ColorAttribute), false) is ColorAttribute[] attributes && attributes.Any())
+        {
+            return attributes.First()
+                             .Color;
+        }
+
+        return string.Empty;
+    }
+
+    public static List<GenericDropItem<T>> GetDropDown<T>(this Type type)
+    {
+        return type.GetEnumValues()
+            .OfType<T>()
+            .ToDictionary(key => key, val => (val as Enum).GetDescription())
+            .Select(c => new GenericDropItem<T>()
+            {
+                Value = c.Key,
+                Text = c.Value
+            }).ToList();
+    }
+}
+
+public static class StringHelper
+{
+    public static string GetDescription(this string enumeration)
+    {
+        var fi = enumeration.GetType()
+                            .GetField(enumeration);
+
+        if (fi?.GetCustomAttributes(typeof(DescriptionAttribute), false) is DescriptionAttribute[] attributes && attributes.Any())
+        {
+            return attributes.First()
+                             .Description;
+        }
+
+        return string.Empty;
+    }
+}
+public class GenericDropItem<T>
+{
+    public T Value { get; set; }
+    public string Text { get; set; }
 }

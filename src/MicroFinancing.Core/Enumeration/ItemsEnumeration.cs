@@ -27,9 +27,13 @@ namespace MicroFinancing.Core.Enumeration
         public enum Duration
         {
             [Description("40 Days")]
-            Fixed = 0,
+            [DefaultValue(40)]
+            FortyDays = 0,
+            [Description("36 Days")]
+            [DefaultValue(36)]
+            ThirtySixDays = 2,
+            [Description("Custom")]
             Custom = 1,
-
         }
     }
 

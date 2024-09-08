@@ -7,24 +7,27 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace MicroFinancing.Services;
 
-public class CurrentUser : ICurrentUser
+public class BlazorCurrentUser : ICurrentUser
 {
     private readonly IServiceScopeFactory _factory;
+    private readonly AuthenticationStateProvider _authenticationStateProvider;
 
-    public CurrentUser(IServiceScopeFactory factory)
+    public BlazorCurrentUser(IServiceScopeFactory factory, AuthenticationStateProvider authenticationStateProvider)
     {
         _factory = factory;
+        _authenticationStateProvider = authenticationStateProvider;
     }
 
-    private AuthenticationState State => _factory.CreateScope().ServiceProvider.GetRequiredService<AuthenticationStateProvider>().GetAuthenticationStateAsync().GetAwaiter().GetResult();
+    
 
     private ClaimsPrincipal User
     {
         get
         {
-            if (State is not null)
+            var state = _authenticationStateProvider.GetAuthenticationStateAsync().GetAwaiter().GetResult();
+            if (state is not null)
             {
-                return State.User;
+                return state.User;
             }
 
             return _factory.CreateScope().ServiceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext.User;
