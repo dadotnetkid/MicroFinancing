@@ -1,4 +1,5 @@
-﻿using MicroFinancing.Core.Common;
+﻿using Hangfire;
+using MicroFinancing.Core.Common;
 using MicroFinancing.Core.Enumeration;
 using MicroFinancing.DataTransferModel;
 using MicroFinancing.Entities;
@@ -13,13 +14,17 @@ public class CustomerService : ICustomerService
     private readonly IRepository<Customers, long> _customerRepository;
     private readonly IRepository<Lending, long> _lendingRepository;
     private readonly IUserService _userService;
+    private readonly ISmsService _smsService;
 
     public CustomerService(IRepository<Customers, long> customerRepository,
-        IRepository<Lending, long> lendingRepository, IUserService userService)
+        IRepository<Lending, long> lendingRepository,
+        IUserService userService,
+        ISmsService smsService)
     {
         _customerRepository = customerRepository;
         _lendingRepository = lendingRepository;
         _userService = userService;
+        _smsService = smsService;
     }
 
     public IQueryable<CustomerGridDTM> GetCustomer()
@@ -48,8 +53,13 @@ public class CustomerService : ICustomerService
             LastName = model.LastName,
             MiddleName = model.MiddleName,
             PlaceOfBirth = model.PlaceOfBirth ?? string.Empty,
+            PhoneNumber = model.PhoneNumber,
             IsDeleted = false
         });
+
+        BackgroundJob.Enqueue(() =>
+            _smsService.SendNewlyCreateCustomer(model.PhoneNumber,
+                $"{model.FirstName} {model.LastName}"));
     }
 
     public async Task EditCustomer(EditCustomerDTM? model)
@@ -67,6 +77,7 @@ public class CustomerService : ICustomerService
         customer.LastName = model.LastName;
         customer.MiddleName = model.MiddleName;
         customer.PlaceOfBirth = model.PlaceOfBirth ?? string.Empty;
+        customer.PhoneNumber = model.PhoneNumber;
 
         await _customerRepository.SaveChangesAsync();
     }
@@ -82,13 +93,14 @@ public class CustomerService : ICustomerService
             PlaceOfBirth = x.PlaceOfBirth,
             Address = x.Address,
             Id = x.Id,
+            PhoneNumber = x.PhoneNumber,
             TotalAmountPaid = x.Payments.Sum(p => p.PaymentAmount),
             TotalDebt = x.Lending.Sum(l => l.TotalCredit),
             TotalBalance = x.Lending.Sum(l => l.TotalCredit) - x.Payments.Sum(p => p.PaymentAmount),
             CustomerFlag = x.Flag,
             HasActiveLoan = x.Lending.Any(x => !x.IsPaid && x.IsActive),
             DailyDueAmount = x.Lending
-                .OrderBy(c=>c.Id)
+                .OrderBy(c => c.Id)
                 .Select(c => c.DailyDueAmount)
                 .LastOrDefault()
         }).FirstOrDefaultAsync();
@@ -147,7 +159,8 @@ public class CustomerService : ICustomerService
             LastName = x.LastName,
             DateOfBirth = x.DateOfBirth,
             PlaceOfBirth = x.PlaceOfBirth,
-            Address = x.Address
+            Address = x.Address,
+            PhoneNumber = x.PhoneNumber
         }).FirstOrDefaultAsync();
 
         return result;

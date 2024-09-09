@@ -21,30 +21,32 @@ using MicroFinancing.Providers;
 using MicroFinancing.Validators;
 using MicroFinancing.Components;
 using DevExpress.Blazor.Reporting;
+using Hangfire;
+using MicroFinancing.Infrastructure;
 using MicroFinancing.Services.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(builder.Configuration.GetValue<string>("Syncfusion:Licensing"));
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(
+    builder.Configuration.GetValue<string>("Syncfusion:Licensing"));
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<MFDbContext>(options =>
     options.UseSqlServer(connectionString), ServiceLifetime.Transient);
 
-
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
-       {
-           options.SignIn.RequireConfirmedAccount = true;
-           options.Password.RequireDigit = false;
-           options.Password.RequireLowercase = false;
-           options.Password.RequireNonAlphanumeric = false;
-           options.Password.RequireUppercase = false;
-           options.Password.RequiredLength = 6;
-           options.Password.RequiredUniqueChars = 0;
-       })
+    {
+        options.SignIn.RequireConfirmedAccount = true;
+        options.Password.RequireDigit = false;
+        options.Password.RequireLowercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequiredLength = 6;
+        options.Password.RequiredUniqueChars = 0;
+    })
     .AddDefaultUI()
     .AddDefaultTokenProviders()
     .AddEntityFrameworkStores<MFDbContext>();
@@ -59,7 +61,8 @@ builder.Services.AddSyncfusionBlazor();
 
 /*Registration of Services*/
 builder.Services.AddBlazorServices();
-builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+builder.Services
+    .AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 
 /*Registration of Validators*/
 builder.Services.AddValidators();
@@ -84,6 +87,15 @@ builder.Services.RegisterMediatR();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
+builder.Services.AddHangfire(configuration => configuration
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Add the processing server as IHostedService
+builder.Services.AddHangfireServer();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -97,6 +109,7 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
@@ -109,5 +122,14 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{               
+    DashboardTitle = "Sample Jobs",
+    Authorization = new[]
+    {
+        new  HangfireAuthorizationFilter("admin")
+    }
+});
+
 
 app.Run();

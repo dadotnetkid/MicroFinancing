@@ -28,6 +28,12 @@
                 </div>
                 <div class="row mt-1">
                     <div class="col-12">
+                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@model.PhoneNumber" Placeholder="PhoneNumber" CssClass="e-outline" FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                        <ValidationMessage For="@(()=>model.PhoneNumber)" TValue="string" />
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-12">
                         <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@model.Address" Placeholder="Address" CssClass="e-outline" FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
                         <ValidationMessage For="@(()=>model.Address)" TValue="string" />
                     </div>

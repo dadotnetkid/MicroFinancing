@@ -44,18 +44,22 @@ public static class DependencyRegistrar
         services.AddTransient<ISecurityService, SecurityService>();
         services.AddTransient<IBatchService, BatchService>();
         services.AddTransient<ITermService, TermService>();
+        services.AddTransient<ISmsService, SmsService>();
 
         services.AddTransient<ICurrentUser, BlazorCurrentUser>();
 
+
+
         //Scopes
-        services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+        services
+            .AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
         services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ClaimsPrincipalFactory>();
 
         //Singleton
         services.AddSingleton(x => new ClaimsValueModel());
         return services;
-
     }
+
     public static IServiceCollection AddApiServices(this IServiceCollection services)
     {
         //Repository
@@ -87,17 +91,18 @@ public static class DependencyRegistrar
         services.AddTransient<ISecurityService, SecurityService>();
         services.AddTransient<IBatchService, BatchService>();
         services.AddTransient<ITermService, TermService>();
+        services.AddTransient<ISmsService, SmsService>();
 
         services.AddTransient<ICurrentUser, CurrentUser>();
 
         //Scopes
-        services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+        services
+            .AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
         services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ClaimsPrincipalFactory>();
 
         //Singleton
         services.AddSingleton(x => new ClaimsValueModel());
         return services;
-
     }
 
     public static IServiceCollection AddPolicy(this IServiceCollection services)
@@ -107,7 +112,7 @@ public static class DependencyRegistrar
         {
             //Administrator
             options.AddPolicy(ClaimsConstant.Administrator,
-                              policy => policy.RequireClaim(ClaimsConstant.ClaimType, new[] { ClaimsConstant.Administrator }));
+                policy => policy.RequireClaim(ClaimsConstant.ClaimType, new[] { ClaimsConstant.Administrator }));
 
             //View Permission
             options.AddPolicy(ClaimsConstant.Users.View,
@@ -149,7 +154,8 @@ public static class DependencyRegistrar
                 policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.ManagePayment));
             //Print Override Payment
             options.AddPolicy(ClaimsConstant.Customer.OverridePayment,
-                policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.OverridePayment));
+                policy => policy.RequireClaim(ClaimsConstant.ClaimType,
+                    ClaimsConstant.Policy.Customer.OverridePayment));
             //Print Add Loan
             options.AddPolicy(ClaimsConstant.Customer.AddPayment,
                 policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.AddPayment));

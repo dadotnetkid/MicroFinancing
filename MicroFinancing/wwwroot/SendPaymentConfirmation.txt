@@ -1,0 +1,4 @@
+Hi [CustomerName]
+Thank you for paying [Amount] 
+
+[Do not reply]
