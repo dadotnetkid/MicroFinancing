@@ -58,7 +58,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddSyncfusionBlazor();
 
 /*Registration of Services*/
-builder.Services.AddServices();
+builder.Services.AddBlazorServices();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 
 /*Registration of Validators*/

@@ -11,4 +11,5 @@ public interface IPaymentService
     Task<Payment> AddPayment(CreatePaymentDTM model);
     
     Task UploadFile(UploadFiles uploadedFile, Payment payment);
+    Task UploadFile(byte[]? uploadedFile, long paymentId);
 }

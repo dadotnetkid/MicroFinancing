@@ -3,7 +3,9 @@ using MicroFinancing.DataTransferModel;
 using MicroFinancing.Entities;
 using MicroFinancing.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Syncfusion.Blazor.Inputs;
 
 namespace MicroFinancing.WebApi.Controllers;
 
@@ -21,10 +23,18 @@ public class PaymentController : ControllerBase
 
     // GET
     [HttpPost]
-    [Authorize(Policy = ClaimsConstant.Customer.AddPayment)]
-    public async Task<ActionResult<Payment>> AddPayment([FromBody] CreatePaymentDTM item)
+    public async Task<ActionResult<long>> AddPayment([FromBody] CreatePaymentDTM item)
     {
         var payment = await _paymentService.AddPayment(item);
-        return Ok(payment);
+
+        return Ok(payment.Id);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> UploadSignature([FromBody] UploadSignaturePayload payload)
+    {
+        await _paymentService.UploadFile(payload.UploadFiles, payload.PaymentId);
+
+        return Ok();
     }
 }

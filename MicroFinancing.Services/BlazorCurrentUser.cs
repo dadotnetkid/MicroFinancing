@@ -18,22 +18,9 @@ public class BlazorCurrentUser : ICurrentUser
         _authenticationStateProvider = authenticationStateProvider;
     }
 
-    
 
-    private ClaimsPrincipal User
-    {
-        get
-        {
-            var state = _authenticationStateProvider.GetAuthenticationStateAsync().GetAwaiter().GetResult();
-            if (state is not null)
-            {
-                return state.User;
-            }
 
-            return _factory.CreateScope().ServiceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext.User;
-        }
-    }
-
+    public ClaimsPrincipal User => _authenticationStateProvider.GetAuthenticationStateAsync().GetAwaiter().GetResult().User;
 
     private string GetFullName()
     {

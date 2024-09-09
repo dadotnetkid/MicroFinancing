@@ -1,8 +1,39 @@
 ﻿@page "/AddPayment/{CustomerId:long}"
 @using MicroFinancing.MobileApp.Services.Client
-<h3>Add Payment</h3>
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Calendars
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Inputs
+
+<h3 class="text-info fw-bolder">@CustomerDetail.FullName</h3>
+<h4 class="text-muted">Total Balance: @CustomerDetail.TotalBalance?.ToString("n2")</h4>
+<h4 class="text-muted">Daily Due: @CustomerDetail.DailyDueAmount?.ToString("n2")</h4>
 
 <EditForm Model="model">
-    <InputFile ></InputFile>
+    <div class="row">
+        <div class="col">
+            <SfNumericTextBox @bind-Value="model.PaymentAmount" CssClass="e-outline"
+                              FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" Placeholder="Payment Amount"></SfNumericTextBox>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col">
+            <SfDatePicker @bind-Value="model.PaymentDate" Placeholder="Payment Amount"></SfDatePicker>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col">
+            <SfButton IsPrimary="true" @onclick="@(async ()=>await signatureRef.ClearAsync())">
+                Clear
+            </SfButton>
+            <SfSignature @ref="signatureRef" Changed="OnChange" style="height:10em; width: 100%; margin-top:5px"></SfSignature>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col">
+            <SfButton @onclick="BackToList">Back</SfButton>
+            <SfButton IsPrimary="true" @onclick="SavePayment">Submit</SfButton>
+        </div>
+    </div>
 </EditForm>
 

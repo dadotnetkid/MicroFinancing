@@ -1,0 +1,6 @@
+﻿<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="MicroFinancing: IISProfile" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+    <riderPublish configuration="Release" platform="Any CPU" publish_profile="IISProfile.pubxml" pubxml_path="$PROJECT_DIR$/MicroFinancing/Properties/PublishProfiles/IISProfile.pubxml" save_password="true" user_name=".\administrator" uuid_high="-1447116480330774804" uuid_low="-5301479758428252816" />
+    <method v="2" />
+  </configuration>
+</component>

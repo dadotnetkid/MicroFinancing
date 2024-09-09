@@ -536,6 +536,9 @@ namespace MicroFinancing.DataMigrations.Migrations
                     b.Property<long>("CustomerId")
                         .HasColumnType("bigint");
 
+                    b.Property<decimal?>("DailyDueAmount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("DeleterUserId")
                         .HasColumnType("nvarchar(450)");
 

@@ -39,7 +39,7 @@ namespace MicroFinancing.Services
             {
                 CreatedAt = x.CreatedAt,
                 CreatedBy = x.Creator.FullName,
-                CustomerName=x.Customers.FullName,
+                CustomerName = x.Customers.FullName,
                 CustomerId = x.CustomerId,
                 Id = x.Id,
                 PaymentAmount = x.PaymentAmount,
@@ -85,10 +85,31 @@ namespace MicroFinancing.Services
             var files = uploadedFile.Stream.ToArray();
             var filePath = Path.Combine("Attachments", payment.CustomerId.ToString());
             payment.Attachment = Path.Combine(filePath, $"{payment.Id}.{uploadedFile.FileInfo.Type}");
+
             await _repository.UpdateAsync(payment);
             filePath = Path.Combine(_hostEnvironment.ContentRootPath, "wwwroot", filePath);
+
             if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
             await File.WriteAllBytesAsync(Path.Combine(filePath, $"{payment.Id}.{uploadedFile.FileInfo.Type}"), files);
+        }
+
+        public async Task UploadFile(byte[]? uploadedFile, long paymentId)
+        {
+            if (uploadedFile is null) return;
+            
+            var payment = _repository.Entity.FirstOrDefault(c => c.Id == paymentId);
+            
+            var filePath = Path.Combine("Attachments", payment.CustomerId.ToString());
+
+            payment.Attachment = Path.Combine(filePath, $"{paymentId}.png");
+
+            await _repository.SaveChangesAsync();
+
+            filePath = Path.Combine("\\\\172.11.1.242\\c$\\inetpub\\sites\\ccc.interworx.app", "wwwroot", filePath);
+
+            if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
+
+            await File.WriteAllBytesAsync(Path.Combine(filePath, $"{payment.Id}.png"), uploadedFile);
         }
     }
 }

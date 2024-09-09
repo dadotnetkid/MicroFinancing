@@ -25,6 +25,7 @@ builder.Services.AddDbContext<MFDbContext>(options =>
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = true)
        .AddDefaultUI()
        .AddDefaultTokenProviders()
+
        .AddEntityFrameworkStores<MFDbContext>();
 builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ClaimsPrincipalFactory>();
 
@@ -38,7 +39,7 @@ builder.Services.AddControllers();
 builder.Services.AddMvcCore()
        .AddApiExplorer();
 
-builder.Services.AddServices();
+builder.Services.AddApiServices();
 
 builder.Services.AddHttpContextAccessor();
 

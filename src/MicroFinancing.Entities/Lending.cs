@@ -21,6 +21,7 @@ public sealed class Lending : BaseEntity<long>
     [Required] public string CreatedBy { get; set; }
 
     [Required] public DateTime CreatedAt { get; set; }
+    
 
     public bool IsDeleted { get; set; }
 
@@ -44,5 +45,6 @@ public sealed class Lending : BaseEntity<long>
     public ICollection<Payment> Payments { get; set; }
     public int NumberOfDays { get; set; }
     public int PaymentDays { get; set; }
+    public decimal? DailyDueAmount { get; set; }
     public LendingEnumeration.Duration Duration { get; set; }
 }

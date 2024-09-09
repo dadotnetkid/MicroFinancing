@@ -33,6 +33,7 @@ public class CustomerBaseDTM
     public decimal? TotalBalance { get; set; }
     public CustomerFlag CustomerFlag { get; set; } = CustomerFlag.GoodPayer;
     public bool HasActiveLoan { get; set; }
+    public decimal? DailyDueAmount { get; set; }
 }
 public sealed class CustomerGridDTM : CustomerBaseDTM
 {
@@ -51,5 +52,5 @@ public sealed class EditCustomerDTM : CustomerBaseDTM
 public sealed class CustomerDetailDTM : CustomerBaseDTM
 {
     public override string FullName => $"{FirstName} {LastName}";
-   
+
 }

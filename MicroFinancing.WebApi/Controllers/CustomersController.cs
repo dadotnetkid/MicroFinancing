@@ -1,7 +1,6 @@
 ﻿using MicroFinancing.Core.Common;
 using MicroFinancing.DataTransferModel;
 using MicroFinancing.Interfaces.Services;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,6 +28,21 @@ public class CustomersController : ControllerBase
         {
             res = res.Where(x => x.FullName.Contains(customerName));
         }
+
         return Ok(await res.ToListAsync());
     }
+
+    [HttpGet]
+    public async Task<ActionResult<CustomerGridDTM>> GetCustomerId(long customerId)
+    {
+        if (customerId == 0)
+        {
+            return NotFound();
+        }
+
+        var res = await _customerService.GetCustomerDetail(customerId);
+
+        return Ok(res);
+    }
+
 }

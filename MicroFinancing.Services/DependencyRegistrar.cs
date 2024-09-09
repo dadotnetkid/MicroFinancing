@@ -13,7 +13,7 @@ namespace MicroFinancing.Services;
 
 public static class DependencyRegistrar
 {
-    public static IServiceCollection AddServices(this IServiceCollection services)
+    public static IServiceCollection AddBlazorServices(this IServiceCollection services)
     {
         //Repository
         services.AddScoped(typeof(IRepository<,>), typeof(BaseRepository<,>));
@@ -46,6 +46,49 @@ public static class DependencyRegistrar
         services.AddTransient<ITermService, TermService>();
 
         services.AddTransient<ICurrentUser, BlazorCurrentUser>();
+
+        //Scopes
+        services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+        services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ClaimsPrincipalFactory>();
+
+        //Singleton
+        services.AddSingleton(x => new ClaimsValueModel());
+        return services;
+
+    }
+    public static IServiceCollection AddApiServices(this IServiceCollection services)
+    {
+        //Repository
+        services.AddScoped(typeof(IRepository<,>), typeof(BaseRepository<,>));
+
+        //Scoped Adaptor
+        services.AddTransient(typeof(BaseAdaptor<,>));
+        services.AddTransient(typeof(UserAdaptor));
+        services.AddTransient(typeof(CustomerAdaptor));
+        services.AddTransient(typeof(PermissionAdaptor));
+        services.AddTransient(typeof(PaymentAdaptor));
+        services.AddTransient(typeof(LendingAdaptor));
+        services.AddTransient(typeof(LendingSummaryAdaptor));
+        services.AddTransient(typeof(CollectionSummaryReportAdaptor));
+        services.AddTransient(typeof(CustomerByCollectorSummaryReportAdaptor));
+        services.AddTransient(typeof(CustomerComboBoxAdaptor));
+        services.AddTransient<BatchAdaptor>();
+        services.AddTransient<TermAdaptor>();
+        services.AddTransient<ParticipantInBatchAdaptor>();
+
+        //Transient
+        services.AddTransient<IUserService, ApiUserService>();
+        services.AddTransient<ICustomerService, CustomerService>();
+        services.AddTransient<IPermissionService, PermissionService>();
+        services.AddTransient<IPaymentService, PaymentService>();
+        services.AddTransient<ILendingService, LendingService>();
+        services.AddTransient<IReportingService, ReportingService>();
+        services.AddTransient<IDashboardService, DashboardService>();
+        services.AddTransient<ISecurityService, SecurityService>();
+        services.AddTransient<IBatchService, BatchService>();
+        services.AddTransient<ITermService, TermService>();
+
+        services.AddTransient<ICurrentUser, CurrentUser>();
 
         //Scopes
         services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();

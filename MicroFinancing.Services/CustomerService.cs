@@ -73,7 +73,7 @@ public class CustomerService : ICustomerService
 
     public async Task<CustomerDetailDTM?> GetCustomerDetail(long id)
     {
-        return await _customerRepository.Entity.Where(x => x.Id == id).Select(x => new CustomerDetailDTM
+        var res = await _customerRepository.Entity.Where(x => x.Id == id).Select(x => new CustomerDetailDTM
         {
             FirstName = x.FirstName,
             MiddleName = x.MiddleName,
@@ -86,8 +86,14 @@ public class CustomerService : ICustomerService
             TotalDebt = x.Lending.Sum(l => l.TotalCredit),
             TotalBalance = x.Lending.Sum(l => l.TotalCredit) - x.Payments.Sum(p => p.PaymentAmount),
             CustomerFlag = x.Flag,
-            HasActiveLoan = x.Lending.Any(x => !x.IsPaid && x.IsActive)
+            HasActiveLoan = x.Lending.Any(x => !x.IsPaid && x.IsActive),
+            DailyDueAmount = x.Lending
+                .OrderBy(c=>c.Id)
+                .Select(c => c.DailyDueAmount)
+                .LastOrDefault()
         }).FirstOrDefaultAsync();
+
+        return res;
     }
 
     public async Task UpdateFlag(long customerId, CustomerFlag customerFlagValue)
@@ -130,6 +136,7 @@ public class CustomerService : ICustomerService
             });
         return customers;
     }
+
     public async Task<EditCustomerDTM?> GetCustomerDetailForEdit(long customerId)
     {
         var result = await _customerRepository.Entity.Where(x => x.Id == customerId).Select(x => new EditCustomerDTM
