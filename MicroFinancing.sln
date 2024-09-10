@@ -41,8 +41,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroFinancing.Infrastructu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroFinancing.WebApi", "MicroFinancing.WebApi\MicroFinancing.WebApi.csproj", "{13621174-7349-403A-81BA-7EAF09F7A5BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroFinancing.Mediator", "MicroFinancing.Mediator\MicroFinancing.Mediator.csproj", "{52B7F4D6-4A0D-4E1A-ABAE-0C8C62FC3EC2}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,10 +103,6 @@ Global
 		{13621174-7349-403A-81BA-7EAF09F7A5BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13621174-7349-403A-81BA-7EAF09F7A5BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13621174-7349-403A-81BA-7EAF09F7A5BD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{52B7F4D6-4A0D-4E1A-ABAE-0C8C62FC3EC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{52B7F4D6-4A0D-4E1A-ABAE-0C8C62FC3EC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{52B7F4D6-4A0D-4E1A-ABAE-0C8C62FC3EC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{52B7F4D6-4A0D-4E1A-ABAE-0C8C62FC3EC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -128,7 +122,6 @@ Global
 		{9B20691A-83ED-4442-A288-1F155F86E382} = {74D4D951-1CF9-40DF-8899-F77BE02CFD1A}
 		{B38CE7E0-A502-4233-82A8-A970EC8BB69A} = {C6265D00-74FB-447C-9BDC-3AF1085337CC}
 		{13621174-7349-403A-81BA-7EAF09F7A5BD} = {C6265D00-74FB-447C-9BDC-3AF1085337CC}
-		{52B7F4D6-4A0D-4E1A-ABAE-0C8C62FC3EC2} = {8F3E4F5E-87D7-472E-ACEC-5674897DB076}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5D5F73FF-C32E-4A03-8B82-74E397ACD789}

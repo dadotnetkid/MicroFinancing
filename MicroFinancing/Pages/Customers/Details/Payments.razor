@@ -1,7 +1,13 @@
 ﻿@using Syncfusion.Blazor.Data
-<SfGrid AllowPaging="true" TValue="PaymentGridDTM" @ref="paymentGrid" Query="queryData">
+<SfGrid AllowPaging="true" TValue="PaymentGridDTM" @ref="paymentGrid" Query="queryData" AllowSorting="true">
     <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(PaymentAdaptor)"
                                           Adaptor="Adaptors.CustomAdaptor" />
+
+    <GridSortSettings>
+        <GridSortColumns>
+            <GridSortColumn Field="@nameof(PaymentGridDTM.PaymentDate)" Direction="SortDirection.Descending"></GridSortColumn>
+        </GridSortColumns>
+    </GridSortSettings>
     <GridColumns>
         <GridColumn Field=@nameof(PaymentGridDTM.CreatedBy) Width="100">
             <Template>

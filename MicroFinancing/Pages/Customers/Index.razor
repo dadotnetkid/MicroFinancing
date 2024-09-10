@@ -13,13 +13,21 @@
         </div>
     </div>
     <div class="card-body">
-        <SfGrid AllowPaging="true" AllowFiltering="true" TValue="CustomerGridDTM" @ref="customerGrid">
+        <SfGrid AllowPaging="true" AllowFiltering="true" TValue="CustomerGridDTM" @ref="customerGrid"   AllowMultiSorting="true" AllowSorting="true">
             <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(CustomerAdaptor)"
-                                                  Adaptor="Adaptors.CustomAdaptor" />
+                                                  Adaptor="Adaptors.CustomAdaptor" 
+            
+            />
+            <GridPageSettings PageSize="20" ></GridPageSettings>
             <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
-            <GridEditSettings AllowAdding="true" AllowDeleting="false" AllowEditing="false" Mode="EditMode.Normal"></GridEditSettings>
+            <GridEditSettings AllowAdding="true" AllowDeleting="false" AllowEditing="false" Mode="EditMode.Normal" ></GridEditSettings>
+            <GridSortSettings>
+                <GridSortColumns>
+                    <GridSortColumn Field="@nameof(CustomerGridDTM.FirstName)" Direction="SortDirection.Ascending"></GridSortColumn>
+                </GridSortColumns>
+            </GridSortSettings>
             <GridColumns>
-                <GridColumn Field=@nameof(CustomerGridDTM.FirstName) Width="100">
+                <GridColumn Field=@nameof(CustomerGridDTM.FirstName) Width="100" AllowSorting="true" >
                     <Template>
                         @{
                             var row = (CustomerGridDTM)context;

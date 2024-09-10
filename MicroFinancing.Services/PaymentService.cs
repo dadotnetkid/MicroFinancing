@@ -70,7 +70,7 @@ public sealed class PaymentService : IPaymentService
                 LendingId = activeLoan
             };
             payment = await _repository.AddAsync(payment);
-            
+
             await _mediator.Send(payment);
 
             BackgroundJob.Enqueue(() =>

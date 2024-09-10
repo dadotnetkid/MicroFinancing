@@ -29,7 +29,7 @@ public class SmsService : ISmsService
 
         var file = File.ReadAllText(path);
         file = file.Replace("[CustomerName]", customerName);
-        SendSms(phoneNumber, file);
+//SendSms(phoneNumber, file);
     }
 
     public void SendPaymentConfirmation(long customerId, string? amount)
@@ -40,10 +40,18 @@ public class SmsService : ISmsService
             .AsNoTracking()
             .FirstOrDefault(c => c.Id == customerId);
 
-        var lines = File.ReadAllText(path);
+        var lines = File.ReadLines(path);
+        var messages = new List<string>();
 
+        foreach (var line in lines)
+        {
+            var message = line.Replace("[Amount]", amount)
+                .Replace("[CustomerName]", customer.FullName);
+            
+            messages.Add(message);
+        }
 
-        SendSms(customer.PhoneNumber, lines);
+        //SendSms(customer.PhoneNumber, messages);
     }
 
     public void SendSms(string phoneNumber, string messages)
@@ -62,9 +70,41 @@ public class SmsService : ISmsService
         res = serialPort.ReadExisting();
         Console.WriteLine(res);
         Thread.Sleep(500);
-        serialPort.WriteLine($"{messages}");
+        serialPort.Write($@"{messages}");
+      
+        serialPort.Write([26], 0, 1);
+
+        string response = serialPort.ReadExisting();
+        Console.WriteLine($"Modem response: {response}");
+        serialPort.Close();
+    }
+
+    public void SendSms(string phoneNumber, List<string> messages)
+    {
+        using var serialPort = ConfigurePort();
+        var res = string.Empty;
+        serialPort.WriteLine($"AT\r\n");
+        Thread.Sleep(500);
         res = serialPort.ReadExisting();
         Console.WriteLine(res);
+        serialPort.Write($"AT+CMGF=1\r\n");
+        res = serialPort.ReadExisting();
+        Console.WriteLine(res);
+        Thread.Sleep(500);
+        serialPort.Write($"AT+CMGS=\"{phoneNumber}\"\r\n");
+        res = serialPort.ReadExisting();
+        Console.WriteLine(res);
+        Thread.Sleep(500);
+        /*foreach (var message in messages)
+        {
+            serialPort.WriteLine($"{messages}\r\n");
+        }*/
+        serialPort.WriteLine($"sdf\r\n");
+        serialPort.WriteLine($"sdf\r\n");
+        serialPort.WriteLine($"sdf\r\n");
+        serialPort.WriteLine($"sdf\r\n");
+        serialPort.WriteLine($"sdf\r\n");
+      
         serialPort.Write([26], 0, 1);
 
         string response = serialPort.ReadExisting();
@@ -82,10 +122,10 @@ public class SmsService : ISmsService
             DataBits = 8,
             DtrEnable = true,
             RtsEnable = true,
-            NewLine = Environment.NewLine,
             Handshake = Handshake.RequestToSend,
             StopBits = StopBits.One,
-            Parity = Parity.Even
+            NewLine = Environment.NewLine,
+            Parity = Parity.None
         };
 
         if (!serialPort.IsOpen)

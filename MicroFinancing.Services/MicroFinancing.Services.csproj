@@ -18,6 +18,7 @@
     <ProjectReference Include="..\MicroFinancing.Components\MicroFinancing.Components.csproj" />
     <ProjectReference Include="..\MicroFinancing.DataTransferModel\MicroFinancing.DataTransferModel.csproj" />
     <ProjectReference Include="..\MicroFinancing.Interfaces\MicroFinancing.Interfaces.csproj" />
+    <ProjectReference Include="..\MicroFinancing.Mediator\MicroFinancing.Mediator.csproj" />
     <ProjectReference Include="..\MicroFinancing.Providers\MicroFinancing.Providers.csproj" />
     <ProjectReference Include="..\MicroFinancing.Repository\MicroFinancing.Repositories.csproj" />
     <ProjectReference Include="..\src\MicroFinancing.Core\MicroFinancing.Core.csproj" />
