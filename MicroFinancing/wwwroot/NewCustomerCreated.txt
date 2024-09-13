@@ -1,4 +1,4 @@
 Hi [CustomerName],\r\n
-You are now added to CCC Lending,\r\n
+You are now added to Cash Credit Company,\r\n
 \r\n
 [Do not reply]

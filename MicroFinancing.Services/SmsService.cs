@@ -23,16 +23,17 @@ public class SmsService : ISmsService
         _customerRepository = customerRepository;
     }
 
-    public void SendNewlyCreateCustomer(string phoneNumber, string customerName)
+    public Task SendNewlyCreateCustomer(string phoneNumber, string customerName)
     {
         var path = Path.Combine(_hostEnvironment.WebRootPath, "NewCustomerCreated.txt");
 
         var file = File.ReadAllText(path);
         file = file.Replace("[CustomerName]", customerName);
 //SendSms(phoneNumber, file);
+        return Task.CompletedTask;
     }
 
-    public void SendPaymentConfirmation(long customerId, string? amount)
+    public Task SendPaymentConfirmation(long customerId, string? amount)
     {
         var path = Path.Combine(_hostEnvironment.WebRootPath, "SendPaymentConfirmation.txt");
 
@@ -47,14 +48,15 @@ public class SmsService : ISmsService
         {
             var message = line.Replace("[Amount]", amount)
                 .Replace("[CustomerName]", customer.FullName);
-            
+
             messages.Add(message);
         }
 
         //SendSms(customer.PhoneNumber, messages);
+        return Task.CompletedTask;
     }
 
-    public void SendSms(string phoneNumber, string messages)
+    public Task SendSms(string phoneNumber, string messages)
     {
         using var serialPort = ConfigurePort();
         var res = string.Empty;
@@ -71,12 +73,13 @@ public class SmsService : ISmsService
         Console.WriteLine(res);
         Thread.Sleep(500);
         serialPort.Write($@"{messages}");
-      
+
         serialPort.Write([26], 0, 1);
 
         string response = serialPort.ReadExisting();
         Console.WriteLine($"Modem response: {response}");
         serialPort.Close();
+        return Task.CompletedTask;
     }
 
     public void SendSms(string phoneNumber, List<string> messages)
@@ -104,7 +107,7 @@ public class SmsService : ISmsService
         serialPort.WriteLine($"sdf\r\n");
         serialPort.WriteLine($"sdf\r\n");
         serialPort.WriteLine($"sdf\r\n");
-      
+
         serialPort.Write([26], 0, 1);
 
         string response = serialPort.ReadExisting();

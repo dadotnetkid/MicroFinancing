@@ -2,7 +2,7 @@
 
 public interface ISmsService
 {
-    void SendSms(string phoneNumber, string messages);
-    void SendNewlyCreateCustomer(string phoneNumber, string customerName);
-    void SendPaymentConfirmation(long customerId, string? amount);
+    Task SendSms(string phoneNumber, string messages);
+    Task SendNewlyCreateCustomer(string phoneNumber, string customerName);
+    Task SendPaymentConfirmation(long customerId, string? amount);
 }

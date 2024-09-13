@@ -44,10 +44,9 @@ public static class DependencyRegistrar
         services.AddTransient<ISecurityService, SecurityService>();
         services.AddTransient<IBatchService, BatchService>();
         services.AddTransient<ITermService, TermService>();
-        services.AddTransient<ISmsService, SmsService>();
+        services.AddTransient<ISmsService, SmsApiService>();
 
         services.AddTransient<ICurrentUser, BlazorCurrentUser>();
-
 
 
         //Scopes

@@ -35,11 +35,16 @@ public class CustomerService : ICustomerService
             MiddleName = x.MiddleName,
             LastName = x.LastName,
             DateOfBirth = x.DateOfBirth,
+            PhoneNumber = x.PhoneNumber,
             PlaceOfBirth = x.PlaceOfBirth,
             Address = x.Address,
             Id = x.Id,
-            TotalAmountPaid = x.Payments.Sum(x => x.PaymentAmount),
+            TotalDebt = x.Lending.Where(c => c.IsActive).Select(c => c.TotalCredit).FirstOrDefault(),
             FullName = x.FullName,
+            TotalAmountPaid = x.Payments
+                               .Where(c => c.LendingId == x.Lending.Where(c => c.IsActive)
+                                                        .Select(c => c.Id).FirstOrDefault())
+                                                        .Sum(x => x.PaymentAmount),
         });
     }
 
@@ -129,22 +134,30 @@ public class CustomerService : ICustomerService
 
     public IQueryable<CustomerGridDTM> GetCustomerByCollector(string collectorId)
     {
-        var customer = _lendingRepository.Entity.Where(x => x.Collector == collectorId && x.IsActive && !x.IsPaid)
+        var customer = _lendingRepository.Entity.Where(x => x.Collector == collectorId)
             .Select(x => x.CustomerId)
             .Distinct().ToList();
+
         var customers = _customerRepository.Entity.Where(x => customer.Contains(x.Id))
             .Select(x => new CustomerGridDTM
             {
                 FirstName = x.FirstName,
                 MiddleName = x.MiddleName,
                 LastName = x.LastName,
+                PhoneNumber = x.PhoneNumber,
                 DateOfBirth = x.DateOfBirth,
                 PlaceOfBirth = x.PlaceOfBirth,
                 Address = x.Address,
                 Id = x.Id,
-                TotalAmountPaid = x.Payments.Sum(x => x.PaymentAmount),
                 FullName = x.FullName,
-                TotalBalance = x.Lending.Sum(c => c.TotalCredit) - x.Payments.Sum(c => c.PaymentAmount)
+
+                TotalBalance = x.Lending.Sum(c => c.TotalCredit) - x.Payments.Sum(c => c.PaymentAmount),
+                TotalDebt = x.Lending.Where(c => c.IsActive).Select(c => c.TotalCredit).FirstOrDefault(),
+                TotalAmountPaid = x.Payments
+                                   .Where(c => c.LendingId == x.Lending.Where(c => c.IsActive)
+                                                               .Select(c => c.Id).FirstOrDefault())
+                                   .Sum(x => x.PaymentAmount),
+
             });
         return customers;
     }

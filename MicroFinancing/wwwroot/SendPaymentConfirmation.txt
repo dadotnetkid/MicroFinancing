@@ -1,3 +1,6 @@
 Hi [CustomerName]
-Thank you for paying [Amount] 
+
+Thank you for paying [Amount] for your active loan with balance of [Balance]
+
 [Do not reply]
+Cash Credit Company

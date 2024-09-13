@@ -43,16 +43,6 @@
                                                             FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
                     </EditTemplate>
                 </GridColumn>
-                <GridColumn Field=@nameof(CustomerGridDTM.MiddleName) Width="75">
-                    <EditTemplate>
-                        @{
-                            var item = (context as CustomerGridDTM) ?? new();
-                        }
-                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@item.MiddleName" Placeholder="First Name"
-                                                            CssClass="e-outline"
-                                                            FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
-                    </EditTemplate>
-                </GridColumn>
                 <GridColumn Field=@nameof(CustomerGridDTM.LastName) Width="100">
                     <EditTemplate>
                         @{
@@ -63,23 +53,14 @@
                                                             FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
                     </EditTemplate>
                 </GridColumn>
-                <GridColumn Field=@nameof(CustomerGridDTM.DateOfBirth) Format="MM/dd/yyy" Width="75">
-                    <EditTemplate>
-                        @{
-                            var item = (context as CustomerGridDTM) ?? new();
-                        }
-                        <Syncfusion.Blazor.Calendars.SfDatePicker AllowEdit="true" @bind-Value="item.DateOfBirth" Placeholder="Date" />
-                    </EditTemplate>
+                <GridColumn Field=@nameof(CustomerGridDTM.PhoneNumber) Width="100">
+                    
                 </GridColumn>
-                <GridColumn Field=@nameof(CustomerGridDTM.Address) Width="100">
-                    <EditTemplate>
-                        @{
-                            var item = (context as CustomerGridDTM) ?? new();
-                        }
-                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@item.Address" Placeholder="First Name"
-                                                            CssClass="e-outline"
-                                                            FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
-                    </EditTemplate>
+                <GridColumn Field=@nameof(CustomerGridDTM.TotalDebt) Width="100">
+                    
+                </GridColumn>
+                <GridColumn Field=@nameof(CustomerGridDTM.TotalAmountPaid) Width="100">
+                    
                 </GridColumn>
                 <GridColumn Width="90" TextAlign="TextAlign.Right" AllowFiltering="false">
                     <Template>
