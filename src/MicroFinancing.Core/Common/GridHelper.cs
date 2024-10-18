@@ -7,6 +7,7 @@ using Syncfusion.Blazor.Data;
 using System.ComponentModel;
 
 using Newtonsoft.Json;
+using System.Security.AccessControl;
 
 namespace MicroFinancing.Core.Common;
 
@@ -36,6 +37,14 @@ public static class GridHelper
         var count = source.Cast<T>()
                           .Count();
 
+        IDictionary<string, object> aggregates=default!;
+
+        if (dm.Aggregates != null && dm.Aggregates.Any())
+        {
+            aggregates = DataUtil.PerformAggregation(source, dm.Aggregates);
+        }
+
+
         if (dm.Skip != 0)
         {
             //Paging
@@ -49,7 +58,7 @@ public static class GridHelper
 
         if (dm.Group != null)
         {
-            IEnumerable query =  source.AsEnumerable();
+            IEnumerable query = source.AsEnumerable();
             foreach (var grp in dm.Group)
             {
                 query = DataUtil.Group<T>(source, grp, dm.Aggregates, 0, dm.GroupByFormatter);
@@ -57,16 +66,32 @@ public static class GridHelper
 
             return dm.RequiresCounts
                 ? new DataResult
-                    { Result = query, Count = count }
+                { Result = query, Count = count }
                 : query;
+        }
+
+
+        if (aggregates is null)
+        {
+            return dm.RequiresCounts
+                ? new DataResult
+                    { Result = await source.ToListAsync(), Count = count }
+                : source;
         }
 
         return dm.RequiresCounts
             ? new DataResult
-            { Result = await source.ToListAsync(), Count = count }
+                { Result = await source.ToListAsync(), Count = count,Aggregates = aggregates}
             : source;
     }
+    public class ReturnType<T>
+    {
+        public int Count { get; set; }
 
+        public IEnumerable<T> Result { get; set; }
+
+        public IDictionary<string, object> Aggregates { get; set; }
+    }
     public static T? GetByKey<T>(this DataManagerRequest dm, string key)
     {
         try
@@ -77,7 +102,7 @@ public static class GridHelper
             {
                 parseValue = (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(value);
             }
-            
+
             else
             {
                 parseValue = (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(value);

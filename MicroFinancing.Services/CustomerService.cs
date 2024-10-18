@@ -99,9 +99,10 @@ public class CustomerService : ICustomerService
             Address = x.Address,
             Id = x.Id,
             PhoneNumber = x.PhoneNumber,
-            TotalAmountPaid = x.Payments.Sum(p => p.PaymentAmount),
-            TotalDebt = x.Lending.Sum(l => l.TotalCredit),
-            TotalBalance = x.Lending.Sum(l => l.TotalCredit) - x.Payments.Sum(p => p.PaymentAmount),
+            TotalAmountPaid = x.Payments.Where(c => c.PaymentType != PaymentEnum.PaymentType.System).Sum(p => p.PaymentAmount),
+            TotalDebt = x.Lending.Where(c => !c.IsRestruct).Sum(l => l.TotalCredit),
+            TotalBalance = x.Lending.Where(c => !c.IsPaid)
+                .Select(l => l.TotalCredit - l.Payments.Sum(p => p.PaymentAmount)).FirstOrDefault(),
             CustomerFlag = x.Flag,
             HasActiveLoan = x.Lending.Any(x => !x.IsPaid && x.IsActive),
             DailyDueAmount = x.Lending

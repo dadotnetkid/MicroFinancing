@@ -27,6 +27,7 @@ namespace MicroFinancing.Services
                 Email = x.Email,
                 UserName = x.UserName,
                 FullName = x.FirstName + " " + x.LastName,
+                Branch = x.Branch,
                 UserRoles = x.UserRoles.Select(ur => new ApplicationRoleDTM()
                 {
                     Id = ur.Role.Id,

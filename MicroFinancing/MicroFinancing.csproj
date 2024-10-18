@@ -209,6 +209,8 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Pages\Customers\Details\Paluwagan.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Summary\CustomerSummary\Index.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Reports\CustomerSummary\Index.razor" />
   </ItemGroup>
 
 </Project>

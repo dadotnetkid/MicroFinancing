@@ -5,6 +5,8 @@ using MicroFinancing.Interfaces.Repositories;
 using MicroFinancing.Interfaces.Services;
 using MicroFinancing.Providers;
 using MicroFinancing.Repositories;
+using MicroFinancing.Services.Handlers;
+
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,6 +49,8 @@ public static class DependencyRegistrar
         services.AddTransient<ISmsService, SmsApiService>();
 
         services.AddTransient<ICurrentUser, BlazorCurrentUser>();
+
+        services.AddTransient<ReConstructHandler>();
 
 
         //Scopes
@@ -93,6 +97,8 @@ public static class DependencyRegistrar
         services.AddTransient<ISmsService, SmsService>();
 
         services.AddTransient<ICurrentUser, CurrentUser>();
+
+        services.AddTransient<ReConstructHandler>();
 
         //Scopes
         services

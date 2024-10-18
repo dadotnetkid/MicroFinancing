@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using MicroFinancing.Core.Enumeration;
+
+using Microsoft.AspNetCore.Identity;
 
 namespace MicroFinancing.Entities;
 
-public sealed class ApplicationUser : IdentityUser
+public sealed class ApplicationUser : IdentityUser, ISoftDeletable
 {
     public ApplicationUser()
     {
@@ -21,4 +23,7 @@ public sealed class ApplicationUser : IdentityUser
     public ICollection<ApplicationUserClaims> UserClaims { get; set; }
     public ICollection<Payment> Payments { get; set; }
     public string FullName { get; set; }
+    public DateTimeOffset? DeletionAt { get; set; }
+    public bool IsDeleted { get; set; }
+    public BranchEnum.Branch Branch { get; set; }
 }

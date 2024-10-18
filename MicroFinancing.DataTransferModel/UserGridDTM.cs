@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+using MicroFinancing.Core.Enumeration;
+
 namespace MicroFinancing.DataTransferModel;
 
 public sealed class UserGridDTM
@@ -17,4 +19,5 @@ public sealed class UserGridDTM
     [Display(Name = "User Roles")] public IEnumerable<ApplicationRoleDTM>? UserRoles { get; set; }
 
     public string FullName { get; set; }
+    public BranchEnum.Branch Branch { get; set; }
 }

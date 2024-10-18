@@ -11,9 +11,8 @@
 
     </div>
     <div class="card-body">
-        <SfGrid AllowPaging="true" TValue="PaymentGridDTM" @ref="paymentGrid" Query="QueryData" Toolbar="@(ToolBars)" AllowTextWrap="true">
+        <SfGrid AllowPaging="true" TValue="PaymentGridDTM" @ref="paymentGrid" Query="QueryData" Toolbar="@(ToolBars)" AllowTextWrap="true" EnableAdaptiveUI="true">
             <GridEditSettings AllowAdding="true" AllowDeleting="false" AllowEditing="false" Mode="EditMode.Normal"></GridEditSettings>
-
             <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(PaymentAdaptor)"
                                                   Adaptor="Adaptors.CustomAdaptor" />
             <GridColumns>
@@ -26,8 +25,7 @@
                                                                 AllowFiltering="true"
                                                                 @bind-Value="@item.CustomerId"
                                                                 Placeholder="Customer Name"
-                                                                EnableVirtualization="true"
-                                                                >
+                                                                EnableVirtualization="true">
 
                             <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(CustomerComboBoxAdaptor)"
                                                                   Adaptor="Adaptors.CustomAdaptor" />
@@ -63,7 +61,23 @@
                 </GridColumn>
 
             </GridColumns>
+            <GridAggregates>
 
+                <GridAggregate>
+                    <GridAggregateColumns>
+                        <GridAggregateColumn Field=@nameof(PaymentGridDTM.PaymentAmount) Type="AggregateType.Sum">
+                            <FooterTemplate>
+                                @{
+                                    var aggregate = (context as AggregateTemplateContext);
+                                    <div>
+                                        <p>Total Collection: @aggregate.Sum</p>
+                                    </div>
+                                }
+                            </FooterTemplate>
+                        </GridAggregateColumn>
+                    </GridAggregateColumns>
+                </GridAggregate>
+            </GridAggregates>
         </SfGrid>
     </div>
 </div>

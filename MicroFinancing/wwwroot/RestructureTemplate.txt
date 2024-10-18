@@ -1,0 +1,4 @@
+Hi [CustomerName],\r\n
+You are restructure from your current loan.
+\r\n
+[Do not reply]

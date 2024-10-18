@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
 namespace MicroFinancing.Infrastructure.Common;
@@ -11,7 +12,13 @@ public static class EnumExtensions
             .GetMember(enumValue.ToString())
             .FirstOrDefault()?
             .GetCustomAttribute<DisplayAttribute>()?
-            .GetName() ?? enumValue.ToString();
+            .GetName() ??
+                    enumValue.GetType()
+                                   .GetMember(enumValue.ToString())
+                                   .FirstOrDefault()?
+                                   .GetCustomAttribute<DescriptionAttribute>()?
+                                   .Description ??
+                    enumValue.ToString();
 
         return _enum;
     }

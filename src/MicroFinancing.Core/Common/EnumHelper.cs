@@ -35,6 +35,19 @@ public static class EnumHelper
         return default!;
     }
 
+    public static decimal? GetInterest(this Enum enumeration)
+    {
+        var fi = enumeration.GetType()
+                            .GetField(enumeration.ToString());
+
+        if (fi?.GetCustomAttributes(typeof(InterestAttribute), false) is InterestAttribute[] attributes && attributes.Any())
+        {
+            return attributes.FirstOrDefault()?.Rate;
+        }
+
+        return default!;
+    }
+
     public static string GetColor(this Enum enumeration)
     {
         var fi = enumeration.GetType()

@@ -7,8 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using MicroFinancing.Core.Common;
 using MicroFinancing.Core.Enumeration;
 using MicroFinancing.Interfaces.Services;
+
+using Microsoft.EntityFrameworkCore;
+
+using Syncfusion.Blazor;
 
 namespace MicroFinancing.Services
 {
@@ -32,6 +37,7 @@ namespace MicroFinancing.Services
             return _repository.Entity.Select(x => new LendingGridDTM
             {
                 Amount = x.Amount + x.ItemAmount,
+                TotalCredit = x.TotalCredit,
                 Category = x.Category,
                 CreatedAt = x.CreatedAt,
                 CreatedBy = x.CreatedBy,
@@ -41,7 +47,11 @@ namespace MicroFinancing.Services
                 IsDeleted = x.IsDeleted,
                 LendingDate = x.LendingDate,
                 CustomerName = $"{x.Customers.FirstName} {x.Customers.LastName}",
-                Collector = x.CollectorUser.FirstName + " " + x.CollectorUser.LastName
+                Collector = x.CollectorUser.FirstName + " " + x.CollectorUser.LastName,
+                IsRestruct = x.IsRestruct,
+                IsPaid = x.IsPaid,
+                ParentId = x.ParentLendingId
+
             });
 
 
@@ -49,18 +59,7 @@ namespace MicroFinancing.Services
 
         public async Task AddLending(CreateLendingDTM model)
         {
-            var numberOfDays = (model.DueDate - Convert.ToDateTime(model.LendingDate?.ToShortDateString()))?.Days ?? 0;
-
-            var dayss = Enumerable
-                .Range(0, numberOfDays + 1)
-                .Select(n => new { date = model.LendingDate.GetValueOrDefault().AddDays(n) });
-
-            var sundays = dayss
-                 .Count(c => c.date.DayOfWeek == DayOfWeek.Sunday);
-
-            var interestRate = (numberOfDays * 0.003325M) * 100;
-
-            var interestValue = model.Amount * (interestRate / 100);
+            var numberOfDays = CalculateInterest(model, out var sundays, out var interestRate, out var interestValue);
 
             await _repository.AddAsync(new Lending()
             {
@@ -85,15 +84,23 @@ namespace MicroFinancing.Services
             });
         }
 
-        public IQueryable<LendingSummaryGridDTM> GetSummary()
+        public Task<object> GetSummary(DataManagerRequest dm,
+                                       string userId)
         {
-            return _customersRepository.Entity.Select(x => new LendingSummaryGridDTM()
+            var query = _customersRepository.Entity.AsQueryable();
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                query = query.Where(x => x.Lending.Any(l => l.Collector == userId));
+            }
+
+            return query.Select(x => new LendingSummaryGridDTM()
             {
                 Id = x.Id,
                 CustomerName = x.FirstName + " " + x.LastName,
                 TotalBalance = x.Lending.Sum(l => l.Amount + l.ItemAmount) - x.Payments.Sum(p => p.PaymentAmount),
                 DueDate = x.Lending.Max(x => x.DueDate),
-            });
+            }).ToDataResult(dm);
 
         }
 
@@ -121,17 +128,7 @@ namespace MicroFinancing.Services
                 throw new Exception("Lending not found");
             }
 
-            var numberOfDays = (model.DueDate - model.LendingDate)?.Days ?? 0;
-
-            var dayss = Enumerable
-                        .Range(0, numberOfDays + 1)
-                        .Select(n => new { date = model.LendingDate.GetValueOrDefault().AddDays(n) });
-            var sundays = dayss
-                .Count(c => c.date.DayOfWeek == DayOfWeek.Sunday);
-
-            var interestRate = (numberOfDays * 0.003325M) * 100;
-
-            var interestValue = model.Amount * (interestRate / 100);
+            var numberOfDays = CalculateInterest(model, out var sundays, out var interestRate, out var interestValue);
 
             res.Amount = model.Amount;
             res.Category = model.Category;
@@ -148,6 +145,28 @@ namespace MicroFinancing.Services
             res.UpdateAt = DateTimeOffset.Now;
 
             await _repository.SaveChangesAsync();
+        }
+
+        private static int CalculateInterest(BaseLendingDTM model,
+                                             out int sundays,
+                                             out decimal interestRate,
+                                             out decimal interestValue)
+        {
+            var numberOfDays = model.Duration == LendingEnumeration.Duration.Custom ? ((model.DueDate - model.LendingDate)?.Days ?? 0) : model.Duration.GetDefault<int>();
+
+            var dayss = Enumerable
+                        .Range(0, numberOfDays + 1)
+                        .Select(n => new { date = model.LendingDate.GetValueOrDefault().AddDays(n) });
+            sundays = dayss
+                .Count(c => c.date.DayOfWeek == DayOfWeek.Sunday);
+
+            interestRate = model.Duration.GetInterest() ?? Math.Round((numberOfDays * 0.003325M) * 100, 2);
+
+            interestValue = model.Amount * (interestRate / 100);
+
+            model.DueDate = model.LendingDate.GetValueOrDefault().AddDays(numberOfDays);
+
+            return numberOfDays;
         }
 
         public EditLendingDTM GetLendingDetailsForEdit(long id)
@@ -167,5 +186,14 @@ namespace MicroFinancing.Services
             return res;
         }
 
+        public async Task SetActiveLoan(long id)
+        {
+            var res = await _repository.Entity.FirstOrDefaultAsync(x => x.Id == id);
+
+            res.IsActive = true;
+            res.IsPaid = false;
+
+            await _repository.SaveChangesAsync();
+        }
     }
 }

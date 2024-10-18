@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace MicroFinancing.Core.Attributes;
 
-namespace MicroFinancing.Core.Attributes
+public class ColorAttribute : Attribute
 {
-    public class ColorAttribute : Attribute
+    public ColorAttribute(string Color)
     {
-        public string Color { get; private set; }
-
-        public ColorAttribute(string Color)
-        {
-            this.Color = Color;
-        }
+        this.Color = Color;
     }
+
+    public string Color { get; private set; }
+}
+public class InterestAttribute : Attribute
+{
+    public InterestAttribute(string Rate)
+    {
+        this.Rate = Convert.ToDecimal(Rate);
+    }
+    public decimal Rate { get; private set; }
 }

@@ -4,6 +4,7 @@ using MicroFinancing.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MicroFinancing.DataMigrations.Migrations
 {
     [DbContext(typeof(MFDbContext))]
-    partial class MFDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240921094457_AddIndexToSoftDelete")]
+    partial class AddIndexToSoftDelete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,9 +93,6 @@ namespace MicroFinancing.DataMigrations.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Branch")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -581,9 +580,6 @@ namespace MicroFinancing.DataMigrations.Migrations
                     b.Property<bool>("IsPaid")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsRestruct")
-                        .HasColumnType("bit");
-
                     b.Property<decimal>("ItemAmount")
                         .HasColumnType("decimal(18,2)");
 
@@ -595,9 +591,6 @@ namespace MicroFinancing.DataMigrations.Migrations
 
                     b.Property<int>("NumberOfDays")
                         .HasColumnType("int");
-
-                    b.Property<long>("ParentLendingId")
-                        .HasColumnType("bigint");
 
                     b.Property<int>("PaymentDays")
                         .HasColumnType("int");

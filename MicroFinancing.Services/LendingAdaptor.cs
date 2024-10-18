@@ -19,10 +19,12 @@ namespace MicroFinancing.Services
         }
         public override async Task<object> ReadAsync(DataManagerRequest dm, string? key = null)
         {
-            var query = _lendingService.Get();
+            var query = _lendingService.Get()
+                                       .OrderByDescending(c => c.Id)
+                                       .AsQueryable();
             if (dm.Params != null && dm.Params.Any(x => x.Key == "CustomerId"))
             {
-                var customerId=dm.Params.FirstOrDefault(x => x.Key == "CustomerId").Value.ToTypeOf<long>();
+                var customerId = dm.Params.FirstOrDefault(x => x.Key == "CustomerId").Value.ToTypeOf<long>();
                 query = query.Where(x => x.CustomerId == customerId);
             }
             return await query.ToDataResult(dm);

@@ -50,7 +50,8 @@ public class BlazorUserService : IUserService
             LastName = item.LastName,
             LockoutEnabled = false,
             EmailConfirmed = true,
-            AccessFailedCount = 0
+            AccessFailedCount = 0,
+            Branch = item.Branch,
         };
 
         await _userManager.CreateAsync(user, item.Password);
@@ -72,13 +73,17 @@ public class BlazorUserService : IUserService
         applicationUser.FirstName = user.FirstName;
         applicationUser.LastName = user.LastName;
         applicationUser.Email = user.Email;
+        applicationUser.Branch = user.Branch;
+
         await userManager.UpdateAsync(applicationUser);
     }
 
     public async Task DeleteUser(string? userId)
     {
         var user = await _userManager.FindByIdAsync(userId);
-        await _userManager.DeleteAsync(user);
+        user.IsDeleted = true;
+
+        await _userManager.UpdateAsync(user);
     }
 
     public async Task ResetPassword(ResetPasswordUserDTM resetPasswordUserDtm)

@@ -4,6 +4,7 @@ using MicroFinancing.Entities;
 using MicroFinancing.Interfaces.Repositories;
 using MicroFinancing.Interfaces.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace MicroFinancing.Repositories
 {
@@ -18,7 +19,12 @@ namespace MicroFinancing.Repositories
             _db = db;
             _currentUser = currentUser;
         }
+
+        public DatabaseFacade Database => _db.Database;
+
         public DbSet<T> Entity => _db.Set<T>();
+
+
 
         public IQueryable<T> Fetch(Expression<Func<T, bool>> filterExpression)
         {

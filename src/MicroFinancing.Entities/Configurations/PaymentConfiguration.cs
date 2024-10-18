@@ -1,4 +1,5 @@
-﻿using MicroFinancing.Entities.Common;
+﻿using MicroFinancing.Core.Enumeration;
+using MicroFinancing.Entities.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,7 +12,7 @@ public sealed class PaymentConfiguration : IEntityTypeConfiguration<Payment>
         entity.HasIndex(c => new { c.IsDeleted, c.LendingId, c.CustomerId }).IsUnique(false);
         entity.Property(c => c.CreatedAt).HasDefaultValueSql("GETUTCDATE");
 
-        entity.HasQueryFilter(c => !c.IsDeleted);
+        entity.HasQueryFilter(c => !c.IsDeleted && c.PaymentType != PaymentEnum.PaymentType.System);
 
         entity.HasOne(c => c.Creator).WithMany()
             .IsRequired(false)

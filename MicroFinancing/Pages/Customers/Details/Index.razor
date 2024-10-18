@@ -1,9 +1,12 @@
 ﻿@page "/Customers/Details/{Id:long}"
+@using Hangfire
+@using MicroFinancing.Components.DialogComponent
 @using MicroFinancing.Components.ToastsComponent
+@using MicroFinancing.Services.Handlers
 @attribute [Authorize(Policy = ClaimsConstant.Customer.View)]
 <PageTitle>Details</PageTitle>
 <CascadingValue Name="MainPage" Value="this">
-   
+
     @if (model != null)
     {
         <div class="card">
@@ -99,7 +102,7 @@
                             <b class="text-muted">Loan</b>
                         </div>
                         <div class="float-right">
-
+                            <Syncfusion.Blazor.Buttons.SfButton IconCss="fas fa-sync" OnClick="OnRestructClick" />
                             <Syncfusion.Blazor.Buttons.SfButton IconCss="fas fa-plus" OnClick="OnAddLendingClick" Disabled="@(model.TotalBalance>0)" />
                         </div>
                     </div>
@@ -116,10 +119,8 @@
                             <b class="text-muted">Payments</b>
                         </div>
                         <div class="float-right">
-                            @if (model.TotalBalance > 0 || model.HasActiveLoan)
-                            {
-                                <Syncfusion.Blazor.Buttons.SfButton IconCss="fas fa-plus" OnClick="OnAddClick" />
-                            }
+
+                            <Syncfusion.Blazor.Buttons.SfButton IconCss="fas fa-plus" OnClick="OnAddClick" />
 
                         </div>
                     </div>
@@ -144,6 +145,8 @@
     [Inject] IToasts toast { get; set; }
     [Inject] IUserService userService { get; set; }
     [Parameter] public long Id { get; set; }
+    [Inject] IDialogService DialogService { get; set; }
+    [Inject] ReConstructHandler ReConstructHandler { get; set; }
     private Payments? paymentRef;
     private AddPayment? addPaymentRef;
     private Lending? lendingRef;
@@ -164,8 +167,6 @@
     {
         Permission = await customerService.GetPermission();
     }
-
-
 
     public async Task GetDetails()
     {
@@ -223,5 +224,23 @@
     }
 
     public bool IsPrinting { get; set; }
+
+    private void OnRestructClick(MouseEventArgs obj)
+    {
+
+        DialogService.ShowDialog("Restruct",
+                                 "Do you want to restruct this customer",
+                                 async e =>
+                                 {
+                                     if (!e)
+                                     {
+                                         return;
+                                     }
+
+                                     await ReConstructHandler.Restruct(model.Id);
+
+                                     await lendingRef.RefreshGrid();
+                                 });
+    }
 
 }

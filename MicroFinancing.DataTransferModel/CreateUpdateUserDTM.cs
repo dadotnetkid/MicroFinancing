@@ -1,4 +1,6 @@
-﻿namespace MicroFinancing.DataTransferModel;
+﻿using MicroFinancing.Core.Enumeration;
+
+namespace MicroFinancing.DataTransferModel;
 
 public sealed class CreateUpdateUserDTM
 {
@@ -12,6 +14,7 @@ public sealed class CreateUpdateUserDTM
     public string? Email { get; set; }
     public string? UserName { get; set; }
     public string? Password { get; set; }
-    public string[] UserRole { get; set; }
+    public string[] UserRole { get; set; } = [];
+    public BranchEnum.Branch Branch { get; set; }
 
 }

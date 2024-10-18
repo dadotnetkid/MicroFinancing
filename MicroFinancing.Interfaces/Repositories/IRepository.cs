@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using MicroFinancing.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace MicroFinancing.Interfaces.Repositories;
 
@@ -14,6 +15,7 @@ public interface IRepository<T, TKey> where T : class
     Task<bool> DeleteAsync(Expression<Func<T, bool>> filterExpression);
     Task<bool> DeleteAsync(IEnumerable<T> items);
     Task<bool> DeleteAsync(object? id);
+    DatabaseFacade Database { get; }
 
     Task SaveChangesAsync();
 }

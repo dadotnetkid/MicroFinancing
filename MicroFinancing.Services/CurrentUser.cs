@@ -22,6 +22,11 @@ public class CurrentUser : ICurrentUser
 
     public ClaimsPrincipal User => _httpContext.User;
 
+    public bool IsInRole(string role)
+    {
+        throw new NotImplementedException();
+    }
+
     private string GetFullName()
     {
         return User.GetUserFullName();

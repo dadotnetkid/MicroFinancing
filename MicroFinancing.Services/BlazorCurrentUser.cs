@@ -22,6 +22,11 @@ public class BlazorCurrentUser : ICurrentUser
 
     public ClaimsPrincipal User => _authenticationStateProvider.GetAuthenticationStateAsync().GetAwaiter().GetResult().User;
 
+    public bool IsInRole(string role)
+    {
+        return User.IsInRole(role);
+    }
+
     private string GetFullName()
     {
         return User.GetUserFullName();

@@ -24,6 +24,7 @@ using DevExpress.Blazor.Reporting;
 using Hangfire;
 using MicroFinancing.Infrastructure;
 using MicroFinancing.Services.Handlers;
+using NuGet.Protocol.Core.Types;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -123,7 +124,7 @@ app.MapControllers();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 app.UseHangfireDashboard("/hangfire", new DashboardOptions
-{               
+{
     DashboardTitle = "Sample Jobs",
     Authorization = new[]
     {
@@ -131,5 +132,86 @@ app.UseHangfireDashboard("/hangfire", new DashboardOptions
     }
 });
 
-
+//RecurringJob.AddOrUpdate<ReConstructHandler>("ReconstructLending", x => x.Handle(), Cron.Daily);
+//await TestClass.Test(app.Services);
 app.Run();
+
+public class TestClass
+{
+    public static async Task Test(IServiceProvider services)
+    {
+        var _repository = services.CreateScope().ServiceProvider.GetService<IRepository<Customers, long>>();
+        var lending = services.CreateScope().ServiceProvider.GetService<IRepository<Lending, long>>();
+
+        _repository.Database.BeginTransaction();
+
+        var customersList = _repository.Entity
+                                       .Where(c => c.Lending.Any())
+                                       .Where(c => !c.IsDeleted)
+                                       .Where(c => c.Lending.Any(l => !l.IsDeleted))
+                                       .Where(c => c.Lending.All(l => l.IsPaid))
+                                       .Include(c => c.Lending).ToList();
+
+        foreach (var c in customersList)
+        {
+            var customer = c.FullName;
+            var id = c.Id;
+            if (c.Lending.All(e => e.IsPaid))
+            {
+                var lendingres = c.Lending.LastOrDefault();
+
+                lendingres.IsActive = true;
+                lendingres.IsPaid = false;
+                await _repository.SaveChangesAsync();
+
+            }
+
+        }
+
+
+        await _repository.Database.CommitTransactionAsync();
+    }
+
+    private static List<long> ListOfIds = new();
+    private static IRepository<Lending, long>? repository;
+
+    private static void GetLatestLoan(long id = 0)
+    {
+        var qry = repository.Entity.Where(c => c.ParentLendingId != 0);
+
+        if (id > 0)
+        {
+            qry = qry.Where(c => c.ParentLendingId == id);
+        }
+
+        var res = qry.ToList();
+
+        foreach (var _res in res)
+        {
+            var ___ = new Lending();
+
+            if (id == 0)
+            {
+                ___ = repository.Entity.Where(c => c.Id == _res.ParentLendingId)
+                                .FirstOrDefault();
+            }
+            else
+            {
+                ___ = repository.Entity.Where(c => c.ParentLendingId == _res.Id)
+                                .FirstOrDefault();
+            }
+
+            if (___.IsRestruct)
+            {
+                GetLatestLoan(___.Id);
+                return;
+            }
+            else
+            {
+                _res.IsPaid = false;
+                _res.IsActive = true;
+
+            }
+        }
+    }
+}

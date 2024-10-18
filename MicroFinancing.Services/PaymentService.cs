@@ -56,7 +56,15 @@ public sealed class PaymentService : IPaymentService
     {
         try
         {
-            var activeLoan = _lendingRepository.Entity.Where(x => x.CustomerId == model.CustomerId).Max(x => x.Id);
+            var activeLoan = _lendingRepository.Entity.OrderByDescending(c => c.Id).FirstOrDefault(x => x.CustomerId == model.CustomerId);
+
+            if (activeLoan == null)
+            {
+                throw new Exception("No active loan found for this customer");
+            }
+
+            activeLoan.IsActive = true;
+            activeLoan.IsPaid = false;
 
             var payment = new Payment
             {
@@ -67,15 +75,14 @@ public sealed class PaymentService : IPaymentService
                 Attachment = string.Empty,
                 Override = model.Override,
                 Reason = model.Reason ?? string.Empty,
-                LendingId = activeLoan
+                LendingId = activeLoan.Id
             };
             payment = await _repository.AddAsync(payment);
 
             await _mediator.Send(payment);
 
             BackgroundJob.Enqueue(() =>
-                _smsService.SendPaymentConfirmation(model.CustomerId,
-                    payment.PaymentAmount.GetValueOrDefault().ToString("n2")));
+                _smsService.SendPaymentConfirmation(model.CustomerId, payment));
 
             return payment;
         }
@@ -118,5 +125,18 @@ public sealed class PaymentService : IPaymentService
         if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
 
         await File.WriteAllBytesAsync(Path.Combine(filePath, $"{payment.Id}.png"), uploadedFile);
+    }
+
+    public async Task DeletePayment(long paymentId)
+    {
+        var entity = await _repository.Entity.FindAsync(paymentId);
+
+        if (entity is null) return;
+
+        entity.DeleterUserId = await _userService.GetUserId();
+        entity.DeletionAt = DateTimeOffset.Now;
+        entity.IsDeleted = true;
+
+        await _repository.SaveChangesAsync();
     }
 }

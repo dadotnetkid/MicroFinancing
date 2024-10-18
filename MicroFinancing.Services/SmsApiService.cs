@@ -26,6 +26,11 @@ public class SmsApiService : ISmsService
 
     public async Task SendSms(string phoneNumber, string messages)
     {
+        if (string.IsNullOrEmpty(phoneNumber))
+        {
+            return;
+        }
+
         await _httpClient.PostAsJsonAsync("/api/Sms/Send", new
         {
             number = phoneNumber,
@@ -42,8 +47,10 @@ public class SmsApiService : ISmsService
         await SendSms(phoneNumber, file);
     }
 
-    public async Task SendPaymentConfirmation(long customerId, string? amount)
+    public async Task SendPaymentConfirmation(long customerId,
+                                              Payment payment)
     {
+
         var path = Path.Combine(_hostEnvironment.WebRootPath, "SendPaymentConfirmation.txt");
 
         var customer = await _customerRepository.Entity
@@ -53,15 +60,40 @@ public class SmsApiService : ISmsService
             {
                 FullName = x.FullName,
                 x.PhoneNumber,
-                Balance = x.Lending.Sum(l => l.TotalCredit) - x.Payments.Sum(p => p.PaymentAmount)
+                Balance = x.Lending.Where(c => c.Id == payment.LendingId).Sum(l => l.TotalCredit) - 
+                          x.Payments.Where(c => c.LendingId == payment.LendingId).Sum(p => p.PaymentAmount)
             }).FirstOrDefaultAsync();
+
+
 
         var lines = await File.ReadAllTextAsync(path);
 
-        lines = lines.Replace("[Amount]", amount)
+        lines = lines.Replace("[Amount]", payment.PaymentAmount?.ToString("n2"))
             .Replace("[CustomerName]", customer.FullName)
             .Replace("[Balance]", customer.Balance?.ToString("n2"));
 
         await SendSms(customer.PhoneNumber, lines);
+    }
+
+    public async Task SendRestructureToAdmin(string? customers)
+    {
+        var path = Path.Combine(_hostEnvironment.WebRootPath, "RestructureTemplateAdmin.txt");
+
+        var lines = await File.ReadAllTextAsync(path);
+
+        lines = lines.Replace("[customers]", customers);
+
+        await SendSms("09179602390", lines);
+    }
+
+    public async Task SendRestructureToCustomer(string phoneNumber, string customerName)
+    {
+        var path = Path.Combine(_hostEnvironment.WebRootPath, "RestructureTemplate.txt");
+
+        var lines = await File.ReadAllTextAsync(path);
+
+        lines = lines.Replace("[CustomerName]", customerName);
+
+        await SendSms("09179602390", lines);
     }
 }

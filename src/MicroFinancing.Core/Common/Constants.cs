@@ -25,7 +25,11 @@ namespace MicroFinancing.Core.Common
         PrintReport,
         [Description("Reset Password")]
         ResetPassword,
-        AddUser
+        AddUser,
+        [Description("Set Active Loan")]
+        SetActiveLoan,
+        [Description("Preview SOA")]
+        PreviewSOA,
     }
 
    

@@ -12,4 +12,6 @@ public interface IPaymentService
     
     Task UploadFile(UploadFiles uploadedFile, Payment payment);
     Task UploadFile(byte[]? uploadedFile, long paymentId);
+
+    Task DeletePayment(long paymentId);
 }

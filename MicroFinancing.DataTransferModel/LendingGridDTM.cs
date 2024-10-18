@@ -29,6 +29,10 @@ public class BaseLendingDTM
 }
 public sealed class LendingGridDTM : BaseLendingDTM
 {
+    public bool IsRestruct { get; set; }
+    public bool IsPaid { get; set; }
+    public long ParentId { get; set; }
+    public decimal TotalCredit { get; set; }
 }
 public sealed class LendingSummaryGridDTM : BaseLendingDTM
 {

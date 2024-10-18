@@ -33,7 +33,8 @@ public class SmsService : ISmsService
         return Task.CompletedTask;
     }
 
-    public Task SendPaymentConfirmation(long customerId, string? amount)
+    public Task SendPaymentConfirmation(long customerId,
+                                        Payment payment)
     {
         var path = Path.Combine(_hostEnvironment.WebRootPath, "SendPaymentConfirmation.txt");
 
@@ -46,7 +47,7 @@ public class SmsService : ISmsService
 
         foreach (var line in lines)
         {
-            var message = line.Replace("[Amount]", amount)
+            var message = line.Replace("[Amount]", payment.PaymentAmount?.ToString("n2"))
                 .Replace("[CustomerName]", customer.FullName);
 
             messages.Add(message);
@@ -54,6 +55,22 @@ public class SmsService : ISmsService
 
         //SendSms(customer.PhoneNumber, messages);
         return Task.CompletedTask;
+    }
+
+    public Task SendRestructureToAdmin(string? customers)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task SendRestructureToCustomer(string phoneNumber,
+                                          string customerName)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task SendRestructureToCustomer(string phoneNumber)
+    {
+        throw new NotImplementedException();
     }
 
     public Task SendSms(string phoneNumber, string messages)

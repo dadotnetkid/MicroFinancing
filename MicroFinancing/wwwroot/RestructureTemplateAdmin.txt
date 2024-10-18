@@ -1,0 +1,3 @@
+Hi Florencio,\r\n
+this is the list of customer that is restructured.\r\n
+[customers]

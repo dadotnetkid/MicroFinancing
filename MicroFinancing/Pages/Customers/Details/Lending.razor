@@ -1,7 +1,7 @@
 ﻿@using Syncfusion.Blazor.Data
 <SfGrid AllowPaging="true" TValue="LendingGridDTM" @ref="lendingGrid" Query="queryData">
     <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(LendingAdaptor)"
-                                          Adaptor="Adaptors.CustomAdaptor"/>
+                                          Adaptor="Adaptors.CustomAdaptor" />
     <GridColumns>
         <GridColumn Field=@nameof(LendingGridDTM.CustomerName) Width="100"></GridColumn>
         <GridColumn Field=@nameof(LendingGridDTM.Category) Width="75">
@@ -10,7 +10,7 @@
 
                     var row = context as LendingGridDTM;
                 }
-                @if (row is {Category: Core.Enumeration.LendingEnumeration.LendingCategory.Cash })
+                @if (row is { Category: Core.Enumeration.LendingEnumeration.LendingCategory.Cash })
                 {
                     <span class="badge badge-primary">@row.Category.ToString()</span>
                 }
@@ -20,7 +20,7 @@
                 }
             </Template>
         </GridColumn>
-        <GridColumn Field=@nameof(LendingGridDTM.Amount) Width="100"></GridColumn>
+        <GridColumn Field=@nameof(LendingGridDTM.TotalCredit) Width="100"></GridColumn>
         <GridColumn Field=@nameof(LendingGridDTM.LendingDate) Width="100"></GridColumn>
         <GridColumn Field=@nameof(LendingGridDTM.DueDate) Width="100"></GridColumn>
         <GridColumn Field=@nameof(LendingGridDTM.Collector) Width="100"></GridColumn>
@@ -30,7 +30,9 @@
                 <SfDropDownButton IconCss="fas fa-ellipsis-v">
                     <DropDownMenuItems>
                         <DropDownMenuItem Id="@GenericDropdownItem.ViewDetails.ToString()" Text="View Details" IconCss="fas fa-user-edit"></DropDownMenuItem>
-                        <DropDownMenuItem Id="delete" Text="@GenericDropdownItem.Delete.ToString()" IconCss="fas fa-trash"></DropDownMenuItem>
+                        <DropDownMenuItem Id="@GenericDropdownItem.Delete.ToString()" Text="@GenericDropdownItem.Delete.ToString()" IconCss="fas fa-trash"></DropDownMenuItem>
+                        <DropDownMenuItem Id="@GenericDropdownItem.SetActiveLoan.ToString()" Text="@GenericDropdownItem.SetActiveLoan.GetDescription()" IconCss="fas fa-check"></DropDownMenuItem>
+                        <DropDownMenuItem Id="@GenericDropdownItem.PreviewSOA.ToString()" Text="@GenericDropdownItem.PreviewSOA.GetDescription()" IconCss="fas fa-print"></DropDownMenuItem>
                     </DropDownMenuItems>
                     <DropDownButtonEvents ItemSelected="@((e)=>OnDropdownSelectedMenu(e,(LendingGridDTM)context))" />
                 </SfDropDownButton>
@@ -42,9 +44,9 @@
 
 </SfGrid>
 <EditLending @ref="editLendingRef" OnSubmitSuccess="OnSubmitSuccess" />
-
+<PdfViewModal @ref="printPreview"></PdfViewModal>
 @code {
-    [CascadingParameter(Name ="MainPage")]public Index MainPage { get; set; }
+    [CascadingParameter(Name = "MainPage")] public Index MainPage { get; set; }
     private SfGrid<LendingGridDTM>? lendingGrid;
     private AddLending? lendingRef;
     private Query queryData = new();

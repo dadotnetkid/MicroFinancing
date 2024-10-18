@@ -1,8 +1,13 @@
-﻿namespace MicroFinancing.Services;
+﻿using MicroFinancing.Entities;
+
+namespace MicroFinancing.Services;
 
 public interface ISmsService
 {
     Task SendSms(string phoneNumber, string messages);
     Task SendNewlyCreateCustomer(string phoneNumber, string customerName);
-    Task SendPaymentConfirmation(long customerId, string? amount);
+    Task SendPaymentConfirmation(long customerId,
+                                 Payment payment);
+    Task SendRestructureToAdmin(string? customers);
+    Task SendRestructureToCustomer(string phoneNumber, string customerName);
 }

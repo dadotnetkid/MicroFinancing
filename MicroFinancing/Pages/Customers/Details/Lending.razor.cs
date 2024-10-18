@@ -13,6 +13,7 @@ namespace MicroFinancing.Pages.Customers.Details;
 public partial class Lending
 {
     private EditLending editLendingRef;
+    private PdfViewModal printPreview;
     [Inject] IDialogService DialogService { get; set; }
     [Inject] IUserService userService { get; set; }
     [Inject] ILendingService lendingService { get; set; }
@@ -28,7 +29,34 @@ public partial class Lending
         {
             await EditLendingDetails(context);
         }
+        if (menuEventArgs.Item.Id == GenericDropdownItem.SetActiveLoan.ToString())
+        {
+            await SetActiveLoan(context);
+        }
+        if (menuEventArgs.Item.Id == GenericDropdownItem.PreviewSOA.ToString())
+        {
+            await PreviewSOA(context);
+        }
     }
+
+    private async Task PreviewSOA(LendingGridDTM context)
+    {
+        var res = await userService.IsAuthorize(ClaimsConstant.Customer.Print);
+        if (!res) return;
+
+        IsPrinting = true;
+        await InvokeAsync(StateHasChanged);
+
+        await Task.Factory.StartNew(async () =>
+        {
+            await printPreview.PreviewSOAByLendingId(context.Id);
+
+            IsPrinting = false;
+            await InvokeAsync(StateHasChanged);
+        });
+    }
+
+    public bool IsPrinting { get; set; }
 
     private async Task EditLendingDetails(LendingGridDTM context)
     {
@@ -40,6 +68,19 @@ public partial class Lending
         }
 
         editLendingRef.Show(context.Id);
+    }
+
+    private async Task SetActiveLoan(LendingGridDTM context)
+    {
+        var authorize = await userService.IsAuthorize(ClaimsConstant.Customer.ManageLoan);
+
+        if (!authorize)
+        {
+            return;
+        }
+
+        await lendingService.SetActiveLoan(context.Id);
+        await lendingGrid.Refresh();
     }
 
     private async Task DeleteLending(LendingGridDTM context)

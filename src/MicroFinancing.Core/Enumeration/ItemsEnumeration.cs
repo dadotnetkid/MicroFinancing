@@ -28,10 +28,15 @@ namespace MicroFinancing.Core.Enumeration
         {
             [Description("40 Days")]
             [DefaultValue(40)]
+            [Interest("13.3")]
             FortyDays = 0,
             [Description("36 Days")]
             [DefaultValue(36)]
             ThirtySixDays = 2,
+            [Description("30 Days")]
+            [DefaultValue(30)]
+            [Interest("10")]
+            ThirtyDays = 3,
             [Description("Custom")]
             Custom = 1,
         }

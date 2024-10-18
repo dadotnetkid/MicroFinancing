@@ -2,7 +2,10 @@
 @using Syncfusion.Blazor.Popups
 @using Blazored.FluentValidation
 @using MicroFinancing.Components.ToastsComponent
+@using MicroFinancing.Core.Enumeration
 @using MicroFinancing.DataTransferModel
+@using MicroFinancing.Infrastructure.Common
+@using MicroFinancing.Infrastructure.Enums
 @using MicroFinancing.Interfaces.Services
 @using Syncfusion.Blazor.DropDowns
 <SfDialog Width="900px" ShowCloseIcon="true" @bind-Visible="visibility" CssClass="modal-center-top">
@@ -34,6 +37,19 @@
                     <div class="col-12">
                         <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@user.UserName" Enabled="@string.IsNullOrEmpty(user.UserId)" Placeholder="UserName" CssClass="e-outline" FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
                         <ValidationMessage For="@(()=>user.UserName)" TValue="string" />
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-12">
+
+                        <SfDropDownList TValue="BranchEnum.Branch" 
+                                        DataSource="EnumExtensions.ToDictionary<BranchEnum.Branch>()"
+                                        @bind-Value="@user.Branch" 
+                                        TItem="KeyValuePair<BranchEnum.Branch, string>" CssClass="e-outline" Placeholder="Branch">
+                            <DropDownListFieldSettings Value="Key" Text="Value"></DropDownListFieldSettings>
+                        </SfDropDownList>
+                        <ValidationMessage For="@(()=>user.UserRole)" TValue="string[]" />
                     </div>
                 </div>
 

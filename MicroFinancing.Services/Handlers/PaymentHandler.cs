@@ -21,7 +21,11 @@ namespace MicroFinancing.Services.Handlers
         public async Task Handle(Payment request, CancellationToken cancellationToken)
         {
 
-            var getTotalPayment = _repository.Entity.AsNoTracking().Where(x => x.CustomerId == request.CustomerId).Sum(x => x.PaymentAmount);
+            var getTotalPayment = _repository.Entity.AsNoTracking()
+                                             .Where(x => x.CustomerId == request.CustomerId)
+                                             .Where(c => c.LendingId == request.LendingId)
+                                             .Sum(x => x.PaymentAmount);
+
             var getActiveLoanWithBalance = _lendingRepository.Entity
                 .FirstOrDefault(x => x.Id == request.LendingId);
             if (getTotalPayment >= getActiveLoanWithBalance?.TotalCredit)

@@ -17,6 +17,15 @@
                 <GridColumn Field=@nameof(UserGridDTM.LastName) Width="150"></GridColumn>
                 <GridColumn Field=@nameof(UserGridDTM.Email) Width="150"></GridColumn>
                 <GridColumn Field=@nameof(UserGridDTM.UserName) Width="150"></GridColumn>
+                <GridColumn Field=@nameof(UserGridDTM.Branch) Width="150">
+                    <Template>
+                        @{
+                            var item = context as UserGridDTM;
+                        }
+
+                        @item.Branch.GetDescription()
+                    </Template>
+                </GridColumn>
                 <GridColumn Field=@nameof(UserGridDTM.UserRoles) Width="150">
                     <Template>
                         @{

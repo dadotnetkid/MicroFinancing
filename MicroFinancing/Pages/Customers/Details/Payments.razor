@@ -17,7 +17,7 @@
                 @if (row.Override)
                 {
                     <span>@row.CreatedBy (Override)</span>
-                    <br/>
+                    <br />
                     <small class="text-muted">@row.Reason</small>
                 }
                 else
@@ -41,7 +41,21 @@
                 }
             </Template>
         </GridColumn>
+
+
         <GridColumn Field=@nameof(PaymentGridDTM.PaymentDate) Width="100"></GridColumn>
+
+        @if (CurrentUser.IsInRole("Administrator"))
+        {
+            <GridColumn  Width="30">
+                <Template>
+                    @{
+                        var row = context as PaymentGridDTM;
+                    }
+                    <a style="cursor:pointer" @onclick="@(()=>DeletePayment(row))"><span class="fas fa-trash"></span></a>
+                </Template>
+            </GridColumn>
+        }
     </GridColumns>
 
 </SfGrid>
@@ -50,9 +64,13 @@
     private Query queryData = new();
 
     [CascadingParameter(Name = "MainPage")] public Index MainPage { get; set; }
+    [Inject] IPaymentService paymentService { get; set; }
+    [Inject] ICurrentUser CurrentUser { get; set; }
+
     protected override void OnInitialized()
     {
         queryData.AddParams("CustomerId", MainPage.Id);
+
         base.OnInitialized();
     }
     public async Task Refresh()
@@ -61,5 +79,11 @@
         await paymentGrid.Refresh();
     }
 
+    private async Task DeletePayment(PaymentGridDTM? row)
+    {
+        await paymentService.DeletePayment(row.Id);
+
+        await Refresh();
+    }
 
 }

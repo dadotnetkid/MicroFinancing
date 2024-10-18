@@ -45,6 +45,19 @@
         await InvokeAsync(StateHasChanged);
     }
 
+    public async Task PreviewSOAByLendingId(long lendingId)
+    {
+        visibility = true;
+
+        report = new rptStatementofAccount()
+            {
+                DataSource = await _reportingService.StatementOfAccountByLendingId(lendingId)
+            };
+
+
+        await InvokeAsync(StateHasChanged);
+    }
+
 
 
     public void Close()

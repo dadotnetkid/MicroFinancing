@@ -7,7 +7,7 @@
         </div>
     </div>
     <div class="card-body">
-        <SfGrid AllowPaging="true" TValue="LendingSummaryGridDTM" @ref="lendingGrid">
+        <SfGrid AllowPaging="true" TValue="LendingSummaryGridDTM" @ref="lendingGrid" EnableAdaptiveUI="true">
             <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(LendingSummaryAdaptor)"
                                                   Adaptor="Adaptors.CustomAdaptor" />
             <GridColumns>
