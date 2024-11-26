@@ -138,21 +138,21 @@
     {
         if (e.Item.Id == GenericDropdownItem.ViewDetails.ToString())
         {
-            if (await userService.IsAuthorize(ClaimsConstant.Customer.View))
+            if (await userService.IsAuthorizeAsync(ClaimsConstant.Customer.View))
             {
                 navigationManager.NavigateTo($"/Customers/Details/{context.Id}");
             }
         }
         if (e.Item.Id == GenericDropdownItem.Edit.ToString())
         {
-            if (await userService.IsAuthorize(ClaimsConstant.Customer.Manage))
+            if (await userService.IsAuthorizeAsync(ClaimsConstant.Customer.Manage))
             {
                 await editCustomer?.Show(context.Id);
             }
         }
         if (e.Item.Id == GenericDropdownItem.Delete.ToString())
         {
-            if (await userService.IsAuthorize(ClaimsConstant.Customer.Manage))
+            if (await userService.IsAuthorizeAsync(ClaimsConstant.Customer.Manage))
             {
                 dialogService.ShowDialog("Delete",
                                          "Delete this Item",
@@ -178,7 +178,7 @@
 
     private async Task OnAddClick()
     {
-        if (await userService.IsAuthorize(ClaimsConstant.Customer.Add))
+        if (await userService.IsAuthorizeAsync(ClaimsConstant.Customer.Add))
         {
             addCustomer?.Show();
         }
@@ -186,7 +186,7 @@
 
     private async Task OnAddInlineClick(MouseEventArgs obj)
     {
-        if (!await userService.IsAuthorize(ClaimsConstant.Customer.Manage))
+        if (!await userService.IsAuthorizeAsync(ClaimsConstant.Customer.Manage))
         {
             return;
         }

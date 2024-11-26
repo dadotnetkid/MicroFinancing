@@ -1,5 +1,7 @@
 ﻿using MicroFinancing.DataTransferModel;
 using MicroFinancing.Entities;
+
+using Syncfusion.Blazor;
 using Syncfusion.Blazor.Inputs;
 
 namespace MicroFinancing.Interfaces.Services;
@@ -14,4 +16,11 @@ public interface IPaymentService
     Task UploadFile(byte[]? uploadedFile, long paymentId);
 
     Task DeletePayment(long paymentId);
+
+    Task ChangePayment(long paymentId,
+                       long lendingId);
+
+    Task<object> GetPaymentForApproval(DataManagerRequest dm);
+
+    Task PaymentApproval(PaymentForApprovalDto? item);
 }

@@ -13,29 +13,37 @@ public class SmsApiService : ISmsService
     private readonly IRepository<Customers, long> _customerRepository;
 
     public SmsApiService(IWebHostEnvironment hostEnvironment,
-        IRepository<Customers, long> customerRepository)
+        IRepository<Customers, long> customerRepository,
+        IHttpClientFactory httpClientFactory)
     {
         _hostEnvironment = hostEnvironment;
         _customerRepository = customerRepository;
 
-        _httpClient = new HttpClient()
-        {
-            BaseAddress = new Uri("https://sms-api.interworx.app")
-        };
+        _httpClient = httpClientFactory.CreateClient("HttpClientWithSSLUntrusted");
     }
+
+   
 
     public async Task SendSms(string phoneNumber, string messages)
     {
-        if (string.IsNullOrEmpty(phoneNumber))
+        try
         {
-            return;
-        }
+            if (string.IsNullOrEmpty(phoneNumber))
+            {
+                return;
+            }
 
-        await _httpClient.PostAsJsonAsync("/api/Sms/Send", new
+            await _httpClient.PostAsJsonAsync("/api/Sms/Send",
+                                              new
+                                              {
+                                                  number = phoneNumber,
+                                                  message = messages
+                                              });
+        }
+        catch (Exception e)
         {
-            number = phoneNumber,
-            message = messages
-        });
+            throw;
+        }
     }
 
     public async Task SendNewlyCreateCustomer(string phoneNumber, string customerName)

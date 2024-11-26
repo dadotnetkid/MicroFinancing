@@ -31,7 +31,7 @@ public sealed partial class Index
     {
         if (e.Item.Id == GenericDropdownItem.ViewDetails.ToString())
         {
-            if (await userService.IsAuthorize(ClaimsConstant.Customer.View))
+            if (await userService.IsAuthorizeAsync(ClaimsConstant.Customer.View))
             {
                 navigationManager.NavigateTo($"/Batch/{context.Id}");
             }

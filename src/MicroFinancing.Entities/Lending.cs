@@ -49,4 +49,5 @@ public sealed class Lending : BaseEntity<long>
     public LendingEnumeration.Duration Duration { get; set; }
     public long ParentLendingId { get; set; }
     public bool IsRestruct { get; set; }
+    public string LendingNumber { get; set; }
 }

@@ -93,6 +93,9 @@ namespace MicroFinancing.DataMigrations.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<decimal?>("BasicPay")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("Branch")
                         .HasColumnType("int");
 
@@ -119,7 +122,13 @@ namespace MicroFinancing.DataMigrations.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasComputedColumnSql("FirstName + ' ' + LastName ");
 
+                    b.Property<string>("Inviter")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsEmployee")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
@@ -494,9 +503,6 @@ namespace MicroFinancing.DataMigrations.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<decimal?>("Price")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("SKU")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -593,6 +599,12 @@ namespace MicroFinancing.DataMigrations.Migrations
                     b.Property<DateTime>("LendingDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("LendingNumber")
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("nvarchar(450)")
+                        .HasComputedColumnSql("concat('LND-',Id)");
+
                     b.Property<int>("NumberOfDays")
                         .HasColumnType("int");
 
@@ -619,6 +631,9 @@ namespace MicroFinancing.DataMigrations.Migrations
                     b.HasIndex("DeleterUserId");
 
                     b.HasIndex("LastModifierUserId");
+
+                    b.HasIndex("LendingNumber")
+                        .IsUnique();
 
                     b.HasIndex("IsDeleted", "CustomerId", "Collector");
 
@@ -654,6 +669,9 @@ namespace MicroFinancing.DataMigrations.Migrations
 
                     b.Property<DateTimeOffset?>("DeletionAt")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");

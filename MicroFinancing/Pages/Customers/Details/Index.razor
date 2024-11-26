@@ -95,7 +95,7 @@
         </div>
         /*cards*/
         <div class="row mt-2">
-            <div class="col-lg-6 col-sm-12">
+            <div class="col-lg-7 col-sm-12">
                 <div class="card">
                     <div class="card-header">
                         <div class="float-left">
@@ -112,7 +112,7 @@
                 </div>
 
             </div>
-            <div class="col-lg-6 col-sm-12">
+            <div class="col-lg-5 col-sm-12">
                 <div class="card">
                     <div class="card-header">
                         <div class="float-left">
@@ -177,7 +177,7 @@
 
     private async Task OnAddClick()
     {
-        var res = await userService.IsAuthorize(ClaimsConstant.Customer.AddPayment);
+        var res = await userService.IsAuthorizeAsync(ClaimsConstant.Customer.AddPayment);
 
         if (!res)
         {
@@ -190,14 +190,14 @@
 
     private async Task OnAddLendingClick()
     {
-        var res = await userService.IsAuthorize(ClaimsConstant.Customer.AddLoan);
+        var res = await userService.IsAuthorizeAsync(ClaimsConstant.Customer.AddLoan);
         if (!res) return;
         addLendingRef.Show();
     }
 
     private async Task SetFlag()
     {
-        var res = await userService.IsAuthorize(ClaimsConstant.Customer.SetFlag);
+        var res = await userService.IsAuthorizeAsync(ClaimsConstant.Customer.SetFlag);
         if (!res) return;
         setFlagRef.Show();
     }
@@ -207,7 +207,7 @@
     {
         if (obj.Item.Id == GenericDropdownItem.PrintReport.ToString())
         {
-            var res = await userService.IsAuthorize(ClaimsConstant.Customer.Print);
+            var res = await userService.IsAuthorizeAsync(ClaimsConstant.Customer.Print);
             if (!res) return;
 
             IsPrinting = true;

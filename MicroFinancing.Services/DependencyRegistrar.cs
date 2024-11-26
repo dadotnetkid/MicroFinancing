@@ -18,7 +18,7 @@ public static class DependencyRegistrar
     public static IServiceCollection AddBlazorServices(this IServiceCollection services)
     {
         //Repository
-        services.AddScoped(typeof(IRepository<,>), typeof(BaseRepository<,>));
+        services.AddTransient(typeof(IRepository<,>), typeof(BaseRepository<,>));
 
         //Scoped Adaptor
         services.AddTransient(typeof(BaseAdaptor<,>));
@@ -33,7 +33,7 @@ public static class DependencyRegistrar
         services.AddTransient(typeof(CustomerComboBoxAdaptor));
         services.AddTransient<BatchAdaptor>();
         services.AddTransient<TermAdaptor>();
-        services.AddTransient<ParticipantInBatchAdaptor>();
+        services.AddTransient<PaymentApprovalAdaptor>();
 
         //Transient
         services.AddTransient<IUserService, BlazorUserService>();
@@ -55,8 +55,8 @@ public static class DependencyRegistrar
 
         //Scopes
         services
-            .AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
-        services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ClaimsPrincipalFactory>();
+            .AddTransient<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+        services.AddTransient<IUserClaimsPrincipalFactory<ApplicationUser>, ClaimsPrincipalFactory>();
 
         //Singleton
         services.AddSingleton(x => new ClaimsValueModel());
@@ -82,6 +82,7 @@ public static class DependencyRegistrar
         services.AddTransient<BatchAdaptor>();
         services.AddTransient<TermAdaptor>();
         services.AddTransient<ParticipantInBatchAdaptor>();
+        services.AddTransient<PaymentApprovalAdaptor>();
 
         //Transient
         services.AddTransient<IUserService, ApiUserService>();
@@ -119,6 +120,9 @@ public static class DependencyRegistrar
             options.AddPolicy(ClaimsConstant.Administrator,
                 policy => policy.RequireClaim(ClaimsConstant.ClaimType, new[] { ClaimsConstant.Administrator }));
 
+          
+
+
             //View Permission
             options.AddPolicy(ClaimsConstant.Users.View,
                 policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Users.View));
@@ -135,6 +139,10 @@ public static class DependencyRegistrar
             options.AddPolicy(ClaimsConstant.Roles.Manage,
                 policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Roles.Manage));
 
+            //View All Customer
+
+            options.AddPolicy(ClaimsConstant.Customer.ViewAllCustomer,
+                              policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.ViewAllCustomer));
 
             //Manage Customer
             options.AddPolicy(ClaimsConstant.Customer.Manage,

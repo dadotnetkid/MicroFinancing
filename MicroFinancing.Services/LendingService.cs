@@ -12,6 +12,7 @@ using MicroFinancing.Core.Enumeration;
 using MicroFinancing.Interfaces.Services;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 using Syncfusion.Blazor;
 
@@ -22,14 +23,17 @@ namespace MicroFinancing.Services
         private readonly IRepository<Lending, long> _repository;
         private readonly IRepository<Customers, long> _customersRepository;
         private readonly IUserService _userService;
+        private readonly IServiceScopeFactory _scopeFactory;
 
         public LendingService(IRepository<Lending, long> repository,
-            IRepository<Customers, long> customersRepository,
-            IUserService userService)
+                              IRepository<Customers, long> customersRepository,
+                              IUserService userService,
+                              IServiceScopeFactory scopeFactory)
         {
             _repository = repository;
             _customersRepository = customersRepository;
             _userService = userService;
+            _scopeFactory = scopeFactory;
         }
 
         public IQueryable<LendingGridDTM> Get()
@@ -50,7 +54,9 @@ namespace MicroFinancing.Services
                 Collector = x.CollectorUser.FirstName + " " + x.CollectorUser.LastName,
                 IsRestruct = x.IsRestruct,
                 IsPaid = x.IsPaid,
-                ParentId = x.ParentLendingId
+                ParentId = x.ParentLendingId,
+                IsActive = x.IsActive,
+                LendingNumber = x.LendingNumber
 
             });
 
@@ -87,6 +93,7 @@ namespace MicroFinancing.Services
         public Task<object> GetSummary(DataManagerRequest dm,
                                        string userId)
         {
+
             var query = _customersRepository.Entity.AsQueryable();
 
             if (!string.IsNullOrEmpty(userId))
@@ -98,7 +105,9 @@ namespace MicroFinancing.Services
             {
                 Id = x.Id,
                 CustomerName = x.FirstName + " " + x.LastName,
-                TotalBalance = x.Lending.Sum(l => l.Amount + l.ItemAmount) - x.Payments.Sum(p => p.PaymentAmount),
+                TotalBalance = x.Lending.Where(c => c.IsActive).Sum(l => l.TotalCredit) - x.Payments
+                                                                                                   .Where(c => c.Lending.IsActive)
+                                                                                                   .Sum(p => p.PaymentAmount),
                 DueDate = x.Lending.Max(x => x.DueDate),
             }).ToDataResult(dm);
 
@@ -190,8 +199,15 @@ namespace MicroFinancing.Services
         {
             var res = await _repository.Entity.FirstOrDefaultAsync(x => x.Id == id);
 
+            foreach (var i in _repository.Entity.Where(c => c.CustomerId == res.CustomerId && c.Id != id))
+            {
+                i.IsPaid = true;
+                i.IsActive = false;
+            }
+
             res.IsActive = true;
             res.IsPaid = false;
+            res.IsRestruct = false;
 
             await _repository.SaveChangesAsync();
         }

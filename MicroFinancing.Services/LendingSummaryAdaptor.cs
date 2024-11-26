@@ -8,19 +8,19 @@ public sealed class LendingSummaryAdaptor : DataAdaptor
 {
     private readonly ILendingService _lendingService;
     private readonly ICurrentUser _currentUser;
+    private readonly IUserService _userService;
 
-    public LendingSummaryAdaptor(ILendingService lendingService, ICurrentUser currentUser)
+    public LendingSummaryAdaptor(ILendingService lendingService, ICurrentUser currentUser, IUserService userService)
     {
         _lendingService = lendingService;
         _currentUser = currentUser;
+        _userService = userService;
     }
     public override async Task<object> ReadAsync(DataManagerRequest dm, string? key = null)
     {
-        var isAdmin = _currentUser.User.IsInRole("Administrator");
-
         object query = default!;
 
-        if (isAdmin)
+        if (await _userService.IsAuthorizeAsync(ClaimsConstant.Customer.ViewAllCustomer))
         {
             query = await _lendingService.GetSummary(dm, null);
             return query;

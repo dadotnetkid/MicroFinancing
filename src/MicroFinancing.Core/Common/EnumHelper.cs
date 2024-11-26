@@ -73,24 +73,30 @@ public static class EnumHelper
                 Text = c.Value
             }).ToList();
     }
-}
 
-public static class StringHelper
-{
-    public static string GetDescription(this string enumeration)
+    public static T GetValueFromDescription<T>(this string description) where T : Enum
     {
-        var fi = enumeration.GetType()
-                            .GetField(enumeration);
-
-        if (fi?.GetCustomAttributes(typeof(DescriptionAttribute), false) is DescriptionAttribute[] attributes && attributes.Any())
+        foreach (var field in typeof(T).GetFields())
         {
-            return attributes.First()
-                             .Description;
+            if (Attribute.GetCustomAttribute(field,
+                                             typeof(DescriptionAttribute)) is DescriptionAttribute attribute)
+            {
+                if (attribute.Description == description)
+                    return (T)field.GetValue(null);
+            }
+            else
+            {
+                if (field.Name == description)
+                    return (T)field.GetValue(null);
+            }
         }
 
-        return string.Empty;
+        return default(T);
+
+        // Or return default(T);
     }
 }
+
 public class GenericDropItem<T>
 {
     public T Value { get; set; }

@@ -1,0 +1,49 @@
+﻿@page "/Payment-Approval"
+@attribute [Authorize(Policy = ClaimsConstant.Administrator)]
+@using Syncfusion.Blazor.Buttons
+<div class="card">
+    <div class="card-header">
+        <div class="float-left">
+            <h5>Payment Approval</h5>
+        </div>
+
+    </div>
+    <div class="card-body">
+        <SfGrid AllowPaging="true" AllowFiltering="true" TValue="PaymentForApprovalDto" @ref="PaymentApprovalGrid">
+            <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(PaymentApprovalAdaptor)"
+                                                  Adaptor="Adaptors.CustomAdaptor" />
+            <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
+            <GridColumns>
+
+                <GridTemplates>
+
+                    <DetailTemplate Context="paymentContext">
+
+                        @{
+                            var row = paymentContext as PaymentForApprovalDto;
+                        }
+                        <SfGrid TValue="PaymentsForApprovalDto" DataSource="row.Payments">
+                            <GridColumns>
+                                <GridColumn Field=@nameof(PaymentsForApprovalDto.LendingNumber) HeaderText="LendingNumber" Width="110"></GridColumn>
+                                <GridColumn Field=@nameof(PaymentsForApprovalDto.CustomerName) HeaderText="CustomerName" Width="110"></GridColumn>
+                                <GridColumn Field=@nameof(PaymentsForApprovalDto.PaymentDate) HeaderText="PaymentDate" Width="110"></GridColumn>
+                                <GridColumn Field=@nameof(PaymentsForApprovalDto.PaymentAmount) HeaderText="PaymentAmount" Width="110"></GridColumn>
+                            </GridColumns>
+                        </SfGrid>
+                    </DetailTemplate>
+
+
+                </GridTemplates>
+                <GridColumn Field=@nameof(PaymentForApprovalDto.CollectorName) Width="75"></GridColumn>
+                <GridColumn Field=@nameof(PaymentForApprovalDto.TotalAmount) Width="75"></GridColumn>
+                <GridColumn HeaderText="Action" Width="75">
+                    <Template>
+                        <SfButton @onclick="@(()=>OnApproved(context as PaymentForApprovalDto))">Approved</SfButton>
+                    </Template>
+                </GridColumn>
+            </GridColumns>
+
+        </SfGrid>
+    </div>
+
+</div>

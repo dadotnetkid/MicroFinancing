@@ -1,0 +1,36 @@
+﻿@page "/top-sales-chart-report"
+<div class="card">
+    <div class="card-header">
+        <b>Total Collection</b>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <SfDatePicker @bind-Value="DateFrom"
+                              CssClass="e-outline"
+                              FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto"
+                              Placeholder="Date From"></SfDatePicker>
+
+            </div>
+            <div class="col">
+                <SfDatePicker @bind-Value="DateTo"
+                              CssClass="e-outline"
+                              FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto"
+                              Placeholder="Date To"></SfDatePicker>
+
+            </div>
+            <div class="col">
+                <button class="btn btn-primary" @onclick="Search">
+                    <span class="fas fa-search"></span>
+                    Search
+                </button>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col">
+                <TopSalesChart DateFrom="DateFrom?.Date" DateTo="DateTo?.AddDays(1)" @ref=TopSalesChartRef></TopSalesChart>
+            </div>
+        </div>
+
+    </div>
+</div>

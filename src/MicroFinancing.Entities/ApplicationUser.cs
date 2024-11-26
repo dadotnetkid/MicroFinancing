@@ -26,4 +26,8 @@ public sealed class ApplicationUser : IdentityUser, ISoftDeletable
     public DateTimeOffset? DeletionAt { get; set; }
     public bool IsDeleted { get; set; }
     public BranchEnum.Branch Branch { get; set; }
+    public bool IsEmployee { get; set; }
+    public decimal? BasicPay { get; set; }
+
+    public string? Inviter { get; set; }
 }

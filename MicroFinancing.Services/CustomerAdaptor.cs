@@ -14,7 +14,8 @@ namespace MicroFinancing.Services
         private readonly ICustomerService _customerService;
         private readonly IUserService _userService;
 
-        public CustomerAdaptor(ICustomerService customerService,IUserService userService)
+        public CustomerAdaptor(ICustomerService customerService,
+                               IUserService userService)
         {
             _customerService = customerService;
             _userService = userService;
@@ -23,7 +24,7 @@ namespace MicroFinancing.Services
         {
             try
             {
-                if (await _userService.IsInRoleAsync("Administrator"))
+                if (await _userService.IsAuthorizeAsync(ClaimsConstant.Customer.ViewAllCustomer, false))
                 {
                     return await _customerService.GetCustomer()
                                                  .ToDataResult(dm);

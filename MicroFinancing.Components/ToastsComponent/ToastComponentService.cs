@@ -2,7 +2,7 @@
 
 namespace MicroFinancing.Components.ToastsComponent
 {
-    public class ToastComponentService:IToasts
+    public class ToastComponentService : IToasts
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
         public ToastContainer container { get; set; }
@@ -14,11 +14,15 @@ namespace MicroFinancing.Components.ToastsComponent
         {
             try
             {
+                if (container is null)
+                {
+                    return;
+                }
                 await container.ShowToast(title, message);
             }
             catch (Exception e)
             {
-                
+
             }
         }
     }

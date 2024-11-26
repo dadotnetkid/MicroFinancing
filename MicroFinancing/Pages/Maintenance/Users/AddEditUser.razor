@@ -1,13 +1,5 @@
-﻿@using Microsoft.AspNetCore.Components
-@using Syncfusion.Blazor.Popups
-@using Blazored.FluentValidation
-@using MicroFinancing.Components.ToastsComponent
-@using MicroFinancing.Core.Enumeration
-@using MicroFinancing.DataTransferModel
+﻿@using MicroFinancing.Core.Enumeration
 @using MicroFinancing.Infrastructure.Common
-@using MicroFinancing.Infrastructure.Enums
-@using MicroFinancing.Interfaces.Services
-@using Syncfusion.Blazor.DropDowns
 <SfDialog Width="900px" ShowCloseIcon="true" @bind-Visible="visibility" CssClass="modal-center-top">
     <DialogPositionData X="center" />
     <DialogTemplates>
@@ -17,39 +9,39 @@
                 <FluentValidationValidator DisableAssemblyScanning="true" @ref="fluentValidator" />
                 <div class="row mt-2">
                     <div class="col-12">
-                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@user.FirstName" Placeholder="First Name" CssClass="e-outline" FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
-                        <ValidationMessage For="@(()=>user.FirstName)" TValue="string" />
+                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@user.FirstName" Placeholder="First Name" CssClass="e-outline" FloatLabelType="FloatLabelType.Auto" />
+                        <ValidationMessage For="@(() => user.FirstName)" TValue="string" />
                     </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col-12">
-                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@user.LastName" Placeholder="Last Name" CssClass="e-outline" FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
-                        <ValidationMessage For="@(()=>user.LastName)" TValue="string" />
+                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@user.LastName" Placeholder="Last Name" CssClass="e-outline" FloatLabelType="FloatLabelType.Auto" />
+                        <ValidationMessage For="@(() => user.LastName)" TValue="string" />
                     </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col-12">
-                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@user.Email" Enabled="@string.IsNullOrEmpty(user.UserId)" Placeholder="Email" CssClass="e-outline" FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
-                        <ValidationMessage For="@(()=>user.Email)" TValue="string" />
+                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@user.Email" Enabled="@string.IsNullOrEmpty(user.UserId)" Placeholder="Email" CssClass="e-outline" FloatLabelType="FloatLabelType.Auto" />
+                        <ValidationMessage For="@(() => user.Email)" TValue="string" />
                     </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col-12">
-                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@user.UserName" Enabled="@string.IsNullOrEmpty(user.UserId)" Placeholder="UserName" CssClass="e-outline" FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
-                        <ValidationMessage For="@(()=>user.UserName)" TValue="string" />
+                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@user.UserName" Enabled="@string.IsNullOrEmpty(user.UserId)" Placeholder="UserName" CssClass="e-outline" FloatLabelType="FloatLabelType.Auto" />
+                        <ValidationMessage For="@(() => user.UserName)" TValue="string" />
                     </div>
                 </div>
 
                 <div class="row mt-2">
                     <div class="col-12">
 
-                        <SfDropDownList TValue="BranchEnum.Branch" 
+                        <SfDropDownList TValue="BranchEnum.Branch"
                                         DataSource="EnumExtensions.ToDictionary<BranchEnum.Branch>()"
-                                        @bind-Value="@user.Branch" 
+                                        @bind-Value="@user.Branch"
                                         TItem="KeyValuePair<BranchEnum.Branch, string>" CssClass="e-outline" Placeholder="Branch">
                             <DropDownListFieldSettings Value="Key" Text="Value"></DropDownListFieldSettings>
                         </SfDropDownList>
-                        <ValidationMessage For="@(()=>user.UserRole)" TValue="string[]" />
+                        <ValidationMessage For="@(() => user.UserRole)" TValue="string[]" />
                     </div>
                 </div>
 
@@ -60,16 +52,39 @@
                             <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(PermissionAdaptor)" Adaptor="Adaptors.CustomAdaptor" />
                             <MultiSelectFieldSettings Text="Name" Value="Name"></MultiSelectFieldSettings>
                         </SfMultiSelect>
-                        <ValidationMessage For="@(()=>user.UserRole)" TValue="string[]" />
+                        <ValidationMessage For="@(() => user.UserRole)" TValue="string[]" />
                     </div>
                 </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <Syncfusion.Blazor.Buttons.SfCheckBox @bind-Checked="user.IsEmployee" Label="Is Employee"></Syncfusion.Blazor.Buttons.SfCheckBox>
+                    </div>
+                </div>
+
+                @if (user.IsEmployee)
+                {
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <SfNumericTextBox TValue="decimal?" @bind-Value="user.BasicPay" Placeholder="Basic Pay" CssClass="e-outline" ShowSpinButton="false"></SfNumericTextBox>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <SfComboBox TValue="UserGridDTM" TItem="UserGridDTM" CssClass="e-outline" Mode="@VisualMode.Default" Placeholder="Inviter">
+                                <ComboBoxFieldSettings Value="Id" Text="FullName"></ComboBoxFieldSettings>
+                                <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(UserAdaptor)" Adaptor="Adaptors.CustomAdaptor" />
+                            </SfComboBox>
+                        </div>
+                    </div>
+                }
                 @if (string.IsNullOrEmpty(user.UserId))
                 {
                     <div class="row mt-2">
                         <div class="col-12">
-                            <Syncfusion.Blazor.Inputs.SfTextBox Type="Syncfusion.Blazor.Inputs.InputType.Password" @bind-Value="@user.Password"
-                                                                Placeholder="Password" CssClass="e-outline" FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
-                            <ValidationMessage For="@(()=>user.Password)" TValue="string" />
+                            <Syncfusion.Blazor.Inputs.SfTextBox Type="InputType.Password" @bind-Value="@user.Password"
+                                                                Placeholder="Password" CssClass="e-outline" FloatLabelType="FloatLabelType.Auto" />
+                            <ValidationMessage For="@(() => user.Password)" TValue="string" />
                         </div>
                     </div>
                 }

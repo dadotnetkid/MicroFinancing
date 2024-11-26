@@ -52,6 +52,8 @@ public class BlazorUserService : IUserService
             EmailConfirmed = true,
             AccessFailedCount = 0,
             Branch = item.Branch,
+            IsEmployee = item.IsEmployee,
+            BasicPay = item.BasicPay
         };
 
         await _userManager.CreateAsync(user, item.Password);
@@ -74,6 +76,8 @@ public class BlazorUserService : IUserService
         applicationUser.LastName = user.LastName;
         applicationUser.Email = user.Email;
         applicationUser.Branch = user.Branch;
+        applicationUser.IsEmployee = user.IsEmployee;
+        applicationUser.BasicPay = user.BasicPay;
 
         await userManager.UpdateAsync(applicationUser);
     }
@@ -101,7 +105,7 @@ public class BlazorUserService : IUserService
         return state.User.GetUserId() ?? string.Empty;
     }
 
-    public async Task<bool> IsAuthorize(string policy,
+    public async Task<bool> IsAuthorizeAsync(string policy,
                                         bool showToast = true)
     {
         var state = await _authenticationStateProvider.GetAuthenticationStateAsync();
@@ -110,6 +114,30 @@ public class BlazorUserService : IUserService
         if (!res && showToast)
         {
             await _toasts.ShowToast("No Permission", "You are not Authorized to do this action");
+        }
+
+        return res;
+    }
+
+    public bool IsAuthorize(string policy,
+                            bool showToast = true)
+    {
+        var state = _authenticationStateProvider.GetAuthenticationStateAsync()
+                                                 .ConfigureAwait(false)
+                                                 .GetAwaiter()
+                                                 .GetResult();
+
+        var res = (_authorizationService.AuthorizeAsync(state.User, policy)
+                                        .ConfigureAwait(false)
+                                        .GetAwaiter()
+                                        .GetResult()).Succeeded;
+
+        if (!res && showToast)
+        {
+            _toasts.ShowToast("No Permission", "You are not Authorized to do this action")
+                   .ConfigureAwait(false)
+                   .GetAwaiter()
+                   .GetResult();
         }
 
         return res;

@@ -37,7 +37,8 @@ namespace MicroFinancing.Core.Common
             public const string AddPayment = "Add Payment";
             public const string SetFlag = "Set Flag";
             public const string ClaimType = "Permission";
-    
+
+            public const string ViewAllCustomer = "View All Customer";
         }
 
         public static class Policy
@@ -45,16 +46,19 @@ namespace MicroFinancing.Core.Common
             public static class Customer
             {
                 public static string[] Manage => new[] { ClaimsConstant.Customer.Manage, Administrator };
+                
                 public static string[] ManageLoan => new[] { ClaimsConstant.Customer.ManageLoan, ClaimsConstant.Customer.Manage, Administrator };
                 public static string[] ManagePayment => new[] { ClaimsConstant.Customer.ManagePayment, ClaimsConstant.Customer.Manage, Administrator };
                 public static string[] OverridePayment => new[] { ClaimsConstant.Customer.OverridePayment, ClaimsConstant.Customer.ManagePayment, ClaimsConstant.Customer.Manage, Administrator };
 
+                public static string[] ViewAllCustomer => new[] { ClaimsConstant.Customer.ViewAllCustomer, ClaimsConstant.Customer.Manage, Administrator };
+
                 public static string[] Print => new[] { ClaimsConstant.Customer.Print, ClaimsConstant.Customer.Manage, Administrator };
                 public static string[] View => new[] { ClaimsConstant.Customer.View, ClaimsConstant.Customer.Manage, ClaimsConstant.Customer.AddPayment, Administrator };
-                public static string[] Add => new[] { ClaimsConstant.Customer.View, ClaimsConstant.Customer.Add, ClaimsConstant.Customer.Manage,  Administrator };
+                public static string[] Add => new[] { ClaimsConstant.Customer.View, ClaimsConstant.Customer.Add, ClaimsConstant.Customer.Manage, Administrator };
                 public static string[] SetFlag => new[] { ClaimsConstant.Customer.SetFlag, ClaimsConstant.Customer.Manage, Administrator };
                 public static string[] AddLoan => new[] { ClaimsConstant.Customer.AddLoan, ClaimsConstant.Customer.Manage, ClaimsConstant.Customer.ManageLoan, Administrator };
-                public static string[] AddPayment => new[] { ClaimsConstant.Customer.View, ClaimsConstant.Customer.AddPayment,ClaimsConstant.Customer.ManagePayment, ClaimsConstant.Customer.Manage,  Administrator };
+                public static string[] AddPayment => new[] { ClaimsConstant.Customer.View, ClaimsConstant.Customer.AddPayment, ClaimsConstant.Customer.ManagePayment, ClaimsConstant.Customer.Manage, Administrator };
             }
             public static class Users
             {

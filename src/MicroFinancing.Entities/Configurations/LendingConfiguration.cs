@@ -15,6 +15,8 @@ public sealed class LendingConfiguration : IEntityTypeConfiguration<Lending>
 
         entity.HasIndex(c => new { c.IsDeleted, c.CustomerId, c.Collector }).IsUnique(false);
 
+        entity.HasIndex(c => new { c.LendingNumber}).IsUnique(true);
+
         entity.HasQueryFilter(c => !c.IsDeleted);
 
         entity.Property(c => c.CreatedAt).HasDefaultValueSql("GETUTCDATE");
@@ -33,5 +35,7 @@ public sealed class LendingConfiguration : IEntityTypeConfiguration<Lending>
             .IsRequired(false)
             .HasForeignKey(c => c.DeleterUserId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        entity.Property(e => e.LendingNumber).HasComputedColumnSql("concat('LND-',Id)");
     }
 }

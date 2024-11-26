@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Microsoft.EntityFrameworkCore;
+
 namespace MicroFinancing.Services
 {
     public sealed class PaymentAdaptor : DataAdaptor
@@ -23,14 +25,16 @@ namespace MicroFinancing.Services
         public override async Task<object> ReadAsync(DataManagerRequest dataManagerRequest, string? key = null)
         {
             var customerId = dataManagerRequest.Params.FirstOrDefault(x => x.Key == "CustomerId").Value?.ToString();
-            
+
             if (!string.IsNullOrEmpty(customerId))
             {
                 var id = Convert.ToInt64(customerId);
 
-                return await _paymentService.Get().Where(x => x.CustomerId == id).ToDataResult(dataManagerRequest);
+                return await _paymentService.Get()
+                                            .Where(x => x.CustomerId == id).ToDataResult(dataManagerRequest);
             }
-            else if (dataManagerRequest.Params.Any(x => x.Key == "DateToday") && dataManagerRequest.Params.Any(x => x.Key == "FilterByUserId"))
+            
+            if (dataManagerRequest.Params.Any(x => x.Key == "DateToday") && dataManagerRequest.Params.Any(x => x.Key == "FilterByUserId"))
             {
                 var dateStart = Convert.ToDateTime(dataManagerRequest.Params.FirstOrDefault(x => x.Key == "DateToday").Value);
                 var dateEnd = dateStart.AddDays(1).AddSeconds(-1);
@@ -41,7 +45,7 @@ namespace MicroFinancing.Services
                     .Where(x => x.CreatedByUserId == filterByUserId)
                     .ToDataResult(dataManagerRequest);
             }
-            return  Task.CompletedTask;
+            return Task.CompletedTask;
         }
     }
 }

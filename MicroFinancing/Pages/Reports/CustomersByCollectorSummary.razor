@@ -11,28 +11,28 @@
     <div class="card-body">
 
         <div class="row">
-            <div class="col">
+            <div class="col-lg-3 col-xs-12">
                 <Syncfusion.Blazor.DropDowns.SfComboBox TItem="UserGridDTM"
                                                         TValue="string"
                                                         @bind-Value="@Collector" Placeholder="Collector"
                                                         CssClass="e-outline"
                                                         FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto">
-                    <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="@typeof(UserAdaptor)" Adaptor="Adaptors.CustomAdaptor"/>
-                    <Syncfusion.Blazor.DropDowns.ComboBoxFieldSettings Text="FullName" Value="Id"/>
+                    <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="@typeof(UserAdaptor)" Adaptor="Adaptors.CustomAdaptor" />
+                    <Syncfusion.Blazor.DropDowns.ComboBoxFieldSettings Text="FullName" Value="Id" />
                 </Syncfusion.Blazor.DropDowns.SfComboBox>
             </div>
-            <div class="col">
+            <div class="col-lg-3 col-xs-12">
                 <SfDatePicker @bind-Value="@DateFrom" CssClass="e-outline"
                               FloatLabelType="FloatLabelType.Auto" Placeholder="Date From">
                     <DatePickerEvents TValue="DateTime" ValueChange="@(OnDateFromValueChange)"></DatePickerEvents>
                 </SfDatePicker>
             </div>
-            <div class="col">
+            <div class="col-lg-3 col-xs-12">
                 <SfDatePicker @bind-Value="@DateTo" CssClass="e-outline"
                               FloatLabelType="FloatLabelType.Auto" Placeholder="Date From">
                 </SfDatePicker>
             </div>
-            <div class="col">
+            <div class="col-lg-3 col-xs-12">
                 <button class="btn btn-primary" @onclick="Search">
                     <span class="fas fa-search"></span>
                     Search
@@ -49,7 +49,7 @@
                     <GridColumns>
                         @if (_report is not null)
                         {
-                            foreach (var col in _columns.Keys)
+                            foreach (var col in _columns.Keys.Where(c => !c.Equals("DueDate")))
                             {
                                 <GridColumn Field="@(col)" AutoFit="true">
 
@@ -81,15 +81,24 @@
 
     private void CustomizeCell(QueryCellInfoEventArgs<ExpandoObject> obj)
     {
-        /*foreach (var i in obj.Data)
+        foreach (var i in obj.Data)
         {
-            if (i.Value is null && obj.Column.Field == i.Key)
+            if ( obj.Column.Field == "CustomerName")
             {
-                var prop =i.GetType().GetProperty("Value");
+                IDictionary<string, object> res = obj.Data;
+                var dueDate = Convert.ToDateTime(res["DueDate"]);
 
-                prop.SetValue("Not Paid", i);
+                @if (DateTime.Now >= dueDate)
+                {
+                    obj.Cell.AddClass(new[] { "bg-danger" });
+                }
+                else if ((dueDate - DateTime.Now).TotalDays <= 10)
+                {
+                    obj.Cell.AddClass(new[] { "bg-warning" });
+                }
+
             }
-        }*/
+        }
     }
 
     private async Task Search()

@@ -16,6 +16,13 @@ public static class GridHelper
     public static async Task<object> ToDataResult<T>(this IQueryable<T> source,
                                                      DataManagerRequest dm)
     {
+        if (!source.Any())
+        {
+            return dm.RequiresCounts
+                ? new DataResult
+                    { Result =  source.ToList(), Count = source.Count() }
+                : source;
+        }
         if (dm.Search is { Count: > 0 })
         {
             // Searching

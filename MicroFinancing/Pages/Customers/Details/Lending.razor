@@ -3,7 +3,7 @@
     <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(LendingAdaptor)"
                                           Adaptor="Adaptors.CustomAdaptor" />
     <GridColumns>
-        <GridColumn Field=@nameof(LendingGridDTM.CustomerName) Width="100"></GridColumn>
+        <GridColumn Field=@nameof(LendingGridDTM.LendingNumber) Width="100"></GridColumn>
         <GridColumn Field=@nameof(LendingGridDTM.Category) Width="75">
             <Template>
                 @{
@@ -18,6 +18,14 @@
                 {
                     <span class="badge badge-info">@row?.Category.ToString()</span>
                 }
+                &nbsp;
+                @if (row.IsActive)
+                {
+
+                    <span class="badge badge-info muted">Active</span>
+                }
+
+
             </Template>
         </GridColumn>
         <GridColumn Field=@nameof(LendingGridDTM.TotalCredit) Width="100"></GridColumn>

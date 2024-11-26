@@ -41,7 +41,7 @@ public partial class Lending
 
     private async Task PreviewSOA(LendingGridDTM context)
     {
-        var res = await userService.IsAuthorize(ClaimsConstant.Customer.Print);
+        var res = await userService.IsAuthorizeAsync(ClaimsConstant.Customer.Print);
         if (!res) return;
 
         IsPrinting = true;
@@ -60,7 +60,7 @@ public partial class Lending
 
     private async Task EditLendingDetails(LendingGridDTM context)
     {
-        var authorize = await userService.IsAuthorize(ClaimsConstant.Customer.ManageLoan);
+        var authorize = await userService.IsAuthorizeAsync(ClaimsConstant.Customer.ManageLoan);
 
         if (!authorize)
         {
@@ -72,7 +72,7 @@ public partial class Lending
 
     private async Task SetActiveLoan(LendingGridDTM context)
     {
-        var authorize = await userService.IsAuthorize(ClaimsConstant.Customer.ManageLoan);
+        var authorize = await userService.IsAuthorizeAsync(ClaimsConstant.Customer.ManageLoan);
 
         if (!authorize)
         {
@@ -85,7 +85,7 @@ public partial class Lending
 
     private async Task DeleteLending(LendingGridDTM context)
     {
-        var authorize = await userService.IsAuthorize(ClaimsConstant.Customer.ManageLoan);
+        var authorize = await userService.IsAuthorizeAsync(ClaimsConstant.Customer.ManageLoan);
 
         if (!authorize)
         {

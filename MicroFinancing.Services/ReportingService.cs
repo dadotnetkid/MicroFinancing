@@ -93,7 +93,9 @@ namespace MicroFinancing.Services
                 Interest = x.Interest
             }).FirstOrDefaultAsync();
 
-            var payments = _paymentRepository.Entity.Where(x => x.LendingId == lendingId);
+            var payments = _paymentRepository.Entity
+                                             .Where(x => x.LendingId == lendingId)
+                                             .Where(c=>!c.Override);
             var currentDate = list.ReleaseDate.AddDays(1);
 
             while (currentDate <= list.DueDate)
@@ -136,12 +138,14 @@ namespace MicroFinancing.Services
             {
                 dateTo = dateTo?.AddDays(1);
 
-                query = query.Where(x => x.PaymentDate >= dateFrom && x.PaymentDate < dateTo);
+                query = query
+
+                    .Where(x => x.PaymentDate >= dateFrom && x.PaymentDate < dateTo);
             }
 
             if (!string.IsNullOrEmpty(collector))
             {
-                query = query.Where(x => x.Lending.Collector == collector);
+                query = query.Where(x => x.CreatorUserId == collector);
             }
 
 
@@ -167,13 +171,13 @@ namespace MicroFinancing.Services
             DateTime startDate, DateTime endDate)
         {
             var res = _customerRepository.Entity
-                .Where(c => c.Lending.Any(l => l.Collector == collectorId))
+                .Where(c => c.Lending.Any(l => l.Collector == collectorId && l.IsActive == true))
                 .Select(c => new
                 {
                     CustomerName = c.FullName,
                     c.Id,
                     c.Payments,
-                    Lending = c.Lending.FirstOrDefault()
+                    Lending = c.Lending.FirstOrDefault(c=>c.IsActive)
                 });
 
             var currentDate = startDate;
@@ -185,6 +189,7 @@ namespace MicroFinancing.Services
                 expandoDict.Add("Id", customer.Id);
                 expandoDict.Add("CustomerName", customer.CustomerName);
                 expandoDict.Add("Loan Amount", customer.Lending.TotalCredit);
+                expandoDict.Add("DueDate", customer.Lending.DueDate);
                 currentDate = startDate;
 
                 while (currentDate <= endDate)

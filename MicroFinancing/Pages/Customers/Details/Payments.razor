@@ -1,4 +1,5 @@
-﻿@using Syncfusion.Blazor.Data
+﻿@using MicroFinancing.Components.DialogComponent
+@using Syncfusion.Blazor.Data
 <SfGrid AllowPaging="true" TValue="PaymentGridDTM" @ref="paymentGrid" Query="queryData" AllowSorting="true">
     <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(PaymentAdaptor)"
                                           Adaptor="Adaptors.CustomAdaptor" />
@@ -9,7 +10,9 @@
         </GridSortColumns>
     </GridSortSettings>
     <GridColumns>
-        <GridColumn Field=@nameof(PaymentGridDTM.CreatedBy) Width="100">
+        <GridColumn Field=@nameof(PaymentGridDTM.LendingNumber) Width="80">
+            
+        </GridColumn><GridColumn Field=@nameof(PaymentGridDTM.CreatedBy) Width="100">
             <Template>
                 @{
                     var row = context as PaymentGridDTM;
@@ -47,11 +50,12 @@
 
         @if (CurrentUser.IsInRole("Administrator"))
         {
-            <GridColumn  Width="30">
+            <GridColumn  Width="70">
                 <Template>
                     @{
                         var row = context as PaymentGridDTM;
                     }
+                    <a style="cursor:pointer" @onclick="@(()=>ChangePayment(row))"><span class="fas fa-exchange-alt"></span></a>
                     <a style="cursor:pointer" @onclick="@(()=>DeletePayment(row))"><span class="fas fa-trash"></span></a>
                 </Template>
             </GridColumn>
@@ -59,13 +63,17 @@
     </GridColumns>
 
 </SfGrid>
+
+<ChangePayment @ref=changePaymentRef></ChangePayment>
 @code {
     private SfGrid<PaymentGridDTM>? paymentGrid;
     private Query queryData = new();
+    private ChangePayment changePaymentRef;
 
     [CascadingParameter(Name = "MainPage")] public Index MainPage { get; set; }
     [Inject] IPaymentService paymentService { get; set; }
     [Inject] ICurrentUser CurrentUser { get; set; }
+    [Inject] IDialogService DialogService { get; set; }
 
     protected override void OnInitialized()
     {
@@ -81,9 +89,24 @@
 
     private async Task DeletePayment(PaymentGridDTM? row)
     {
-        await paymentService.DeletePayment(row.Id);
+        DialogService.ShowDialog("Delete Payment","Do you want to delete this payment",
+                                 async (t) =>
+                                 {
+                                     if (!t)
+                                     {
+                                         return;
+                                     }
+                                     await paymentService.DeletePayment(row.Id);
+                                     await Refresh();
+                                 });
+        
 
-        await Refresh();
+      
+    }
+
+    private void ChangePayment(PaymentGridDTM? row)
+    {
+        changePaymentRef.Show(row);
     }
 
 }

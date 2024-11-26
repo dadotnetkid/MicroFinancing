@@ -10,7 +10,8 @@ public interface IUserService
     Task DeleteUser(string? userId);
     Task ResetPassword(ResetPasswordUserDTM resetPasswordUserDtm);
     Task<string> GetUserId();
-    Task<bool> IsAuthorize(string policy, bool showToast=true);
+    Task<bool> IsAuthorizeAsync(string policy, bool showToast=true);
+    bool IsAuthorize(string policy, bool showToast = true);
     Task AddRoles(CreateUpdateUserDTM user);
     Task<bool> IsInRoleAsync(params string[] roles);
 }

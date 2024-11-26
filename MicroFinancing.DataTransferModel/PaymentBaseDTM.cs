@@ -18,6 +18,7 @@ public class PaymentBaseDTM
     public virtual DateTime PaymentDate { get; set; } = DateTime.Now;
     public virtual string? CreatedBy { get; set; }
     public virtual string? CreatedByUserId { get; set; }
+    public string LendingNumber { get; set; }
 }
 
 public sealed class PaymentGridDTM : PaymentBaseDTM

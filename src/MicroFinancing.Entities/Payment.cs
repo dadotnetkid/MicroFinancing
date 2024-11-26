@@ -18,6 +18,7 @@ public sealed class Payment : BaseEntity<long>, IRequest
     public DateTime PaymentDate { get; set; }
     public string Attachment { get; set; }
     public long LendingId { get; set; }
+    public bool IsApproved { get; set; }
 
     public Customers Customers { get; set; }
 

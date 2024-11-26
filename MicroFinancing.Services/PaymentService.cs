@@ -1,11 +1,17 @@
 ﻿using Hangfire;
 using MediatR;
+
+using MicroFinancing.Core.Common;
 using MicroFinancing.Core.Enumeration;
 using MicroFinancing.DataTransferModel;
 using MicroFinancing.Entities;
 using MicroFinancing.Interfaces.Repositories;
 using MicroFinancing.Interfaces.Services;
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+
+using Syncfusion.Blazor;
 using Syncfusion.Blazor.Inputs;
 
 namespace MicroFinancing.Services;
@@ -16,6 +22,7 @@ public sealed class PaymentService : IPaymentService
     private readonly IRepository<Lending, long> _lendingRepository;
     private readonly IMediator _mediator;
     private readonly ISmsService _smsService;
+    private readonly IRepository<ApplicationUser, string> _userRepository;
     private readonly IRepository<Payment, long> _repository;
     private readonly IUserService _userService;
 
@@ -24,7 +31,8 @@ public sealed class PaymentService : IPaymentService
         IHostEnvironment hostEnvironment,
         IUserService userService,
         IMediator mediator,
-        ISmsService smsService)
+        ISmsService smsService,
+        IRepository<ApplicationUser, string> userRepository)
     {
         _repository = repository;
         _lendingRepository = lendingRepository;
@@ -32,6 +40,7 @@ public sealed class PaymentService : IPaymentService
         _userService = userService;
         _mediator = mediator;
         _smsService = smsService;
+        _userRepository = userRepository;
     }
 
     public IQueryable<PaymentGridDTM> Get()
@@ -48,7 +57,8 @@ public sealed class PaymentService : IPaymentService
             PaymentType = x.PaymentType,
             Reason = x.Reason,
             Override = x.Override,
-            CreatedByUserId = x.CreatorUserId
+            CreatedByUserId = x.CreatorUserId,
+            LendingNumber = x.Lending.LendingNumber
         });
     }
 
@@ -138,5 +148,62 @@ public sealed class PaymentService : IPaymentService
         entity.IsDeleted = true;
 
         await _repository.SaveChangesAsync();
+    }
+
+    public async Task ChangePayment(long paymentId,
+                                    long lendingId)
+    {
+        var entity = await _repository.Entity.FindAsync(paymentId);
+
+        if (entity is null) return;
+
+        entity.LendingId = lendingId;
+
+        await _repository.SaveChangesAsync();
+    }
+
+    public async Task<object> GetPaymentForApproval(DataManagerRequest dm)
+    {
+        var entity = await _userRepository
+                     .Entity
+                     .Select(c => new PaymentForApprovalDto()
+                     {
+                         CollectorName = c.FullName,
+                         TotalAmount = c.Payments.Where(a => !a.IsApproved).Sum(a => a.PaymentAmount),
+                         Payments = c.Payments.Where(a => !a.IsApproved).Select(p => new PaymentsForApprovalDto()
+                         {
+                             PaymentAmount = p.PaymentAmount,
+                             PaymentDate = p.PaymentDate,
+                             PaymentId = p.Id,
+                             CustomerName = p.Customers.FullName,
+                             LendingNumber = p.Lending.LendingNumber
+
+                         }).ToList()
+                     })
+                     .Where(c => c.Payments.Any())
+                     .AsNoTracking()
+                     .ToDataResult(dm);
+
+
+
+        return entity;
+    }
+
+    public async Task PaymentApproval(PaymentForApprovalDto? item)
+    {
+        foreach (var i in item.Payments)
+        {
+            var payment = _repository.Entity.FirstOrDefault(c => c.Id == i.PaymentId);
+
+            if (payment is null)
+            {
+                continue;
+            }
+
+            payment.IsApproved = true;
+
+            await _repository.SaveChangesAsync();
+
+        }
     }
 }

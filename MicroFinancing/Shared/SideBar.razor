@@ -26,7 +26,6 @@
                 with font-awesome or any other icon font library -->
                 @if (user?.IsInRole("Administrator") == true)
                 {
-
                     <li class="nav-item">
                         <a href="/" class="nav-link">
                             <i class="nav-icon fas fa-th"></i>
@@ -62,22 +61,20 @@
                         }
                     </ul>
                 </li>
-                @*<li class="nav-item">
-                <a href="/Batches" class="nav-link">
-                <i class="nav-icon fas fa-cash-register"></i>
-                <p>
-                Batches
-                </p>
-                </a>
-                </li>*@
-                <li class="nav-item">
-                    <a href="/payments" class="nav-link">
-                        <i class="nav-icon fas fa-cash-register"></i>
-                        <p>
-                            Payments
-                        </p>
-                    </a>
-                </li>
+               
+                
+                @if (UserService.IsAuthorize(ClaimsConstant.Customer.ManagePayment))
+                {
+                    <li class="nav-item">
+                        <a href="/payments" class="nav-link">
+                            <i class="nav-icon fas fa-cash-register"></i>
+                            <p>
+                                Payments
+                            </p>
+                        </a>
+                    </li>
+                }
+                
                 @if (user?.IsInRole("Administrator") == true)
                 {
                     <li class="nav-item has-treeview">
@@ -101,10 +98,17 @@
                                     <p>Collector's Clients</p>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="/top-sales-chart-report" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Top Sales Chart Report</p>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 }
-                @if (user?.IsInRole("Administrator") == true)
+                @if (UserService.IsAuthorize(ClaimsConstant.Users.View) ||
+                     UserService.IsAuthorize(ClaimsConstant.Roles.View))
                 {
                     <li class="nav-item has-treeview">
                         <a class="nav-link">
@@ -145,16 +149,18 @@
     </div>
     <!-- /.sidebar -->
 </aside>
+
 @code {
 
     [Inject] private AuthenticationStateProvider? authenticationState { get; set; }
+
+    [Inject] private IUserService UserService { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         var authState = await authenticationState?.GetAuthenticationStateAsync()!;
         user = authState.User;
-
     }
-
 
     private ClaimsPrincipal? user;
 }

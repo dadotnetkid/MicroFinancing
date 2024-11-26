@@ -114,11 +114,18 @@ namespace MicroFinancing.DataTransferModel
                     Value = ClaimsConstant.Customer.Add,
                     Description="Add Customer"
                 },
+                new()
+                {
+                    Name = ClaimsConstant.Customer.ViewAllCustomer,
+                    ClaimType = ClaimsConstant.Customer.ClaimType,
+                    Value = ClaimsConstant.Customer.ViewAllCustomer,
+                    Description=ClaimsConstant.Customer.ViewAllCustomer
+                },
             };
         }
-       
 
-        
+
+
     }
 
     public class ClaimsLookup

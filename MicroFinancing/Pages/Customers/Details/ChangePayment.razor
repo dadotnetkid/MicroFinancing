@@ -1,0 +1,27 @@
+﻿<SfDialog Width="500px" ShowCloseIcon="true" @bind-Visible="visibility" CssClass="modal-center-top">
+    <DialogPositionData X="center" />
+    <DialogTemplates>
+        <Header>Change Payment</Header>
+        <Content>
+
+            <div class="row mt-2">
+                <div class="col-12">
+                    <Syncfusion.Blazor.DropDowns.SfDropDownList TItem="LendingGridDTM" TValue="long"
+                                                                @bind-Value="LendingId"
+                                                                FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto"
+                                                                CssClass="e-outline" Query="query">
+                        <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(LendingAdaptor)"
+                                                              Adaptor="Adaptors.CustomAdaptor" />
+                        <Syncfusion.Blazor.DropDowns.DropDownListFieldSettings Text="LendingNumber" Value="Id"/>
+                    </Syncfusion.Blazor.DropDowns.SfDropDownList>
+
+                </div>
+            </div>
+
+        </Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton IsPrimary="true" Content="Submit" OnClick="@OnBtnSubmitClick" />
+        <DialogButton IsPrimary="false" Content="Cancel" OnClick="@OnBtnCancelClick" />
+    </DialogButtons>
+</SfDialog>

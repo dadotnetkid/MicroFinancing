@@ -6,3 +6,9 @@ public enum Gender
     Female, 
     Others
 }
+
+public enum DeviceType
+{
+    Mobile,
+    Desktop
+}

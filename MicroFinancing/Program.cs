@@ -24,7 +24,10 @@ using DevExpress.Blazor.Reporting;
 using Hangfire;
 using MicroFinancing.Infrastructure;
 using MicroFinancing.Services.Handlers;
-using NuGet.Protocol.Core.Types;
+using Serilog.Events;
+using Serilog;
+
+using ILogger = Serilog.ILogger;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,10 +54,9 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
     .AddDefaultUI()
     .AddDefaultTokenProviders()
     .AddEntityFrameworkStores<MFDbContext>();
-builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ClaimsPrincipalFactory>();
+builder.Services.AddTransient<IUserClaimsPrincipalFactory<ApplicationUser>, ClaimsPrincipalFactory>();
 
 
-builder.Services.AddScoped(typeof(IRepository<,>), typeof(BaseRepository<,>));
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
@@ -94,8 +96,41 @@ builder.Services.AddHangfire(configuration => configuration
     .UseRecommendedSerializerSettings()
     .UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+
+builder.Services.AddHttpClient("HttpClientWithSSLUntrusted",
+                               client =>
+                               {
+                                   client.BaseAddress= new Uri("http://sms-api.interworx.app");
+                                   
+
+                               }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+{
+    ClientCertificateOptions = ClientCertificateOption.Manual,
+    ServerCertificateCustomValidationCallback =
+        (httpRequestMessage, cert, cetChain, policyErrors) =>
+        {
+            return true;
+        }
+});
+
 // Add the processing server as IHostedService
 builder.Services.AddHangfireServer();
+
+builder.Services.AddLogging(b =>
+{
+    var path = Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "Logs",
+                            $"logs-{DateTime.UtcNow:dd-MM-yyyy}.txt");
+    var logger = new LoggerConfiguration()
+                 .MinimumLevel.Information()
+                 .WriteTo.File(path, rollingInterval: RollingInterval.Day, restrictedToMinimumLevel: LogEventLevel.Information,
+                               outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}",
+                               retainedFileTimeLimit: new TimeSpan(365, 0, 0, 0),
+                               fileSizeLimitBytes: 10240000)
+                 .CreateLogger();
+    b.AddSerilog(logger);
+}).AddSingleton<ILogger>(sp => new LoggerConfiguration()
+                               .MinimumLevel.Information()
+                               .CreateLogger());
 
 var app = builder.Build();
 
@@ -133,85 +168,5 @@ app.UseHangfireDashboard("/hangfire", new DashboardOptions
 });
 
 //RecurringJob.AddOrUpdate<ReConstructHandler>("ReconstructLending", x => x.Handle(), Cron.Daily);
-//await TestClass.Test(app.Services);
+//await BuilderFix.Run(app.Services);
 app.Run();
-
-public class TestClass
-{
-    public static async Task Test(IServiceProvider services)
-    {
-        var _repository = services.CreateScope().ServiceProvider.GetService<IRepository<Customers, long>>();
-        var lending = services.CreateScope().ServiceProvider.GetService<IRepository<Lending, long>>();
-
-        _repository.Database.BeginTransaction();
-
-        var customersList = _repository.Entity
-                                       .Where(c => c.Lending.Any())
-                                       .Where(c => !c.IsDeleted)
-                                       .Where(c => c.Lending.Any(l => !l.IsDeleted))
-                                       .Where(c => c.Lending.All(l => l.IsPaid))
-                                       .Include(c => c.Lending).ToList();
-
-        foreach (var c in customersList)
-        {
-            var customer = c.FullName;
-            var id = c.Id;
-            if (c.Lending.All(e => e.IsPaid))
-            {
-                var lendingres = c.Lending.LastOrDefault();
-
-                lendingres.IsActive = true;
-                lendingres.IsPaid = false;
-                await _repository.SaveChangesAsync();
-
-            }
-
-        }
-
-
-        await _repository.Database.CommitTransactionAsync();
-    }
-
-    private static List<long> ListOfIds = new();
-    private static IRepository<Lending, long>? repository;
-
-    private static void GetLatestLoan(long id = 0)
-    {
-        var qry = repository.Entity.Where(c => c.ParentLendingId != 0);
-
-        if (id > 0)
-        {
-            qry = qry.Where(c => c.ParentLendingId == id);
-        }
-
-        var res = qry.ToList();
-
-        foreach (var _res in res)
-        {
-            var ___ = new Lending();
-
-            if (id == 0)
-            {
-                ___ = repository.Entity.Where(c => c.Id == _res.ParentLendingId)
-                                .FirstOrDefault();
-            }
-            else
-            {
-                ___ = repository.Entity.Where(c => c.ParentLendingId == _res.Id)
-                                .FirstOrDefault();
-            }
-
-            if (___.IsRestruct)
-            {
-                GetLatestLoan(___.Id);
-                return;
-            }
-            else
-            {
-                _res.IsPaid = false;
-                _res.IsActive = true;
-
-            }
-        }
-    }
-}

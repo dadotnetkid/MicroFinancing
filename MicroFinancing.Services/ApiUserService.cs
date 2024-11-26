@@ -88,12 +88,18 @@ public class ApiUserService : IUserService
         return Task.FromResult(_currentUser.UserId ?? string.Empty);
     }
 
-    public async Task<bool> IsAuthorize(string policy,
+    public async Task<bool> IsAuthorizeAsync(string policy,
                                         bool showToast = true)
     {
         var res = (await _authorizationService.AuthorizeAsync(_currentUser.User, policy)).Succeeded;
 
         return res;
+    }
+
+    public bool IsAuthorize(string policy,
+                            bool showToast = true)
+    {
+        throw new NotImplementedException();
     }
 
     public async Task AddRoles(CreateUpdateUserDTM user)

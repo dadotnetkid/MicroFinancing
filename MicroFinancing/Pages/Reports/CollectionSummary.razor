@@ -9,7 +9,7 @@
     </div>
     <div class="card-body">
         <div class="row">
-            <div class="col">
+            <div class="col-lg-3 col-xs-12">
                 <Syncfusion.Blazor.DropDowns.SfComboBox TItem="UserGridDTM"
                                                         TValue="string"
                                                         @bind-Value="@Collector" Placeholder="Collector"
@@ -19,15 +19,15 @@
                     <Syncfusion.Blazor.DropDowns.ComboBoxFieldSettings Text="FullName" Value="Id" />
                 </Syncfusion.Blazor.DropDowns.SfComboBox>
             </div>
-            <div class="col">
-                <SfDatePicker @bind-Value="@DateFrom" CssClass="e-outline" 
-                              FloatLabelType="FloatLabelType.Auto"  Placeholder="Date From"></SfDatePicker>
+            <div class="col-lg-3 col-xs-12">
+                <SfDatePicker @bind-Value="@DateFrom" CssClass="e-outline"
+                              FloatLabelType="FloatLabelType.Auto" Placeholder="Date From"></SfDatePicker>
             </div>
-            <div class="col">
+            <div class="col-lg-3 col-xs-12">
                 <SfDatePicker @bind-Value="@DateTo" CssClass="e-outline"
                               FloatLabelType="FloatLabelType.Auto" Placeholder="Date From"></SfDatePicker>
             </div>
-            <div class="col">
+            <div class="col-lg-3 col-xs-12">
                 <button class="btn btn-primary" @onclick="Search">
                     <span class="fas fa-search"></span>
                     Search
@@ -36,36 +36,49 @@
         </div>
         <div class="row mt-2">
             <div class="col">
-                <SfGrid AllowPaging="true" AllowFiltering="false" TValue="CollectionSummaryReportDTM" @ref="customerGrid" Query="QueryData" AllowGrouping="true">
-                    <GridPageSettings PageSize="500" />
-                    <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(CollectionSummaryReportAdaptor)"
-                                                          Adaptor="Adaptors.CustomAdaptor" />
-                    <GridColumns>
-                        <GridColumn Field=@nameof(CollectionSummaryReportDTM.EncodedBy) Width="100"></GridColumn>
-                        <GridColumn Field=@nameof(CollectionSummaryReportDTM.CustomerName) Width="100px"></GridColumn>
-                        <GridColumn Field=@nameof(CollectionSummaryReportDTM.PaymentAmount) Width="100px"></GridColumn>
-                        <GridColumn Field=@nameof(CollectionSummaryReportDTM.PaymentDate) Width="75"></GridColumn>
-                    </GridColumns>
-                    <GridGroupSettings ShowDropArea="false" Columns="GroupBy">
-                     
-                    </GridGroupSettings>
-                    <GridAggregates>
-                        <GridAggregate>
-                            <GridAggregateColumns>
-                                <GridAggregateColumn Field=@nameof(CollectionSummaryReportDTM.PaymentAmount) Type="AggregateType.Sum">
-                                    <GroupFooterTemplate>
-                                        @{
-                                            var aggregate = (context as AggregateTemplateContext);
-                                            <div>
-                                                <p>Sum: @aggregate.Sum</p>
-                                            </div>
-                                        }
-                                    </GroupFooterTemplate>
-                                </GridAggregateColumn>
-                            </GridAggregateColumns>
-                        </GridAggregate>
-                    </GridAggregates>
-                </SfGrid>
+                <div class="content-wrapper e-bigger e-adaptive-demo">
+                    <div class="e-mobile-layout">
+                        <div class="e-mobile-content">
+                            <SfGrid AllowPaging="true" AllowFiltering="false" TValue="CollectionSummaryReportDTM"
+                                    AdaptiveUIMode="AdaptiveMode.Mobile"
+                                    EnableAdaptiveUI="true"
+                                    RowRenderingMode="RowDirection.Vertical"
+                                    @ref="customerGrid"
+                                    Query="QueryData" AllowGrouping="true"
+                                    >
+                                <GridPageSettings PageSize="500" />
+                                <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(CollectionSummaryReportAdaptor)"
+                                                                      Adaptor="Adaptors.CustomAdaptor" />
+                                <GridColumns>
+                                    <GridColumn Field=@nameof(CollectionSummaryReportDTM.EncodedBy) Width="100"></GridColumn>
+                                    <GridColumn Field=@nameof(CollectionSummaryReportDTM.CustomerName) Width="100px"></GridColumn>
+                                    <GridColumn Field=@nameof(CollectionSummaryReportDTM.PaymentAmount) Width="100px"></GridColumn>
+                                    <GridColumn Field=@nameof(CollectionSummaryReportDTM.PaymentDate) AutoFit="true" EnableGroupByFormat="true"></GridColumn>
+                                </GridColumns>
+                                <GridGroupSettings ShowDropArea="false" Columns="GroupBy">
+
+                                </GridGroupSettings>
+                                <GridAggregates>
+                                    <GridAggregate>
+                                        <GridAggregateColumns>
+                                            <GridAggregateColumn Field=@nameof(CollectionSummaryReportDTM.PaymentAmount) Type="AggregateType.Sum">
+                                                <GroupFooterTemplate>
+                                                    @{
+                                                        var aggregate = (context as AggregateTemplateContext);
+                                                        <div>
+                                                            <p>Sum: @aggregate.Sum</p>
+                                                        </div>
+                                                    }
+                                                </GroupFooterTemplate>
+                                            </GridAggregateColumn>
+                                        </GridAggregateColumns>
+                                    </GridAggregate>
+                                </GridAggregates>
+                            </SfGrid>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
 
