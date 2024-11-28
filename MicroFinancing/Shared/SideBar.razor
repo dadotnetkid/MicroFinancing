@@ -61,8 +61,8 @@
                         }
                     </ul>
                 </li>
-               
-                
+
+
                 @if (UserService.IsAuthorize(ClaimsConstant.Customer.ManagePayment))
                 {
                     <li class="nav-item">
@@ -74,7 +74,17 @@
                         </a>
                     </li>
                 }
-                
+
+                @if (user?.IsInRole("Administrator") == true)
+                {
+                    <li class="nav-item">
+                        <a href="/Payment-Approval" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Payment Approval</p>
+                        </a>
+                    </li>
+                }
+
                 @if (user?.IsInRole("Administrator") == true)
                 {
                     <li class="nav-item has-treeview">
@@ -108,7 +118,7 @@
                     </li>
                 }
                 @if (UserService.IsAuthorize(ClaimsConstant.Users.View) ||
-                     UserService.IsAuthorize(ClaimsConstant.Roles.View))
+                UserService.IsAuthorize(ClaimsConstant.Roles.View))
                 {
                     <li class="nav-item has-treeview">
                         <a class="nav-link">

@@ -1,6 +1,10 @@
 Hi [CustomerName]
 
-Thank you for paying [Amount] 
+Thank you for paying!
+Amount: [Amount]
+Date: [Date]
+Received by collecting agent: [Collector]
+Another notification will be sent once payment is processed.
 
 [Do not reply]
 Cash Credit Company

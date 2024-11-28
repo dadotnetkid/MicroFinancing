@@ -10,4 +10,7 @@ public interface ISmsService
                                  Payment payment);
     Task SendRestructureToAdmin(string? customers);
     Task SendRestructureToCustomer(string phoneNumber, string customerName);
+
+    Task PaymentConfirmation(long customerId,
+                             Payment payment);
 }

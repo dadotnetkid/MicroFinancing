@@ -68,6 +68,12 @@ public class SmsService : ISmsService
         throw new NotImplementedException();
     }
 
+    public Task PaymentConfirmation(long customerId,
+                                    Payment payment)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task SendRestructureToCustomer(string phoneNumber)
     {
         throw new NotImplementedException();

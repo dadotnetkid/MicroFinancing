@@ -1,0 +1,7 @@
+Hi [CustomerName]
+
+Loan Payment Successful!
+Your loan payment of [Amount] last [Date] has been processed. The amount has been deducted to your account
+
+[Do not reply]
+Cash Credit Company

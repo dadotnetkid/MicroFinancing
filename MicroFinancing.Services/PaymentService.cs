@@ -204,6 +204,8 @@ public sealed class PaymentService : IPaymentService
 
             await _repository.SaveChangesAsync();
 
+            BackgroundJob.Enqueue<ISmsService>((c) =>c.PaymentConfirmation(payment.CustomerId, payment));
+
         }
     }
 }
