@@ -24,6 +24,8 @@ namespace MicroFinancing.Entities
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             
+            builder.HasDbFunction(() => ScalarFunctionHelper.Format(default(DateTime), default(string)));
+
             builder.Entity<ApplicationRoleClaims>(entity =>
             {
                 entity.ToTable("AspNetRoleClaims");

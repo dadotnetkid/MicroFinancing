@@ -22,5 +22,5 @@ public interface IPaymentService
 
     Task<object> GetPaymentForApproval(DataManagerRequest dm);
 
-    Task PaymentApproval(PaymentForApprovalDto? item);
+    Task PaymentApproval(PaymentsForApprovalByDateDto item);
 }

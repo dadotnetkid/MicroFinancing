@@ -14,9 +14,16 @@ public sealed class PaymentForApprovalDto
 {
     public string CollectorName { get; set; }
 
-    public List<PaymentsForApprovalDto> Payments { get; set; } = new();
+    public List<PaymentsForApprovalByDateDto> PaymentByDate { get; set; } = new();
     public decimal? TotalAmount { get; set; }
 }
+
+public sealed class PaymentsForApprovalByDateDto
+{
+    public string PaymentDate { get; set; }
+    public List<PaymentsForApprovalDto> Payments { get; set; } = new();
+}
+
 public sealed class PaymentsForApprovalDto
 {
     public decimal? PaymentAmount { get; set; }

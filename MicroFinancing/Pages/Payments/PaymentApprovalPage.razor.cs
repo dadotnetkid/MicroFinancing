@@ -15,7 +15,7 @@ namespace MicroFinancing.Pages.Payments
         [Inject] private IDialogService DialogService { get; set; }
         public SfGrid<PaymentForApprovalDto> PaymentApprovalGrid { get; set; }
 
-        private void OnApproved(PaymentForApprovalDto? item)
+        private void OnApproved(PaymentsForApprovalByDateDto item)
         {
             DialogService.ShowDialog("Approval Message", "Do you want to approved this payment",
                                     async (e) =>

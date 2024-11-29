@@ -169,18 +169,33 @@ public sealed class PaymentService : IPaymentService
                      .Select(c => new PaymentForApprovalDto()
                      {
                          CollectorName = c.FullName,
-                         TotalAmount = c.Payments.Where(a => !a.IsApproved).Sum(a => a.PaymentAmount),
-                         Payments = c.Payments.Where(a => !a.IsApproved).Select(p => new PaymentsForApprovalDto()
-                         {
-                             PaymentAmount = p.PaymentAmount,
-                             PaymentDate = p.PaymentDate,
-                             PaymentId = p.Id,
-                             CustomerName = p.Customers.FullName,
-                             LendingNumber = p.Lending.LendingNumber
+                         TotalAmount = c.Payments.Where(a => !a.IsApproved)
+                                        .Sum(a => a.PaymentAmount),
+                         PaymentByDate = c.Payments.Where(a => !a.IsApproved)
+                                          .Select(p => new
+                                          {
+                                              PaymentAmount = p.PaymentAmount,
+                                              PaymentDate = p.PaymentDate,
+                                              PaymentId = p.Id,
+                                              CustomerName = p.Customers.FullName,
+                                              LendingNumber = p.Lending.LendingNumber
 
-                         }).ToList()
-                     })
-                     .Where(c => c.Payments.Any())
+                                          })
+                                          .GroupBy(p => ScalarFunctionHelper.Format(p.PaymentDate, "MM-dd-yyyy"))
+                                          .Select(p => new PaymentsForApprovalByDateDto()
+                                          {
+                                              PaymentDate = p.Key,
+                                              Payments = p.Select(pp => new PaymentsForApprovalDto()
+                                              {
+                                                  PaymentAmount = pp.PaymentAmount,
+                                                  PaymentDate = pp.PaymentDate,
+                                                  PaymentId = pp.PaymentId,
+                                                  CustomerName = pp.CustomerName,
+                                                  LendingNumber = pp.LendingNumber
+                                              })
+                                                          .ToList()
+                                          }).ToList()
+                     }).Where(c => c.PaymentByDate.Any())
                      .AsNoTracking()
                      .ToDataResult(dm);
 
@@ -189,7 +204,7 @@ public sealed class PaymentService : IPaymentService
         return entity;
     }
 
-    public async Task PaymentApproval(PaymentForApprovalDto? item)
+    public async Task PaymentApproval(PaymentsForApprovalByDateDto item)
     {
         foreach (var i in item.Payments)
         {
@@ -204,7 +219,7 @@ public sealed class PaymentService : IPaymentService
 
             await _repository.SaveChangesAsync();
 
-            BackgroundJob.Enqueue<ISmsService>((c) =>c.PaymentConfirmation(payment.CustomerId, payment));
+            BackgroundJob.Enqueue<ISmsService>((c) => c.PaymentConfirmation(payment.CustomerId, payment));
 
         }
     }
