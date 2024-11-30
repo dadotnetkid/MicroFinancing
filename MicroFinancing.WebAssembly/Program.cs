@@ -1,0 +1,21 @@
+using MicroFinancing.Components.DialogComponent;
+using MicroFinancing.Components.ToastsComponent;
+using MicroFinancing.WebAssembly;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Syncfusion.Blazor;
+
+var builder = WebAssemblyHostBuilder.CreateDefault(args);
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(
+                                                               builder.Configuration.GetValue<string>("Mgo+DSMBaFt+QHFqVkNrXVNbdV5dVGpAd0N3RGlcdlR1fUUmHVdTRHRcQl5hT39adk1gUH5XdXc=;Mgo+DSMBPh8sVXJ1S0d+X1RPd11dXmJWd1p/THNYflR1fV9DaUwxOX1dQl9gSX1RcERqWXddeXZVTmM=;ORg4AjUWIQA/Gnt2VFhhQlJBfV5AQmBIYVp/TGpJfl96cVxMZVVBJAtUQF1hSn5QdENiUH9Wc31XR2lf;MTQ3NjYzN0AzMjMxMmUzMTJlMzMzNUVFRXlxb3hBZWEwa3IvZVZocWU3UjUvQm5PS0t3cHZTUTM5aFJmczJ0YzQ9;MTQ3NjYzOEAzMjMxMmUzMTJlMzMzNW1nb3RiTXVsL09Id2REV1NuSlQyQ1dDT0FPODRGWW1iN0wwREdhNjNsTGc9;NRAiBiAaIQQuGjN/V0d+XU9Hc1RDX3xKf0x/TGpQb19xflBPallYVBYiSV9jS31TdUdlWHZeeHdcRGdaUg==;MTQ3NjY0MEAzMjMxMmUzMTJlMzMzNWJGMEo0VlE0SXpkbU9FSEpZaWtveko0QysrN3hGT3VCcURzQlFjczZmTjA9;MTQ3NjY0MUAzMjMxMmUzMTJlMzMzNUlhMFlWTUtxYUNnUFdVcHB0bnJjWEZHSDdOZmlYRU90SEtUT2RUQnZkOTA9;Mgo+DSMBMAY9C3t2VFhhQlJBfV5AQmBIYVp/TGpJfl96cVxMZVVBJAtUQF1hSn5QdENiUH9Wc31WQmBf;MTQ3NjY0M0AzMjMxMmUzMTJlMzMzNVgyVFIvYTBsNFBjME41dXFhSmFCeXNVR1ptMEV4WmRFV1ZETkJYdWNFbnM9;MTQ3NjY0NEAzMjMxMmUzMTJlMzMzNUJLb1Q4WDNVSVZ6bjVMVkhwN3BCMm9KdStOa3dsQVpVRnI0V1RPVnZQWVk9;MTQ3NjY0NUAzMjMxMmUzMTJlMzMzNWJGMEo0VlE0SXpkbU9FSEpZaWtveko0QysrN3hGT3VCcURzQlFjczZmTjA9"));
+
+builder.Services.AddAuthorizationCore();
+builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddScoped<IDialogService, DialogComponentService>();
+builder.Services.AddScoped<IToasts, ToastComponentService>();
+builder.Services.AddSyncfusionBlazor();
+builder.Services.AddSingleton<AuthenticationStateProvider, PersistentAuthenticationStateProvider>();
+
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+
+await builder.Build().RunAsync();

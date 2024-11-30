@@ -23,7 +23,7 @@ namespace MicroFinancing.Services
             _userManager = userManager;
             _jwtSetting = options.Value;
         }
-        public async Task<object?> CreateToken(SecurityDTM.LoginModel loginModel)
+        public async Task<object?> CreateToken(SecurityDto.LoginModel loginModel)
         {
             var user = await _userManager.FindByEmailAsync(loginModel.UserName);
             var result = await _userManager.CheckPasswordAsync(user, loginModel.Password);

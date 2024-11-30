@@ -188,10 +188,17 @@
     <PackageReference Include="Syncfusion.Blazor" Version="21.1.41" />
     <PackageReference Include="Syncfusion.Blazor.Themes" Version="21.1.35" />
 
-
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.10" />
     <PackageReference Include="Serilog" Version="3.1.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
     <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
+
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="NSwag.AspNetCore" Version="14.1.0" />
+    <PackageReference Include="NSwag.MSBuild" Version="14.1.0">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
 
   </ItemGroup>
 
@@ -203,6 +210,7 @@
     <ProjectReference Include="..\MicroFinancing.Repository\MicroFinancing.Repositories.csproj" />
     <ProjectReference Include="..\MicroFinancing.Services\MicroFinancing.Services.csproj" />
     <ProjectReference Include="..\MicroFinancing.Validators\MicroFinancing.Validators.csproj" />
+    <ProjectReference Include="..\MicroFinancing.WebAssembly\MicroFinancing.WebAssembly.csproj" />
     <ProjectReference Include="..\src\MicroFinancing.Core\MicroFinancing.Core.csproj" />
     <ProjectReference Include="..\src\MicroFinancing.Entities\MicroFinancing.Entities.csproj" />
     <ProjectReference Include="..\src\MicroFinancing.Migrations\MicroFinancing.DataMigrations.csproj" />
@@ -220,4 +228,17 @@
     <_ContentIncludedByDefault Remove="Pages\Reports\CustomerSummary\Index.razor" />
   </ItemGroup>
 
+	<PropertyGroup>
+		<RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+	</PropertyGroup>
+
+	<Target Name="NSwag" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Debug' And '$(SkipNSwag)' != 'True' ">
+		<Exec ConsoleToMSBuild="true" ContinueOnError="true" WorkingDirectory="$(ProjectDir)" EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development" Command="$(NSwagExe_Net80) run config.nswag /variables:Configuration=$(Configuration)">
+			<Output TaskParameter="ExitCode" PropertyName="NSwagExitCode" />
+			<Output TaskParameter="ConsoleOutput" PropertyName="NSwagOutput" />
+		</Exec>
+
+		<Message Text="$(NSwagOutput)" Condition="'$(NSwagExitCode)' == '0'" Importance="low" />
+		<Error Text="$(NSwagOutput)" Condition="'$(NSwagExitCode)' != '0'" />
+	</Target>
 </Project>

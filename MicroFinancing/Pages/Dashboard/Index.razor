@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using MicroFinancing.Core.Enumeration
 @attribute [Authorize]
+@rendermode  InteractiveServer
 <PageTitle>Dashboard</PageTitle>
 
 @if (_service.User.IsInRole("Administrator"))

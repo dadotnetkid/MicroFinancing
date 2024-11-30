@@ -22,6 +22,8 @@ using MicroFinancing.Validators;
 using MicroFinancing.Components;
 using DevExpress.Blazor.Reporting;
 using Hangfire;
+
+using MicroFinancing;
 using MicroFinancing.Infrastructure;
 using MicroFinancing.Services.Handlers;
 using Serilog.Events;
@@ -54,11 +56,15 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
     .AddDefaultUI()
     .AddDefaultTokenProviders()
     .AddEntityFrameworkStores<MFDbContext>();
+
 builder.Services.AddTransient<IUserClaimsPrincipalFactory<ApplicationUser>, ClaimsPrincipalFactory>();
 
 
-builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
+builder.Services.AddRazorComponents()
+       .AddInteractiveServerComponents()
+       .AddInteractiveWebAssemblyComponents();
+
+builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddSyncfusionBlazor();
 
@@ -85,7 +91,7 @@ builder.Services.AddPolicy();
 /*Registration of Singleton*/
 builder.Services.AddSingleton(x => new ClaimsValueModel());
 builder.Services.AddControllers();
-
+builder.Services.AddOpenApiDocument();
 builder.Services.RegisterMediatR();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
@@ -100,18 +106,18 @@ builder.Services.AddHangfire(configuration => configuration
 builder.Services.AddHttpClient("HttpClientWithSSLUntrusted",
                                client =>
                                {
-                                   client.BaseAddress= new Uri("http://sms-api.interworx.app");
-                                   
+                                   client.BaseAddress = new Uri("http://sms-api.interworx.app");
+
 
                                }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
-{
-    ClientCertificateOptions = ClientCertificateOption.Manual,
-    ServerCertificateCustomValidationCallback =
+                               {
+                                   ClientCertificateOptions = ClientCertificateOption.Manual,
+                                   ServerCertificateCustomValidationCallback =
         (httpRequestMessage, cert, cetChain, policyErrors) =>
         {
             return true;
         }
-});
+                               });
 
 // Add the processing server as IHostedService
 builder.Services.AddHangfireServer();
@@ -132,6 +138,10 @@ builder.Services.AddLogging(b =>
                                .MinimumLevel.Information()
                                .CreateLogger());
 
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -146,18 +156,25 @@ else
     app.UseHsts();
 }
 
+app.UseOpenApi();
+app.UseSwaggerUi();
+
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
-app.UseRouting();
+app.UseAntiforgery();
+
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapBlazorHub();
-app.MapFallbackToPage("/_Host");
+app.MapRazorComponents<App>()
+   .AddInteractiveServerRenderMode()
+   .AddInteractiveWebAssemblyRenderMode()
+   .AddAdditionalAssemblies(typeof(MicroFinancing.WebAssembly._Imports).Assembly);
+
 app.UseHangfireDashboard("/hangfire", new DashboardOptions
 {
     DashboardTitle = "Sample Jobs",
@@ -166,6 +183,8 @@ app.UseHangfireDashboard("/hangfire", new DashboardOptions
         new  HangfireAuthorizationFilter("admin")
     }
 });
+
+app.MapAdditionalIdentityEndpoints();
 
 //RecurringJob.AddOrUpdate<ReConstructHandler>("ReconstructLending", x => x.Handle(), Cron.Daily);
 //await BuilderFix.Run(app.Services);

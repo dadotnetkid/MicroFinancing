@@ -4,5 +4,5 @@ namespace MicroFinancing.Interfaces.Services;
 
 public interface ISecurityService
 {
-    Task<object?> CreateToken(SecurityDTM.LoginModel loginModel);
+    Task<object?> CreateToken(SecurityDto.LoginModel loginModel);
 }

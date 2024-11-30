@@ -1,0 +1,54 @@
+﻿@page "/Identity/Account/Login"
+
+<div class="card-body login-card-body">
+    <p class="login-box-msg">Sign in to start your session</p>
+    <EditForm Model="Model" method="post" OnValidSubmit="LoginUser" FormName="login">
+        <div class="input-group mb-3">
+            <InputText type="text"
+                       class="form-control" placeholder="Email/UserName "
+                       @bind-Value="@Model.UserName" />
+            <div class="input-group-append">
+                <div class="input-group-text">
+                    <span class="fas fa-envelope"></span>
+                </div>
+            </div>
+        </div>
+        <div class="input-group mb-3">
+            <InputText type="password" class="form-control" placeholder="Password"  @bind-Value="@Model.Password"/>
+            <div class="input-group-append">
+                <div class="input-group-text">
+                    <span class="fas fa-lock"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+            </div>
+
+        </div>
+    </EditForm>
+
+    <p class="mb-1">
+        <a href="forgot-password.html">I forgot my password</a>
+    </p>
+
+</div>
+@code
+{
+    [Inject] private SignInManager<ApplicationUser> _signInManager { get; set; }
+    [Inject] private NavigationManager NavigationManager { get; set; }
+
+    [SupplyParameterFromForm]public SecurityDto.LoginModel Model { get; set; } = new();
+
+    private async Task LoginUser(EditContext obj)
+    {
+        var result = await _signInManager.PasswordSignInAsync(Model.UserName, Model.Password, false, false);
+        if (result.Succeeded)
+        {
+            NavigationManager.NavigateTo("/", true);
+        }
+
+    }
+}

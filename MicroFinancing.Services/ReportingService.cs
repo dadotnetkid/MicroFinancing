@@ -94,8 +94,10 @@ namespace MicroFinancing.Services
             }).FirstOrDefaultAsync();
 
             var payments = _paymentRepository.Entity
+                                             .Where(c => c.IsApproved)
                                              .Where(x => x.LendingId == lendingId)
-                                             .Where(c=>!c.Override);
+                                             .Where(c => !c.Override);
+
             var currentDate = list.ReleaseDate.AddDays(1);
 
             while (currentDate <= list.DueDate)
@@ -177,7 +179,7 @@ namespace MicroFinancing.Services
                     CustomerName = c.FullName,
                     c.Id,
                     c.Payments,
-                    Lending = c.Lending.FirstOrDefault(c=>c.IsActive)
+                    Lending = c.Lending.FirstOrDefault(c => c.IsActive)
                 });
 
             var currentDate = startDate;

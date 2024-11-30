@@ -15,7 +15,7 @@ namespace MicroFinancing.Controllers
             _securityService = securityService;
         }
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] SecurityDTM.LoginModel loginModel)
+        public async Task<IActionResult> Login([FromBody] SecurityDto.LoginModel loginModel)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var res = await _securityService.CreateToken(loginModel);

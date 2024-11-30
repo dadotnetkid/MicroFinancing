@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MicroFinancing.DataTransferModel
 {
-    public sealed class SecurityDTM
+    public sealed class SecurityDto
     {
         public sealed class LoginModel
         {

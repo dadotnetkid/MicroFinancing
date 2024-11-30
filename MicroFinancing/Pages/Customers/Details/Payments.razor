@@ -1,5 +1,6 @@
 ﻿@using MicroFinancing.Components.DialogComponent
 @using Syncfusion.Blazor.Data
+
 <SfGrid AllowPaging="true" TValue="PaymentGridDTM" @ref="paymentGrid" Query="queryData" AllowSorting="true">
     <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(PaymentAdaptor)"
                                           Adaptor="Adaptors.CustomAdaptor" />
@@ -27,6 +28,10 @@
                 {
                     <span>@row.CreatedBy</span>
                 }
+                <br/>
+                <small class=" @(row.IsApproved?"badge-success":"badge-danger") font-weight-light">
+                    @(row.IsApproved?"Approved":"For submission")
+                </small>
             </Template>
         </GridColumn>
         <GridColumn Field=@nameof(PaymentGridDTM.PaymentAmount) Width="75">

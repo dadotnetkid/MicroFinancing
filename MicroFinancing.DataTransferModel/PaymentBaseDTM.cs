@@ -23,7 +23,7 @@ public class PaymentBaseDTM
 
 public sealed class PaymentGridDTM : PaymentBaseDTM
 {
-    
+    public bool IsApproved { get; set; }
 }
 public  class CreatePaymentDTM : PaymentBaseDTM
 {

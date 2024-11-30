@@ -1,5 +1,6 @@
 ﻿@page "/Payment-Approval"
 @attribute [Authorize(Policy = ClaimsConstant.Administrator)]
+@rendermode InteractiveServer
 @using Syncfusion.Blazor.Buttons
 <div class="card">
     <div class="card-header">
@@ -10,8 +11,9 @@
     </div>
     <div class="card-body">
         <SfGrid AllowPaging="true" AllowFiltering="true" TValue="PaymentForApprovalDto" @ref="PaymentApprovalGrid">
+            <GridPageSettings PageSize="Int32.MaxValue"></GridPageSettings>
             <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(PaymentApprovalAdaptor)"
-                                                  Adaptor="Adaptors.CustomAdaptor" />
+                                                  Adaptor="Adaptors.CustomAdaptor"/>
             <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
             <GridColumns>
 
@@ -42,9 +44,10 @@
                                 </GridTemplates>
 
                                 <GridColumn Field=@nameof(PaymentsForApprovalByDateDto.PaymentDate) HeaderText="Date" Width="110"></GridColumn>
+                                <GridColumn Field=@nameof(PaymentsForApprovalByDateDto.TotalAmount) HeaderText="Amount" Width="110"></GridColumn>
                                 <GridColumn HeaderText="Action" Width="75">
                                     <Template>
-                                        <SfButton @onclick="@(()=>OnApproved(context as PaymentsForApprovalByDateDto))">Approved</SfButton>
+                                        <SfButton @onclick="@(() => OnApproved(context as PaymentsForApprovalByDateDto))">Approved</SfButton>
                                     </Template>
                                 </GridColumn>
                             </GridColumns>
@@ -55,7 +58,7 @@
                 </GridTemplates>
                 <GridColumn Field=@nameof(PaymentForApprovalDto.CollectorName) Width="75"></GridColumn>
                 <GridColumn Field=@nameof(PaymentForApprovalDto.TotalAmount) Width="75"></GridColumn>
-                
+
             </GridColumns>
 
         </SfGrid>

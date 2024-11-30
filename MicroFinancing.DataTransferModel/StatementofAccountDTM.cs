@@ -27,5 +27,8 @@ public sealed class PaymentDateDTM
     public DateTime PaymentDate { get; set; }
     public decimal AmountPaid { get; set; }
     public string Notes { get; set; }
+    public bool IsApproved { get; set; }
     public string AmountPaidWithNotes => $"₱ {AmountPaid:n2} {Notes}";
+
+  
 }

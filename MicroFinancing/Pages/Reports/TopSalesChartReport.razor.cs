@@ -1,4 +1,5 @@
 ﻿using MicroFinancing.Services;
+using MicroFinancing.WebAssembly.Pages.Dashboard;
 
 using Microsoft.AspNetCore.Components;
 
@@ -12,6 +13,6 @@ public partial class TopSalesChartReport
 
     private async Task Search()
     {
-        await TopSalesChartRef.Render(DateFrom, DateTo);
+        //await TopSalesChartRef.Render(DateFrom, DateTo);
     }
 }

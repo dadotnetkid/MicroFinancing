@@ -1,18 +1,16 @@
-﻿using MicroFinancing.Core.Common;
-using MicroFinancing.Core.Enumeration;
-using MicroFinancing.Services;
+﻿
 
+/*
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
 using Newtonsoft.Json;
 
-namespace MicroFinancing.Pages.Reports;
+namespace MicroFinancing.WebAssembly.Pages.Dashboard;
 
 public partial class TopSalesChart
 {
     [Inject] IJSRuntime JSRuntime { get; set; }
-    [Inject] IDashboardService DashboardService { get; set; }
     [Inject] ILogger<TopSalesChart> logger { get; set; }
     [Parameter] public DateTime? DateFrom { get; set; }
     [Parameter] public DateTime? DateTo { get; set; }
@@ -182,3 +180,4 @@ public partial class TopSalesChart
         }
     }
 }
+*/
