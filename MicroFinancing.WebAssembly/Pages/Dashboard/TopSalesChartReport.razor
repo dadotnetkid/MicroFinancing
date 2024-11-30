@@ -1,5 +1,5 @@
 ﻿@page "/top-sales-chart-report"
-@rendermode InteractiveServer
+@rendermode InteractiveWebAssembly
 <div class="card">
     <div class="card-header">
         <b>Total Collection</b>
@@ -29,7 +29,7 @@
         </div>
         <div class="row mt-2">
             <div class="col">
-                @*<TopSalesChart DateFrom="DateFrom?.Date" DateTo="DateTo?.AddDays(1)" @ref=TopSalesChartRef></TopSalesChart>*@
+                <TopSalesChart DateFrom="DateFrom?.Date" DateTo="DateTo?.AddDays(1)" @ref=TopSalesChartRef></TopSalesChart>
             </div>
         </div>
 

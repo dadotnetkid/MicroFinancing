@@ -142,6 +142,21 @@ builder.Services.AddLogging(b =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddScoped(sp =>
+{
+    var httpContextAccessor = sp.CreateScope()
+      .ServiceProvider.GetRequiredService<IHttpContextAccessor>();
+
+    var httpContext = httpContextAccessor.HttpContext;
+
+    return new HttpClient
+    {
+        BaseAddress = new Uri($"{httpContext.Request.Scheme}://{httpContext.Request.Host}")
+    };
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

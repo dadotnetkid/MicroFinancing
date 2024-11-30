@@ -1,4 +1,5 @@
-﻿using MicroFinancing.DataTransferModel;
+﻿using MicroFinancing.Core.Enumeration;
+using MicroFinancing.DataTransferModel;
 using MicroFinancing.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,12 +17,19 @@ namespace MicroFinancing.Controllers
         {
             _dashboardService = dashboardService;
         }
-        [HttpGet(nameof(TopSalesChartToday))]
-        public async Task<ActionResult<List<decimal?>>> TopSalesChartToday(DateTime? dateFrom, DateTime? dateTo)
+        [HttpGet(nameof(GetRenderChart))]
+        public async Task<ActionResult<BaseResultDto<List<decimal?>>>> GetRenderChart(DateTime? dateFrom, DateTime? dateTo)
         {
             var renderChart = await _dashboardService.GetRenderChart(dateFrom.GetValueOrDefault(), dateTo.GetValueOrDefault());
 
             return Ok(BaseResultDto<List<decimal?>>.Success(renderChart));
+        }
+        [HttpGet(nameof(GetRenderChartByBranchAndDate))]
+        public async Task<ActionResult<BaseResultDto<List<ChartCollectorDto>>>> GetRenderChartByBranchAndDate(BranchEnum.Branch branch, DateTime? dateFrom, DateTime? dateTo)
+        {
+            var renderChart = await _dashboardService.GetRenderChartByBranchAndDate(branch, dateFrom.GetValueOrDefault(), dateTo.GetValueOrDefault());
+
+            return Ok(BaseResultDto<List<ChartCollectorDto>>.Success(renderChart));
         }
     }
 }

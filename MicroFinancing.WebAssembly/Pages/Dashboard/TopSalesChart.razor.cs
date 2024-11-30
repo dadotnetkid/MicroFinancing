@@ -1,6 +1,9 @@
 ﻿
 
-/*
+using MicroFinancing.Core.Common;
+using MicroFinancing.Core.Enumeration;
+using MicroFinancing.WebAssembly.Services.Client;
+
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
@@ -14,11 +17,19 @@ public partial class TopSalesChart
     [Inject] ILogger<TopSalesChart> logger { get; set; }
     [Parameter] public DateTime? DateFrom { get; set; }
     [Parameter] public DateTime? DateTo { get; set; }
+
+    [Inject] HttpClient HttpClient { get; set; }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+
+
         if (firstRender && (DateFrom is not null && DateTo is not null))
         {
-            var renderChart = await DashboardService.GetRenderChart(DateFrom.GetValueOrDefault(), DateTo.GetValueOrDefault());
+            var dashboardClient = new DashboardClient(HttpClient);
+            var renderChartResult = await dashboardClient.GetRenderChartAsync(DateFrom.GetValueOrDefault(), DateTo.GetValueOrDefault());
+
+            var renderChart = renderChartResult.Data;
 
             if (renderChart is null || !renderChart.Any())
             {
@@ -76,7 +87,11 @@ public partial class TopSalesChart
             dateTo = dateTo?.AddDays(1);
         }
 
-        var renderChart = await DashboardService.GetRenderChart(dateFrom.GetValueOrDefault(), dateTo.GetValueOrDefault());
+        var dashboardClient = new DashboardClient(HttpClient);
+
+        var renderChartResult = await dashboardClient.GetRenderChartAsync(dateFrom.GetValueOrDefault(), dateTo.GetValueOrDefault());
+
+        var renderChart = renderChartResult.Data;
 
         if (renderChart is null || !renderChart.Any())
         {
@@ -134,10 +149,14 @@ public partial class TopSalesChart
                 return;
             }
 
-            var enumBranch = branch.GetValueFromDescription<BranchEnum.Branch>();
+            var dashboardClient = new DashboardClient(HttpClient);
+
+            var enumBranch = branch.GetValueFromDescription<Branch>();
             var obj = JsonConvert.DeserializeAnonymousType(parameters, new { dateFrom = default(DateTime), dateTo = default(DateTime) });
 
-            var res = await DashboardService.GetRenderChartByBranchAndDate(enumBranch, obj.dateFrom, obj.dateTo);
+            var baseResult = await dashboardClient.GetRenderChartByBranchAndDateAsync(enumBranch, obj.dateFrom, obj.dateTo);
+
+            var res = baseResult.Data;
 
             await JSRuntime.InvokeVoidAsync("renderChart",
                                             new
@@ -180,4 +199,3 @@ public partial class TopSalesChart
         }
     }
 }
-*/

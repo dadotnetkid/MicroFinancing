@@ -3,7 +3,7 @@
 public class BaseResultDto<TDto>
 {
     public bool IsSuccess { get; set; }
-    public string Message { get; set; }
+    public string? Message { get; set; }
     public TDto Data { get; set; }
 
     public static BaseResultDto<TDto> Success(TDto data)
