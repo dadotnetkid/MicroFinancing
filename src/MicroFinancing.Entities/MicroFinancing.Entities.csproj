@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\MicroFinancing.Infrastructure\MicroFinancing.Infrastructure.csproj" />
     <ProjectReference Include="..\MicroFinancing.Core\MicroFinancing.Core.csproj" />
   </ItemGroup>
 

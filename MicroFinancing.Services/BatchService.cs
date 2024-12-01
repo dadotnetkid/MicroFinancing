@@ -1,8 +1,5 @@
 ﻿using AutoMapper;
 using MicroFinancing.Core.Common;
-using MicroFinancing.DataTransferModel;
-using MicroFinancing.Entities;
-using MicroFinancing.Interfaces.Repositories;
 using MicroFinancing.Interfaces.Services;
 using Syncfusion.Blazor;
 

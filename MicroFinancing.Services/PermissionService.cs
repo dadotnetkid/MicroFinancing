@@ -1,6 +1,4 @@
-﻿using MicroFinancing.DataTransferModel;
-using MicroFinancing.Entities;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using MicroFinancing.Interfaces.Services;
 using Microsoft.Extensions.DependencyInjection;
-using MicroFinancing.Interfaces.Repositories;
 using System.Runtime.InteropServices;
+using Syncfusion.Blazor;
 using Syncfusion.Blazor.RichTextEditor;
 
 namespace MicroFinancing.Services
@@ -23,7 +21,7 @@ namespace MicroFinancing.Services
 
         public PermissionService(RoleManager<ApplicationRole> roleManager,
             IServiceScopeFactory serviceScopeFactory,
-            IRepository<ApplicationRoleClaims,int> roleClaimsRepository,
+            IRepository<ApplicationRoleClaims, int> roleClaimsRepository,
             ClaimsValueModel claimsValueModel)
         {
             _roleManager = roleManager;
@@ -32,7 +30,7 @@ namespace MicroFinancing.Services
             _claimsValueModel = claimsValueModel;
         }
 
-        public IQueryable<PermissionGridDTM> GetPermissions()
+        public Task<object> GetPermissions(DataManagerRequest dm)
         {
             return _roleManager.Roles.Select(x => new PermissionGridDTM()
             {
@@ -40,12 +38,13 @@ namespace MicroFinancing.Services
                 Name = x.Name,
                 Users = x.UserRoles.Count(),
                 Scopes = x.RoleClaims.Select(rc => rc.ClaimValue)
-            });
+            }).ToDataResult(dm);
         }
 
         public async Task Update(CreateUpdatePermissionDTM item)
         {
-            using var roleManager = _serviceScopeFactory.CreateScope().ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+            using var roleManager = _serviceScopeFactory.CreateScope().ServiceProvider
+                .GetRequiredService<RoleManager<ApplicationRole>>();
             var roles = await roleManager.FindByIdAsync(item.Id);
             roles.Name = item.Name;
             await roleManager.UpdateAsync(roles);
@@ -61,15 +60,15 @@ namespace MicroFinancing.Services
                     RoleId = item?.Id ?? string.Empty,
                 };
             }));
-
         }
 
         public async Task Create(CreateUpdatePermissionDTM item)
         {
-            using var roleManager = _serviceScopeFactory.CreateScope().ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+            using var roleManager = _serviceScopeFactory.CreateScope().ServiceProvider
+                .GetRequiredService<RoleManager<ApplicationRole>>();
             var role = new ApplicationRole()
             {
-                Id=Guid.NewGuid().ToString(),
+                Id = Guid.NewGuid().ToString(),
                 Name = item.Name,
             };
             var result = await roleManager.CreateAsync(role);

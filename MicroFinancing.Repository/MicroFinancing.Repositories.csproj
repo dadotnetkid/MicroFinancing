@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MicroFinancing.Interfaces\MicroFinancing.Interfaces.csproj" />
+    <ProjectReference Include="..\MicroFinancing.WebAssembly\MicroFinancing.WebAssembly.csproj" />
     <ProjectReference Include="..\src\MicroFinancing.Entities\MicroFinancing.Entities.csproj" />
   </ItemGroup>
 

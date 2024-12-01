@@ -20,11 +20,11 @@ public class BaseLendingDTM
     [Display(Name = "Due Date")]
     [DisplayFormat(DataFormatString = "MM/dd/yyyy")]
     public DateTime? DueDate { get; set; } = Convert.ToDateTime(DateTime.Now.ToString("MM-dd-yyyy")).AddDays(40);
-    public string CreatedBy { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public bool IsDeleted { get; set; }
+    public string? CreatedBy { get; set; }
+    public DateTime? CreatedAt { get; set; }
+    public bool? IsDeleted { get; set; }
     [Display(Name = "Customer Name")]
-    public string CustomerName { get; set; }
+    public string? CustomerName { get; set; }
     public string? Collector { get; set; }
 }
 public sealed class LendingGridDTM : BaseLendingDTM

@@ -18,8 +18,8 @@ public sealed class CreateUpdatePermissionDTM
 
     public string? Id { get; set; }
     public string? Name { get; set; }
-    public string[] Scopes { get; set; }
-    public int Users { get; set; }
+    public string[]? Scopes { get; set; }
+    public int? Users { get; set; }
 }
 
 public sealed class ItemsGridDTM

@@ -224,8 +224,17 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Pages\Customers\Details\Paluwagan.razor" />
-    <_ContentIncludedByDefault Remove="Pages\Summary\CustomerSummary\Index.razor" />
     <_ContentIncludedByDefault Remove="Pages\Reports\CustomerSummary\Index.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Maintenance\Users\AddEditUser.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Maintenance\Users\Index.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Maintenance\Users\ResetPassword.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Maintenance\Terms\AddEditTerm.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Maintenance\Terms\Index.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\Dashboard\" />
+    <Folder Include="Pages\Maintenance\" />
   </ItemGroup>
 
 	<PropertyGroup>

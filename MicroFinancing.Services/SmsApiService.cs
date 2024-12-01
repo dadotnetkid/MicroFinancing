@@ -1,6 +1,4 @@
 ﻿using System.Net.Http.Json;
-using MicroFinancing.Entities;
-using MicroFinancing.Interfaces.Repositories;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 

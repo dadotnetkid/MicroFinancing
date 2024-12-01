@@ -1,7 +1,4 @@
-﻿using MicroFinancing.DataTransferModel;
-using MicroFinancing.Entities;
-using MicroFinancing.Interfaces.Repositories;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -90,8 +87,8 @@ namespace MicroFinancing.Services
             });
         }
 
-        public Task<object> GetSummary(DataManagerRequest dm,
-                                       string userId)
+        public async Task<object> GetSummary(DataManagerRequest dm,
+                                             string userId)
         {
 
             var query = _customersRepository.Entity.AsQueryable();
@@ -101,7 +98,7 @@ namespace MicroFinancing.Services
                 query = query.Where(x => x.Lending.Any(l => l.Collector == userId));
             }
 
-            return query.Select(x => new LendingSummaryGridDTM()
+            var result = await query.Select(x => new LendingSummaryGridDTM()
             {
                 Id = x.Id,
                 CustomerName = x.FirstName + " " + x.LastName,
@@ -111,6 +108,7 @@ namespace MicroFinancing.Services
                 DueDate = x.Lending.Max(x => x.DueDate),
             }).ToDataResult(dm);
 
+            return result;
         }
 
         public async Task DeleteLending(long id)

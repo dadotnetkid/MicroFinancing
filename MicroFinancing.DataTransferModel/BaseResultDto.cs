@@ -1,4 +1,7 @@
-﻿namespace MicroFinancing.DataTransferModel;
+﻿using System.Collections;
+using System.Text.Json.Serialization;
+
+namespace MicroFinancing.DataTransferModel;
 
 public class BaseResultDto<TDto>
 {
@@ -23,3 +26,4 @@ public class BaseResultDto<TDto>
         };
     }
 }
+

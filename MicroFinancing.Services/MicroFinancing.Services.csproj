@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="Hangfire.Core" Version="1.8.14" />
     <PackageReference Include="MediatR" Version="12.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.9" />
     <PackageReference Include="Syncfusion.Blazor" Version="21.1.41" />
@@ -20,6 +21,7 @@
     <ProjectReference Include="..\MicroFinancing.Interfaces\MicroFinancing.Interfaces.csproj" />
     <ProjectReference Include="..\MicroFinancing.Providers\MicroFinancing.Providers.csproj" />
     <ProjectReference Include="..\MicroFinancing.Repository\MicroFinancing.Repositories.csproj" />
+    <ProjectReference Include="..\MicroFinancing.WebAssembly\MicroFinancing.WebAssembly.csproj" />
     <ProjectReference Include="..\src\MicroFinancing.Core\MicroFinancing.Core.csproj" />
     <ProjectReference Include="..\src\MicroFinancing.Entities\MicroFinancing.Entities.csproj" />
   </ItemGroup>

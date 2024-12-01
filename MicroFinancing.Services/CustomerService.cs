@@ -1,9 +1,6 @@
 ﻿using Hangfire;
 using MicroFinancing.Core.Common;
 using MicroFinancing.Core.Enumeration;
-using MicroFinancing.DataTransferModel;
-using MicroFinancing.Entities;
-using MicroFinancing.Interfaces.Repositories;
 using MicroFinancing.Interfaces.Services;
 using Microsoft.EntityFrameworkCore;
 

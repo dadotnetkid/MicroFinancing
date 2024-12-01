@@ -1,6 +1,4 @@
 ﻿using MicroFinancing.Core.Common;
-using MicroFinancing.Entities;
-using MicroFinancing.Interfaces.Repositories;
 using MicroFinancing.Interfaces.Services;
 using Syncfusion.Blazor;
 

@@ -1,3 +1,5 @@
+using System.Security.Claims;
+
 namespace MicroFinancing.WebAssembly
 {
     // Add properties to this class and update the server and client AuthenticationStateProviders
@@ -6,5 +8,6 @@ namespace MicroFinancing.WebAssembly
     {
         public required string UserId { get; set; }
         public required string Email { get; set; }
+        public List<string> Roles { get; set; }
     }
 }

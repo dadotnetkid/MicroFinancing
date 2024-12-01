@@ -27,6 +27,11 @@ public class CurrentUser : ICurrentUser
         throw new NotImplementedException();
     }
 
+    public bool IsAuthorized(ClaimsPrincipal user, string policy)
+    {
+        throw new NotImplementedException();
+    }
+
     private string GetFullName()
     {
         return User.GetUserFullName();

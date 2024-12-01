@@ -1,15 +1,13 @@
 ﻿using AutoMapper;
-
 using MicroFinancing.Components.ToastsComponent;
 using MicroFinancing.Core.Common;
-using MicroFinancing.DataTransferModel;
-using MicroFinancing.Entities;
 using MicroFinancing.Interfaces.Services;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Syncfusion.Blazor;
 
 namespace MicroFinancing.Services;
 
@@ -21,15 +19,17 @@ public class BlazorUserService : IUserService
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly IToasts _toasts;
+    private readonly IRepository<ApplicationUser, string> _repository;
     private readonly UserManager<ApplicationUser> _userManager;
 
     public BlazorUserService(UserManager<ApplicationUser> userManager,
-                             IServiceScopeFactory serviceScopeFactory,
-                             AuthenticationStateProvider authenticationStateProvider,
-                             IAuthorizationService authorizationService,
-                             IMapper mapper,
-                             IServiceScopeFactory scopeFactory,
-                             IToasts toasts)
+        IServiceScopeFactory serviceScopeFactory,
+        AuthenticationStateProvider authenticationStateProvider,
+        IAuthorizationService authorizationService,
+        IMapper mapper,
+        IServiceScopeFactory scopeFactory,
+        IToasts toasts,
+        IRepository<ApplicationUser, string> repository)
     {
         _userManager = userManager;
         _serviceScopeFactory = serviceScopeFactory;
@@ -38,6 +38,7 @@ public class BlazorUserService : IUserService
         _mapper = mapper;
         _scopeFactory = scopeFactory;
         _toasts = toasts;
+        _repository = repository;
     }
 
     public async Task<CreateUpdateUserDTM> CreateUser(CreateUpdateUserDTM item)
@@ -68,7 +69,7 @@ public class BlazorUserService : IUserService
     public async Task UpdateUser(CreateUpdateUserDTM user)
     {
         using var userManager = _serviceScopeFactory.CreateScope()
-                                                    .ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            .ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         var applicationUser = await userManager.FindByIdAsync(user.UserId);
 
         applicationUser.UserName = user.UserName;
@@ -106,7 +107,7 @@ public class BlazorUserService : IUserService
     }
 
     public async Task<bool> IsAuthorizeAsync(string policy,
-                                        bool showToast = true)
+        bool showToast = true)
     {
         var state = await _authenticationStateProvider.GetAuthenticationStateAsync();
         var res = (await _authorizationService.AuthorizeAsync(state.User, policy)).Succeeded;
@@ -120,24 +121,24 @@ public class BlazorUserService : IUserService
     }
 
     public bool IsAuthorize(string policy,
-                            bool showToast = true)
+        bool showToast = true)
     {
         var state = _authenticationStateProvider.GetAuthenticationStateAsync()
-                                                 .ConfigureAwait(false)
-                                                 .GetAwaiter()
-                                                 .GetResult();
+            .ConfigureAwait(false)
+            .GetAwaiter()
+            .GetResult();
 
         var res = (_authorizationService.AuthorizeAsync(state.User, policy)
-                                        .ConfigureAwait(false)
-                                        .GetAwaiter()
-                                        .GetResult()).Succeeded;
+            .ConfigureAwait(false)
+            .GetAwaiter()
+            .GetResult()).Succeeded;
 
         if (!res && showToast)
         {
             _toasts.ShowToast("No Permission", "You are not Authorized to do this action")
-                   .ConfigureAwait(false)
-                   .GetAwaiter()
-                   .GetResult();
+                .ConfigureAwait(false)
+                .GetAwaiter()
+                .GetResult();
         }
 
         return res;
@@ -146,7 +147,7 @@ public class BlazorUserService : IUserService
     public async Task AddRoles(CreateUpdateUserDTM user)
     {
         using var userManager = _serviceScopeFactory.CreateScope()
-                                                    .ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            .ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         var applicationUser = await userManager.FindByIdAsync(user.UserId);
         var roles = await userManager.GetRolesAsync(applicationUser);
         await userManager.RemoveFromRolesAsync(applicationUser, roles);
@@ -168,5 +169,28 @@ public class BlazorUserService : IUserService
         }
 
         return false;
+    }
+
+    public async Task<object> GetUsers(DataManagerRequest? dm)
+    {
+        var res = await _repository.Entity.AsNoTracking().Select(x => new UserGridDTM()
+        {
+            Id = x.Id,
+            FirstName = x.FirstName,
+            LastName = x.LastName,
+            Email = x.Email,
+            UserName = x.UserName,
+            FullName = x.FullName,
+            Branch = x.Branch,
+            UserRoles = x.UserRoles.Select(ur => new ApplicationRoleDTM()
+            {
+                Id = ur.Role.Id,
+                ConcurrencyStamp = ur.Role.ConcurrencyStamp,
+                Name = ur.Role.Name,
+                NormalizedName = ur.Role.NormalizedName,
+            })
+        }).ToDataResult(dm);
+
+        return res;
     }
 }

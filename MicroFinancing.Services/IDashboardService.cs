@@ -1,5 +1,4 @@
 ﻿using MicroFinancing.Core.Enumeration;
-using MicroFinancing.DataTransferModel;
 
 namespace MicroFinancing.Services;
 

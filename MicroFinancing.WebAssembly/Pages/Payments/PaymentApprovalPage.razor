@@ -1,0 +1,72 @@
+﻿@page "/Payment-Approval"
+@attribute [Authorize(Policy = ClaimsConstant.Administrator)]
+@rendermode InteractiveWebAssembly
+@using MicroFinancing.Components.DialogComponent
+@using MicroFinancing.Core.Common
+@using MicroFinancing.Services
+@using MicroFinancing.WebAssembly.Services.Client
+<div class="card">
+    <div class="card-header">
+        <div class="float-left">
+            <h5>Payment Approval</h5>
+        </div>
+
+    </div>
+    <div class="card-body">
+        <SfGrid AllowPaging="true" AllowFiltering="true" TValue="PaymentForApprovalDto" @ref="PaymentApprovalGrid">
+            <GridPageSettings PageSize="Int32.MaxValue"></GridPageSettings>
+            <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(PaymentApprovalAdaptor)"
+                                                  Adaptor="Adaptors.CustomAdaptor"/>
+            <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
+            <GridColumns>
+
+                <GridTemplates>
+
+                    <DetailTemplate Context="paymentContext">
+
+                        @{
+                            var row = paymentContext as PaymentForApprovalDto;
+                        }
+                        <SfGrid TValue="PaymentsForApprovalByDateDto" DataSource="row.PaymentByDate">
+                            <GridColumns>
+                                <GridTemplates>
+
+                                    <DetailTemplate Context="rowContext">
+                                        @{
+                                            var dateRows = rowContext as PaymentsForApprovalByDateDto;
+                                        }
+                                        <SfGrid TValue="PaymentsForApprovalDto" DataSource="dateRows.Payments">
+                                            <GridColumns>
+                                                <GridColumn Field=@nameof(PaymentsForApprovalDto.LendingNumber) Width="110"></GridColumn>
+                                                <GridColumn Field=@nameof(PaymentsForApprovalDto.CustomerName) HeaderText="Customer Name" Width="110"></GridColumn>
+                                                <GridColumn Field=@nameof(PaymentsForApprovalDto.PaymentAmount) Width="110"></GridColumn>
+
+                                            </GridColumns>
+                                        </SfGrid>
+                                    </DetailTemplate>
+                                </GridTemplates>
+
+                                <GridColumn Field=@nameof(PaymentsForApprovalByDateDto.PaymentDate) HeaderText="Date" Width="110"></GridColumn>
+                                <GridColumn Field=@nameof(PaymentsForApprovalByDateDto.TotalAmount) HeaderText="Amount" Width="110"></GridColumn>
+                                <GridColumn HeaderText="Action" Width="75">
+                                    <Template>
+                                        <SfButton @onclick="@(() => OnApproved(context as PaymentsForApprovalByDateDto))">Approved</SfButton>
+                                    </Template>
+                                </GridColumn>
+                            </GridColumns>
+                        </SfGrid>
+                    </DetailTemplate>
+
+
+                </GridTemplates>
+                <GridColumn Field=@nameof(PaymentForApprovalDto.CollectorName) Width="75"></GridColumn>
+                <GridColumn Field=@nameof(PaymentForApprovalDto.TotalAmount) Width="75"></GridColumn>
+
+            </GridColumns>
+
+        </SfGrid>
+    </div>
+
+</div>
+
+<DialogContainer/>

@@ -1,6 +1,4 @@
-﻿using MicroFinancing.Entities;
-
-namespace MicroFinancing.Services;
+﻿namespace MicroFinancing.Services;
 
 public interface ISmsService
 {

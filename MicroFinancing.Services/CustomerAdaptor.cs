@@ -26,12 +26,16 @@ namespace MicroFinancing.Services
             {
                 if (await _userService.IsAuthorizeAsync(ClaimsConstant.Customer.ViewAllCustomer, false))
                 {
-                    return await _customerService.GetCustomer()
+                    var a = await _customerService.GetCustomer()
                                                  .ToDataResult(dm);
+
+                    return a;
                 }
 
-                return await _customerService.GetCustomerByCollector(await _userService.GetUserId())
+                var res = await _customerService.GetCustomerByCollector(await _userService.GetUserId())
                                              .ToDataResult(dm);
+
+                return res;
             }
             catch (Exception e)
             {

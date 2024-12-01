@@ -10,15 +10,14 @@ namespace MicroFinancing.Core.Common
 {
     public static class PrincipalHelper
     {
-
         public static string? GetUserFullName(this ClaimsPrincipal principal)
         {
             return principal.FindFirst("FullName")?.Value;
         }
+
         public static string? GetUserId(this ClaimsPrincipal principal)
         {
             return principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
         }
-
     }
 }

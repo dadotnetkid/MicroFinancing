@@ -1,6 +1,5 @@
+using System.Collections.Generic;
 using System.Security.Claims;
-
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace MicroFinancing.WebAssembly
@@ -27,10 +26,12 @@ namespace MicroFinancing.WebAssembly
                 return;
             }
 
-            Claim[] claims = [
+            List<Claim> claims = [
                 new Claim(ClaimTypes.NameIdentifier, userInfo.UserId),
                 new Claim(ClaimTypes.Name, userInfo.Email),
                 new Claim(ClaimTypes.Email, userInfo.Email) ];
+
+            claims.AddRange(userInfo.Roles.Select(c => new Claim(ClaimTypes.Role, c)));
 
             authenticationStateTask = Task.FromResult(
                 new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(claims,

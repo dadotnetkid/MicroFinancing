@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using MicroFinancing.DataTransferModel;
-using MicroFinancing.Interfaces.Repositories;
 
 namespace MicroFinancing.Services.Handlers.BatchCommands;
 

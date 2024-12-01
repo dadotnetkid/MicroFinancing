@@ -1,6 +1,4 @@
 ﻿using MediatR;
-using MicroFinancing.Entities;
-using MicroFinancing.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace MicroFinancing.Services.Handlers

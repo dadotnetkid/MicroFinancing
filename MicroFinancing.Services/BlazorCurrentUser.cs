@@ -27,6 +27,11 @@ public class BlazorCurrentUser : ICurrentUser
         return User.IsInRole(role);
     }
 
+    public bool IsAuthorized(ClaimsPrincipal user, string policy)
+    {
+        throw new NotImplementedException();
+    }
+
     private string GetFullName()
     {
         return User.GetUserFullName();

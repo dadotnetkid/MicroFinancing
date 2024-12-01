@@ -1,14 +1,13 @@
 ﻿using AutoMapper;
 
 using MicroFinancing.Core.Common;
-using MicroFinancing.DataTransferModel;
-using MicroFinancing.Entities;
 using MicroFinancing.Interfaces.Services;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Syncfusion.Blazor;
 
 namespace MicroFinancing.Services;
 
@@ -127,5 +126,10 @@ public class ApiUserService : IUserService
         }
 
         return Task.FromResult(false);
+    }
+
+    public Task<object> GetUsers(DataManagerRequest? dataManager)
+    {
+        throw new NotImplementedException();
     }
 }

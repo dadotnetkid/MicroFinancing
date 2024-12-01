@@ -1,11 +1,9 @@
 ﻿using MicroFinancing.Core.Common;
-using MicroFinancing.DataTransferModel;
-using MicroFinancing.Entities;
-using MicroFinancing.Interfaces.Repositories;
 using MicroFinancing.Interfaces.Services;
 using MicroFinancing.Providers;
 using MicroFinancing.Repositories;
 using MicroFinancing.Services.Handlers;
+using MicroFinancing.WebAssembly.Services.Adaptors;
 
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -48,7 +46,7 @@ public static class DependencyRegistrar
         services.AddTransient<ITermService, TermService>();
         services.AddTransient<ISmsService, SmsApiService>();
 
-        services.AddTransient<ICurrentUser, BlazorCurrentUser>();
+        services.AddTransient<ICurrentUser, WebAssembly.Services.CurrentUser>();
 
         services.AddTransient<ReConstructHandler>();
 
@@ -120,7 +118,7 @@ public static class DependencyRegistrar
             options.AddPolicy(ClaimsConstant.Administrator,
                 policy => policy.RequireClaim(ClaimsConstant.ClaimType, new[] { ClaimsConstant.Administrator }));
 
-          
+
 
 
             //View Permission

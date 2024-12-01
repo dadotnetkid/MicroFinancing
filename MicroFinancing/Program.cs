@@ -24,8 +24,11 @@ using DevExpress.Blazor.Reporting;
 using Hangfire;
 
 using MicroFinancing;
+using MicroFinancing.Core;
 using MicroFinancing.Infrastructure;
 using MicroFinancing.Services.Handlers;
+using MicroFinancing.WebAssembly.Services;
+
 using Serilog.Events;
 using Serilog;
 
@@ -144,18 +147,22 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
+
 builder.Services.AddScoped(sp =>
-{
-    var httpContextAccessor = sp.CreateScope()
-      .ServiceProvider.GetRequiredService<IHttpContextAccessor>();
+       {
+           var httpContextAccessor = sp.CreateScope()
+                                       .ServiceProvider.GetRequiredService<IHttpContextAccessor>();
 
-    var httpContext = httpContextAccessor.HttpContext;
+           var httpContext = httpContextAccessor.HttpContext;
 
-    return new HttpClient
-    {
-        BaseAddress = new Uri($"{httpContext.Request.Scheme}://{httpContext.Request.Host}")
-    };
-});
+           return new HttpClient
+           {
+               BaseAddress = new Uri($"{httpContext.Request.Scheme}://{httpContext.Request.Host}")
+           };
+       })
+       .AddApiClients()
+       .AddCurrentUserService();
 
 var app = builder.Build();
 

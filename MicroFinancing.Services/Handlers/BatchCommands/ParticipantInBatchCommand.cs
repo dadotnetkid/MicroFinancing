@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
 using MicroFinancing.Core.Common;
-using MicroFinancing.DataTransferModel;
-using MicroFinancing.Entities;
-using MicroFinancing.Interfaces.Repositories;
 using Syncfusion.Blazor;
 
 namespace MicroFinancing.Services.Handlers.BatchCommands;

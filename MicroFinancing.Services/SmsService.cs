@@ -1,6 +1,4 @@
 ﻿using System.IO.Ports;
-using MicroFinancing.Entities;
-using MicroFinancing.Interfaces.Repositories;
 using MicroFinancing.Interfaces.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;

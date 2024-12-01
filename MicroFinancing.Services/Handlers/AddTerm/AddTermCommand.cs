@@ -1,8 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using MicroFinancing.DataTransferModel;
-using MicroFinancing.Entities;
-using MicroFinancing.Interfaces.Repositories;
 using MicroFinancing.Interfaces.Services;
 
 namespace MicroFinancing.Services.Handlers.AddTerm;

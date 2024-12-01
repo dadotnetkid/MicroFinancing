@@ -31,5 +31,12 @@ namespace MicroFinancing.Controllers
 
             return Ok(BaseResultDto<List<ChartCollectorDto>>.Success(renderChart));
         }
+        [HttpGet(nameof(GetDashboard))]
+        public async Task<ActionResult<BaseResultDto<DashboardDTM>>> GetDashboard()
+        {
+            var dashboard = await _dashboardService.GetDashboard();
+
+            return Ok(BaseResultDto<DashboardDTM>.Success(dashboard));
+        }
     }
 }
