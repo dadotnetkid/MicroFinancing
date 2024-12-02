@@ -185,8 +185,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.6" />
-    <PackageReference Include="Syncfusion.Blazor" Version="21.1.41" />
-    <PackageReference Include="Syncfusion.Blazor.Themes" Version="21.1.35" />
+    <PackageReference Include="Syncfusion.Blazor" Version="27.2.4" />
+    <PackageReference Include="Syncfusion.Blazor.Themes" Version="27.2.4" />
 
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.10" />
     <PackageReference Include="Serilog" Version="3.1.1" />

@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Syncfusion.Blazor" Version="21.1.41" />
+    <PackageReference Include="Syncfusion.Blazor" Version="27.2.4" />
   </ItemGroup>
 
 </Project>
