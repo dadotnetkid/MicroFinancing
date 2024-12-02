@@ -9,10 +9,11 @@
 
     </div>
     <div class="card-body">
-        <SfGrid AllowPaging="true" AllowFiltering="true" TValue="PaymentForApprovalDto" @ref="PaymentApprovalGrid">
+        <SfGrid AllowPaging="true" AllowFiltering="true" TValue="PaymentForApprovalDto" @ref="PaymentApprovalGrid" >
             <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(PaymentApprovalAdaptor)"
                                                   Adaptor="Adaptors.CustomAdaptor" />
             <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
+            <GridPageSettings PageSize="int.MaxValue"></GridPageSettings>
             <GridColumns>
 
                 <GridTemplates>
@@ -42,6 +43,8 @@
                                 </GridTemplates>
 
                                 <GridColumn Field=@nameof(PaymentsForApprovalByDateDto.PaymentDate) HeaderText="Date" Width="110"></GridColumn>
+
+                                <GridColumn Field=@nameof(PaymentsForApprovalByDateDto.TotalAmount) HeaderText="Total Amount" Width="110"></GridColumn>
                                 <GridColumn HeaderText="Action" Width="75">
                                     <Template>
                                         <SfButton @onclick="@(()=>OnApproved(context as PaymentsForApprovalByDateDto))">Approved</SfButton>

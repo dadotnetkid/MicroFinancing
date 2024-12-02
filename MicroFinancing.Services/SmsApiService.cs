@@ -122,7 +122,7 @@ public class SmsApiService : ISmsService
 
         lines = lines.Replace("[Amount]", payment.PaymentAmount?.ToString("n2"))
             .Replace("[CustomerName]", customer.FullName)
-            .Replace("[Date]", payment?.PaymentDate.ToString("n2"));
+            .Replace("[Date]", payment?.PaymentDate.ToString("MM-dd-yyyy"));
 
         await SendSms(customer.PhoneNumber, lines);
     }

@@ -171,7 +171,7 @@ public sealed class PaymentService : IPaymentService
                          CollectorName = c.FullName,
                          TotalAmount = c.Payments.Where(a => !a.IsApproved)
                                         .Sum(a => a.PaymentAmount),
-                         PaymentByDate = c.Payments.Where(a => !a.IsApproved)
+                         PaymentByDate = c.Payments.Where(a => !a.IsApproved && !a.Lending.IsDeleted)
                                           .Select(p => new
                                           {
                                               PaymentAmount = p.PaymentAmount,
@@ -185,6 +185,7 @@ public sealed class PaymentService : IPaymentService
                                           .Select(p => new PaymentsForApprovalByDateDto()
                                           {
                                               PaymentDate = p.Key,
+                                              TotalAmount = p.Sum(pp => pp.PaymentAmount),
                                               Payments = p.Select(pp => new PaymentsForApprovalDto()
                                               {
                                                   PaymentAmount = pp.PaymentAmount,

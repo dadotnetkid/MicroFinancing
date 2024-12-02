@@ -22,6 +22,7 @@ public sealed class PaymentsForApprovalByDateDto
 {
     public string PaymentDate { get; set; }
     public List<PaymentsForApprovalDto> Payments { get; set; } = new();
+    public decimal? TotalAmount { get; set; }
 }
 
 public sealed class PaymentsForApprovalDto
