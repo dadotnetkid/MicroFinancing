@@ -15,13 +15,27 @@ namespace MicroFinancing.WebAssembly.Services.Adaptors
 
         public override async Task<object> ReadAsync(DataManagerRequest dataManagerRequest, string? key = null)
         {
-            var res = await _userClient.GetUsersAsync(JsonSerializer.Serialize(dataManagerRequest));
-
-            return new DataResult()
+            try
             {
-                Result = res.Result,
-                Count = res.Count
-            };
+                var res = await _userClient.GetUsersAsync(JsonSerializer.Serialize(dataManagerRequest));
+
+                if (!dataManagerRequest.RequiresCounts)
+                {
+                    return res.Result;
+                }
+
+                return new DataResult()
+                {
+                    Result = res.Result,
+                    Count = res.Count
+                };
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+
+                throw;
+            }
         }
     }
 }

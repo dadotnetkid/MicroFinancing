@@ -11,17 +11,7 @@ namespace MicroFinancing.WebAssembly.Pages.Payments
 
         private void OnApproved(PaymentsForApprovalByDateDto item)
         {
-            DialogService.ShowDialog("Approval Message", "Do you want to approved this payment",
-                                    async (e) =>
-                                    {
-                                        if (!e)
-                                        {
-                                            return;
-                                        }
-
-                                        await paymentService.PaymentApprovalAsync(item);
-                                        await PaymentApprovalGrid.Refresh();
-                                    });
+            DialogService.ShowDialog("Approval Message", "Do you want to approved this payment");
         }
     }
 }

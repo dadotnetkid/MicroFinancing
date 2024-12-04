@@ -13,11 +13,10 @@ namespace MicroFinancing.Components.DialogComponent
         {
             _serviceScopeFactory = serviceScopeFactory;
         }
-        public void ShowDialog(string title,
-                               string message,
-                               Action<bool> callBack)
+        public async Task<bool> ShowDialog(string title,
+                                           string message)
         {
-            container.ShowToast(title, message,callBack);
+            return await container.ShowToast(title, message);
         }
     }
 }

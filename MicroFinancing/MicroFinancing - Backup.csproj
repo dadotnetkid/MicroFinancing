@@ -8,16 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Pages\Dashboard\**" />
     <Compile Remove="Pages\Maintenance\**" />
     <Compile Remove="wwwroot\fontawesome-free-5.15.4-web\**" />
-    <Content Remove="Pages\Dashboard\**" />
     <Content Remove="Pages\Maintenance\**" />
     <Content Remove="wwwroot\fontawesome-free-5.15.4-web\**" />
-    <EmbeddedResource Remove="Pages\Dashboard\**" />
     <EmbeddedResource Remove="Pages\Maintenance\**" />
     <EmbeddedResource Remove="wwwroot\fontawesome-free-5.15.4-web\**" />
-    <None Remove="Pages\Dashboard\**" />
     <None Remove="Pages\Maintenance\**" />
     <None Remove="wwwroot\fontawesome-free-5.15.4-web\**" />
   </ItemGroup>
@@ -233,6 +229,10 @@
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Pages\Customers\Details\Paluwagan.razor" />
     <_ContentIncludedByDefault Remove="Pages\Reports\CustomerSummary\Index.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\Dashboard\" />
   </ItemGroup>
 
 	<PropertyGroup>

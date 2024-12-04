@@ -23,13 +23,13 @@
                            Placeholder="Search"></SfTextBox>
             </div>
             <div class="col-lg-2 col-xs-3">
-                
+
                 <button class="btn btn-primary"
                         @onclick="OnSearch">
                     <span class="fas fa-search"></span>
                     Search
                 </button>
-              
+
             </div>
         </div>
         <div class="row mt-2">
@@ -155,12 +155,8 @@
         {
             if (await userService.IsAuthorizeAsync(ClaimsConstant.Customer.Manage))
             {
-                dialogService.ShowDialog("Delete",
-                                         "Delete this Item",
-                                         async (c) =>
-                                         {
-                                             await DeleteCustomer(c, context);
-                                         });
+                await dialogService.ShowDialog("Delete",
+                                            "Delete this Item");
             }
         }
     }

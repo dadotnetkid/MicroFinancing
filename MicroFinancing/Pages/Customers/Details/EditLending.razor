@@ -1,5 +1,6 @@
 ﻿@using MicroFinancing.Core.Enumeration
 @using MicroFinancing.WebAssembly.Services.Adaptors
+@using FilterType = Syncfusion.Blazor.DropDowns.FilterType
 
 <SfDialog Width="500px" ShowCloseIcon="true" @bind-Visible="visibility" CssClass="modal-center-top">
     <DialogPositionData X="center" />
@@ -37,8 +38,8 @@
                     <div class="row mt-2">
                         <div class="col-12">
                             <Syncfusion.Blazor.Inputs.SfNumericTextBox @bind-Value="@model.ItemAmount" Placeholder="Item Amount"
-                                                                   CssClass="e-outline"
-                                                                   FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
+                                                                       CssClass="e-outline"
+                                                                       FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto" />
 
                             <ValidationMessage For="@(() => model.ItemAmount)" TValue="decimal" />
                         </div>
@@ -77,13 +78,17 @@
                 </div>
                 <div class="row mt-2">
                     <div class="col-12">
-                        <Syncfusion.Blazor.DropDowns.SfComboBox TItem="UserGridDTM"
+                        <Syncfusion.Blazor.DropDowns.SfComboBox TItem="MicroFinancing.WebAssembly.Services.Client.UserGridDTM"
                                                                 TValue="string"
                                                                 @bind-Value="@model.Collector" Placeholder="Collector"
                                                                 CssClass="e-outline"
-                                                                FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto">
+                                                                FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto"
+                                                                AllowFiltering="true"
+                                                                EnableVirtualization="true"
+                                                                FilterType="FilterType.StartsWith"
+                                                                >
                             <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="@typeof(UserAdaptor)" Adaptor="Adaptors.CustomAdaptor" />
-                            <Syncfusion.Blazor.DropDowns.ComboBoxFieldSettings Text="FullName" Value="Id" />
+                            <Syncfusion.Blazor.DropDowns.ComboBoxFieldSettings Text="@nameof(UserGridDTM.FullName)" Value="@nameof(UserGridDTM.Id)" />
                         </Syncfusion.Blazor.DropDowns.SfComboBox>
 
                         <ValidationMessage For="@(() => model.Collector)" TValue="string" />
@@ -102,6 +107,6 @@
     <DialogEvents Closed="OnModalClosed" />
 </SfDialog>
 @code {
-   
+
 
 }

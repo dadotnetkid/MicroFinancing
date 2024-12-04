@@ -1,20 +1,20 @@
 ﻿@using MicroFinancing.Components.ToastsComponent
 @using Microsoft.JSInterop
 @using Syncfusion.Blazor.Popups
-<SfDialog Width="250px" @bind-Visible="IsVisible">
+<SfDialog Width="250px" @bind-Visible="IsVisible" @ref="dialog">
     <DialogPositionData X="center" Y="center"></DialogPositionData>
     <DialogTemplates>
         <Header> @Title </Header>
         <Content>@Message</Content>
     </DialogTemplates>
     <DialogButtons>
-        <DialogButton Content="OK" IsPrimary="true" OnClick="@OkClick"/>
-        <DialogButton Content="Cancel" OnClick="@CancelClick"/>
+        <DialogButton Content="OK" IsPrimary="true" OnClick="@OkClick" />
+        <DialogButton Content="Cancel" OnClick="@CancelClick" />
     </DialogButtons>
 </SfDialog>
 @code {
 
-
+    private CancellationTokenSource FinishConfirm;
     [Inject] private IJSRuntime jsRuntime { get; set; }
     [Inject] private IDialogService DialogService { get; set; }
 
@@ -23,6 +23,8 @@
     public bool IsVisible { get; set; }
 
     internal string toastId = Guid.NewGuid().ToString();
+    private SfDialog dialog;
+
     protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
@@ -30,29 +32,55 @@
             DialogService.container = this;
         }
     }
-    public void ShowToast(string title, string message, Action<bool> callBack)
+
+    protected override void OnInitialized()
+    {
+        DialogService.container = this;
+        base.OnInitialized();
+    }
+
+    public async Task<bool> ShowToast(string title, string message)
     {
         Message = message;
         Title = title;
         IsVisible = true;
-        StateHasChanged();
-        Callback = callBack;
+        await dialog.ShowAsync();
+
+        try
+        {
+            using (FinishConfirm = new())
+            {
+                await Task.Delay(-1, FinishConfirm.Token);
+            }
+        }
+        catch (TaskCanceledException) { }
+
+        return IsConfirm;
     }
 
     public Action<bool> Callback { get; set; }
+    public bool IsConfirm { get; set; }
 
     private void OkClick(MouseEventArgs obj)
     {
         IsVisible = false;
         StateHasChanged();
-        Callback.Invoke(true);
+        ConfirmDialog(true);
     }
 
     private void CancelClick(MouseEventArgs obj)
     {
         IsVisible = false;
         StateHasChanged();
-        Callback.Invoke(false);
+        ConfirmDialog(false);
     }
 
+    private void ConfirmDialog(bool confirmation)
+    {
+        IsConfirm = confirmation;
+        if (FinishConfirm.Token.CanBeCanceled)
+        {
+            FinishConfirm.Cancel();
+        }
+    }
 }

@@ -92,17 +92,16 @@ public partial class Lending
             return;
         }
 
-        DialogService.ShowDialog("Delete",
-                                 "Do you want to delete this item",
-                                 async e =>
-                                 {
-                                     if (!e)
-                                     {
-                                         return;
-                                     }
-                                     await lendingService.DeleteLending(context.Id);
-                                     await lendingGrid.Refresh();
-                                 });
+        var res= await DialogService.ShowDialog("Delete",
+                                     "Do you want to delete this item");
+
+        if (!res)
+        {
+            return;
+        }
+
+        await lendingService.DeleteLending(context.Id);
+        await lendingGrid.Refresh();
     }
 
     private async Task OnSubmitSuccess()

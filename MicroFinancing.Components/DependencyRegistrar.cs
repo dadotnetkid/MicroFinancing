@@ -1,12 +1,8 @@
 ﻿using MicroFinancing.Components.ToastsComponent;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using MicroFinancing.Components.DialogComponent;
+using Syncfusion.Blazor.Popups;
 
 namespace MicroFinancing.Components
 {
@@ -14,8 +10,10 @@ namespace MicroFinancing.Components
     {
         public static IServiceCollection AddComponents(this IServiceCollection services)
         {
-            services.AddScoped<IToasts, ToastComponentService>();
-            services.AddScoped<IDialogService, DialogComponentService>();
+            services.AddSingleton<IDialogService, DialogComponentService>();
+            services.AddSingleton<IToasts, ToastComponentService>();
+
+            services.AddScoped<SfDialogService>();
             return services;
         }
     }

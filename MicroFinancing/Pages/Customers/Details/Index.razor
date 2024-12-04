@@ -8,6 +8,9 @@
 
 @attribute [Authorize(Policy = ClaimsConstant.Customer.View)]
 <PageTitle>Details</PageTitle>
+
+<DialogContainer/>
+
 <CascadingValue Name="MainPage" Value="this">
 
     @if (model != null)
@@ -228,22 +231,11 @@
 
     public bool IsPrinting { get; set; }
 
-    private void OnRestructClick(MouseEventArgs obj)
+    private async Task OnRestructClick(MouseEventArgs obj)
     {
 
-        DialogService.ShowDialog("Restruct",
-                                 "Do you want to restruct this customer",
-                                 async e =>
-                                 {
-                                     if (!e)
-                                     {
-                                         return;
-                                     }
-
-                                     await ReConstructHandler.Restruct(model.Id);
-
-                                     await lendingRef.RefreshGrid();
-                                 });
+     await   DialogService.ShowDialog("Restruct",
+                                 "Do you want to restruct this customer");
     }
 
 }

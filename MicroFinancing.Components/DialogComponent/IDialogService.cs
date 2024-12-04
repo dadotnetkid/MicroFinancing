@@ -6,8 +6,7 @@ namespace MicroFinancing.Components.DialogComponent;
 
 public interface IDialogService
 {
-    public void ShowDialog(string title,
-                           string message,
-                           Action<bool> callBack);
+    public Task<bool> ShowDialog(string title,
+                           string message);
     public DialogContainer container { get; set; }
 }

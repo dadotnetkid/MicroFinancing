@@ -28,7 +28,8 @@
         <body class="hold-transition  sidebar-collapse sidebar-mini" style="height: auto;">
             <!-- Site wrapper -->
             <div class="wrapper">
-                <Routes />
+               
+                <Routes/>
                 <div id="blazor-error-ui">
                     <environment include="Staging,Production">
                         An error has occurred. This application may no longer respond until reloaded.
@@ -217,9 +218,10 @@
         </div>
 
 
-
-        <script src="/adminlte/js/adminlte.min.js"></script>
-
+    <script src="_framework/blazor.web.js"></script>
+    <script src="/plugins/jquery/jquery.min.js"></script>
+    <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/adminlte/js/adminlte.min.js"></script>
 
     </body>
 </html>
