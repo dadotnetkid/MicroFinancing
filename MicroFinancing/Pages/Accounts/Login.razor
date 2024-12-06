@@ -1,5 +1,4 @@
 ﻿@page "/Identity/Account/Login"
-
 <div class="card-body login-card-body">
     <p class="login-box-msg">Sign in to start your session</p>
     <EditForm Model="Model" method="post" OnValidSubmit="LoginUser" FormName="login">
@@ -14,7 +13,7 @@
             </div>
         </div>
         <div class="input-group mb-3">
-            <InputText type="password" class="form-control" placeholder="Password"  @bind-Value="@Model.Password"/>
+            <InputText type="password" class="form-control" placeholder="Password" @bind-Value="@Model.Password" />
             <div class="input-group-append">
                 <div class="input-group-text">
                     <span class="fas fa-lock"></span>
@@ -39,8 +38,8 @@
 {
     [Inject] private SignInManager<ApplicationUser> _signInManager { get; set; }
     [Inject] private NavigationManager NavigationManager { get; set; }
-
-    [SupplyParameterFromForm]public SecurityDto.LoginModel Model { get; set; } = new();
+    [Inject] AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+    [SupplyParameterFromForm] public SecurityDto.LoginModel Model { get; set; } = new();
 
     private async Task LoginUser(EditContext obj)
     {
@@ -49,6 +48,17 @@
         {
             NavigationManager.NavigateTo("/", true);
         }
+    }
 
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        if (state.User.Identity.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo("/", true);
+        }
+
+        await base.OnInitializedAsync();
     }
 }

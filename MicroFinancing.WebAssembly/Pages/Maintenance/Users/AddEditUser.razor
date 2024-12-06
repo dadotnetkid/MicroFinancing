@@ -9,7 +9,6 @@
         <Header> Add/Edit User</Header>
         <Content>
             <EditForm Model="user">
-                <FluentValidationValidator DisableAssemblyScanning="true" @ref="fluentValidator"/>
                 <div class="row mt-2">
                     <div class="col-12">
                         <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@user.FirstName" Placeholder="First Name" CssClass="e-outline" FloatLabelType="FloatLabelType.Auto"/>
@@ -38,11 +37,11 @@
                 <div class="row mt-2">
                     <div class="col-12">
 
-                        <SfDropDownList TValue="Branch"
-                                        DataSource="EnumExtensions.ToDictionary<Branch>()"
-                                        @bind-Value="@user.Branch"
-                                        TItem="KeyValuePair<Branch, string>" CssClass="e-outline" Placeholder="Branch">
-                            <DropDownListFieldSettings Value="Key" Text="Value"></DropDownListFieldSettings>
+                        <SfDropDownList TValue="BranchDto"
+                                        DataSource="branches"
+                                        @bind-Value="@SelectedBranch"
+                                        TItem="BranchDto" CssClass="e-outline" Placeholder="Branch">
+                            <DropDownListFieldSettings Value="@nameof(BranchDto.Branch)" Text="@nameof(BranchDto.BranchName)"></DropDownListFieldSettings>
                         </SfDropDownList>
                         <ValidationMessage For="@(() => user.Branch)" TValue="Branch"/>
                     </div>
@@ -51,7 +50,7 @@
                 <div class="row mt-2">
                     <div class="col-12">
 
-                        <SfMultiSelect TValue="IEnumerable<string>" @bind-Value="@user.UserRole" TItem="PermissionGridDTM" CssClass="e-outline" Mode="@VisualMode.Default" Placeholder="User Roles"
+                        <SfMultiSelect TValue="List<string>" @bind-Value="@user.UserRole" TItem="PermissionGridDTM" CssClass="e-outline" Mode="@VisualMode.Default" Placeholder="User Roles"
                         EnableVirtualization="true"
                                        >
                             <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(PermissionAdaptor)" Adaptor="Adaptors.CustomAdaptor"/>

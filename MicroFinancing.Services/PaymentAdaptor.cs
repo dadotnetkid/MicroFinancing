@@ -1,5 +1,4 @@
-﻿using MicroFinancing.Core.Common;
-using MicroFinancing.Interfaces.Services;
+﻿using MicroFinancing.Interfaces.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Syncfusion.Blazor;
 using System;

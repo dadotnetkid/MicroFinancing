@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroFinancing.Components",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mobile", "Mobile", "{4F80C9AA-AE1C-4E4D-8A45-77881B34B0F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroFinancing.WebAssembly", "MicroFinancing.WebAssembly\MicroFinancing.WebAssembly.csproj", "{EFCAEADD-FEC3-40FD-9CF9-63093BB9D68A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroFinancing.WebAssembly", "MicroFinancing.WebAssembly\MicroFinancing.WebAssembly.csproj", "{EFCAEADD-FEC3-40FD-9CF9-63093BB9D68A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

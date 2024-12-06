@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using MicroFinancing.Core.Common;
+
 using MicroFinancing.Interfaces.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http;

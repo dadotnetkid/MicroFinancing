@@ -1,0 +1,10 @@
+﻿@inject NavigationManager navigationManager
+
+@code {
+    [Parameter] public string Url { get; set; }
+    protected async override Task OnInitializedAsync()
+    {
+        navigationManager.NavigateTo(Url, forceLoad: true);
+
+    }
+}

@@ -1,4 +1,5 @@
 ﻿@page "/Items"
+@using MicroFinancing.WebAssembly.Services.Adaptors
 <SfGrid AllowPaging="true" TValue="CustomerGridDTM" @ref="customerGrid">
     <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(CustomerAdaptor)"
                                           Adaptor="Adaptors.CustomAdaptor" />

@@ -12,6 +12,18 @@ namespace MicroFinancing.Services.Handlers
             });
             return services;
         }
+        public static IServiceCollection RegisterReportHandlers(this IServiceCollection services)
+        {
+            services.AddScoped<ReportHandler>();
+
+            services.AddScoped<PaymentSummaryReportHandler>();
+
+            services.AddScoped<IEnumerable<IReportHandler>>(sp => new List<IReportHandler>()
+            {
+                sp.GetRequiredService<PaymentSummaryReportHandler>()
+            });
+            return services;
+        }
 
     }
 }

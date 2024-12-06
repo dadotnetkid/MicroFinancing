@@ -14,7 +14,7 @@ public sealed class CreateUpdateUserDTM
     public string? Email { get; set; }
     public string? UserName { get; set; }
     public string? Password { get; set; }
-    public string[] UserRole { get; set; } = [];
+    public List<string> UserRole { get; set; } = [];
     public BranchEnum.Branch Branch { get; set; }
     public bool IsEmployee { get; set; }
     public decimal? BasicPay { get; set; }

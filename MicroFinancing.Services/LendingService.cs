@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using MicroFinancing.Core.Common;
 using MicroFinancing.Core.Enumeration;
 using MicroFinancing.Interfaces.Services;
 

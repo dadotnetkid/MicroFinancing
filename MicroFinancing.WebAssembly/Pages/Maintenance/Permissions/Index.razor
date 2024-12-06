@@ -7,12 +7,12 @@
             <h5>Permission</h5>
         </div>
         <div class="float-right">
-            <Syncfusion.Blazor.Buttons.SfButton IconCss="fas fa-user-plus" OnClick="AddPermission"/>
+            <Syncfusion.Blazor.Buttons.SfButton IconCss="fas fa-user-plus" OnClick="AddPermission" />
         </div>
     </div>
     <div class="card-body">
         <SfGrid AllowPaging="true" TValue="PermissionGridDTM" @ref="PermissionGrid">
-            <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(PermissionAdaptor)" Adaptor="Adaptors.CustomAdaptor"/>
+            <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(PermissionAdaptor)" Adaptor="Adaptors.CustomAdaptor" />
             <GridColumns>
                 <GridColumn Field=@nameof(PermissionGridDTM.Name) Width="200"></GridColumn>
                 <GridColumn Field=@nameof(PermissionGridDTM.Users) Width="80"></GridColumn>
@@ -40,7 +40,7 @@
                                 <DropDownMenuItem Id="@GenericDropdownItem.Delete.ToString()" Text="Delete" IconCss="fas fa-trash"></DropDownMenuItem>
                                 <DropDownMenuItem Id="@GenericDropdownItem.AddUser.ToString()" Text="Add User" IconCss="fas fa-redo"></DropDownMenuItem>
                             </DropDownMenuItems>
-                            <DropDownButtonEvents ItemSelected="@((e) => OnDropdownSelectedMenu(e, (PermissionGridDTM)context))"/>
+                            <DropDownButtonEvents ItemSelected="@((e) => OnDropdownSelectedMenu(e, (PermissionGridDTM)context))" />
                         </SfDropDownButton>
 
 
@@ -51,7 +51,7 @@
     </div>
 </div>
 <CascadingValue Name="MainPage" Value="this">
-    <AddEditPermission @ref="addEditPermission"/>
+    <AddEditPermission @ref="addEditPermission" />
 </CascadingValue>
 
 @code {
@@ -64,27 +64,27 @@
         switch (menuEventArgs.Item.Id.ToTypeOf<GenericDropdownItem>())
         {
             case GenericDropdownItem.Edit:
-            {
-                addEditPermission?.Show(new()
                 {
-                    Id = context.Id,
-                    Name = context.Name,
-                    Scopes = context.Scopes.ToArray(),
-                    Users = context.Users
-                });
-                break;
-            }
+                    addEditPermission?.Show(new()
+                        {
+                            Id = context.Id,
+                            Name = context.Name,
+                            Scopes = context.Scopes.ToList(),
+                            Users = context.Users
+                        });
+                    break;
+                }
             case GenericDropdownItem.AddUser:
-            {
-                addEditPermission?.Show(new()
                 {
-                    Id = context.Id,
-                    Name = context.Name,
-                    Scopes = context.Scopes.ToArray(),
-                    Users = context.Users
-                });
-                break;
-            }
+                    addEditPermission?.Show(new()
+                        {
+                            Id = context.Id,
+                            Name = context.Name,
+                            Scopes = context.Scopes.ToList(),
+                            Users = context.Users
+                        });
+                    break;
+                }
         }
     }
 

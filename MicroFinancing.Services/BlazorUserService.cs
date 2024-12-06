@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MicroFinancing.Components.ToastsComponent;
-using MicroFinancing.Core.Common;
 using MicroFinancing.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;

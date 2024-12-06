@@ -1,5 +1,4 @@
-﻿using MicroFinancing.Core.Common;
-using MicroFinancing.Interfaces.Services;
+﻿using MicroFinancing.Interfaces.Services;
 using Syncfusion.Blazor;
 
 namespace MicroFinancing.Services;

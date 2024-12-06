@@ -95,7 +95,10 @@ builder.Services.AddPolicy();
 builder.Services.AddSingleton(x => new ClaimsValueModel());
 builder.Services.AddControllers();
 builder.Services.AddOpenApiDocument();
+
 builder.Services.RegisterMediatR();
+
+builder.Services.RegisterReportHandlers();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 

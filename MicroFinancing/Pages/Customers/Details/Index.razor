@@ -9,7 +9,7 @@
 @attribute [Authorize(Policy = ClaimsConstant.Customer.View)]
 <PageTitle>Details</PageTitle>
 
-<DialogContainer/>
+<DialogContainer />
 
 <CascadingValue Name="MainPage" Value="this">
 
@@ -234,8 +234,16 @@
     private async Task OnRestructClick(MouseEventArgs obj)
     {
 
-     await   DialogService.ShowDialog("Restruct",
-                                 "Do you want to restruct this customer");
+        var res = await DialogService.ShowDialog("Restruct",
+                                         "Do you want to restruct this customer");
+
+        if (!res)
+        {
+            return;
+        }
+
+        await ReConstructHandler.Restruct(Id);
+        await lendingRef.RefreshGrid();
     }
 
 }

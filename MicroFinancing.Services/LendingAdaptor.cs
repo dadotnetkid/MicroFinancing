@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MicroFinancing.Interfaces.Services;
-using MicroFinancing.Core.Common;
 
 namespace MicroFinancing.Services
 {

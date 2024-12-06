@@ -1,9 +1,15 @@
+
+
+using FluentValidation;
+
 using MicroFinancing.Components.DialogComponent;
 using MicroFinancing.WebAssembly;
 using MicroFinancing.WebAssembly.Services;
-using MicroFinancing.WebAssembly.Services.Adaptors;
+using MicroFinancing.WebAssembly.Validators;
+
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+
 using Syncfusion.Blazor;
 using Syncfusion.Blazor.Popups;
 using Syncfusion.Licensing;
@@ -25,6 +31,9 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
     .AddCurrentUserService();
 
 builder.Services.AddDataAdaptors();
+
+builder.Services.AddTransient<IValidator<CreateUpdateUserDTM>, CreateUpdateUserDTMValidator>();
+
 
 builder.Services.AddSyncfusionBlazor();
 

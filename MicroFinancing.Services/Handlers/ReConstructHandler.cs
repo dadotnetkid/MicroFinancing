@@ -65,6 +65,7 @@ public class ReConstructHandler
     public async Task Restruct(long customerId)
     {
         var query = await _repository.Entity
+                                     .Where(c => c.CustomerId == customerId)
                                .Where(c => !c.IsPaid)
                                .Where(c => c.DueDate < DateTime.Now)
                                .Select(c => new RestructureCustomerDTM

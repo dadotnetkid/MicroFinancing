@@ -9,9 +9,18 @@ namespace MicroFinancing.WebAssembly.Pages.Payments
         [Inject] private IDialogService DialogService { get; set; }
         public SfGrid<PaymentForApprovalDto> PaymentApprovalGrid { get; set; }
 
-        private void OnApproved(PaymentsForApprovalByDateDto item)
+        private async Task OnApproved(PaymentsForApprovalByDateDto item)
         {
-            DialogService.ShowDialog("Approval Message", "Do you want to approved this payment");
+            var res = await DialogService.ShowDialog("Approval Message", "Do you want to approved this payment");
+
+            if (!res)
+            {
+                return;
+            }
+
+            await paymentService.PaymentApprovalAsync(item);
+
+            await PaymentApprovalGrid.Refresh();
         }
     }
 }

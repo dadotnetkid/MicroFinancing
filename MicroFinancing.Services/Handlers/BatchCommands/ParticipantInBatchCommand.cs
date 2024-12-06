@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
-using MicroFinancing.Core.Common;
+
 using Syncfusion.Blazor;
 
 namespace MicroFinancing.Services.Handlers.BatchCommands;

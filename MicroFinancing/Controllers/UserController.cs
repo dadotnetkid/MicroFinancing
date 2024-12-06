@@ -27,7 +27,7 @@ public class UserController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPut(nameof(UpdateUser))]
+    [HttpPost(nameof(UpdateUser))]
     public async Task<ActionResult<BaseResultDto<bool>>> UpdateUser([FromBody] CreateUpdateUserDTM item)
     {
         try

@@ -1,8 +1,11 @@
 ﻿@page "/Customers"
+@using MediatR
 @using MicroFinancing.Components.DialogComponent
 @using Syncfusion.Blazor.Buttons
 @using Syncfusion.Blazor.Data
 @rendermode InteractiveServer
+
+<DialogContainer />
 <div class="card">
     <div class="card-header">
         <div class="float-left">
@@ -155,8 +158,16 @@
         {
             if (await userService.IsAuthorizeAsync(ClaimsConstant.Customer.Manage))
             {
-                await dialogService.ShowDialog("Delete",
-                                            "Delete this Item");
+                var res = await dialogService.ShowDialog("Delete",
+                                                "Delete this Item");
+
+                if (!res)
+                {
+                    return;
+                }
+
+                await customerService.DeleteCustomer(context.Id);
+                await customerGrid.Refresh();
             }
         }
     }

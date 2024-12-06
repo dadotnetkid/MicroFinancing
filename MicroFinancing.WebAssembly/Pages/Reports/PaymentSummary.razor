@@ -1,0 +1,118 @@
+﻿@page "/reports/payment-summary"
+@using Syncfusion.Blazor.Data
+
+@rendermode InteractiveWebAssembly
+<div class="card">
+    <div class="card-header">
+        <div class="float-left">
+            <h5>Payment Summary Report</h5>
+        </div>
+
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-3 col-xs-12">
+                <Syncfusion.Blazor.DropDowns.SfComboBox TItem="UserGridDTM"
+                                                        TValue="string"
+                                                        @bind-Value="@Collector" Placeholder="Collector"
+                                                        CssClass="e-outline"
+                                                        FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto">
+                    <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="@typeof(UserAdaptor)" Adaptor="Adaptors.CustomAdaptor" />
+                    <Syncfusion.Blazor.DropDowns.ComboBoxFieldSettings Text="FullName" Value="Id" />
+                </Syncfusion.Blazor.DropDowns.SfComboBox>
+            </div>
+            <div class="col-lg-3 col-xs-12">
+                <SfDatePicker @bind-Value="@DateFrom" CssClass="e-outline"
+                              FloatLabelType="FloatLabelType.Auto" Placeholder="Date From"></SfDatePicker>
+            </div>
+            <div class="col-lg-3 col-xs-12">
+                <SfDatePicker @bind-Value="@DateTo" CssClass="e-outline"
+                              FloatLabelType="FloatLabelType.Auto" Placeholder="Date From"></SfDatePicker>
+            </div>
+            <div class="col-lg-3 col-xs-12">
+                <button class="btn btn-primary" @onclick="Search">
+                    <span class="fas fa-search"></span>
+                    Search
+                </button>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col">
+                <div class="content-wrapper e-bigger e-adaptive-demo">
+                    <div class="e-mobile-layout">
+                        <div class="e-mobile-content">
+                            <SfGrid AllowPaging="true" AllowFiltering="false" TValue="PaymentSummaryDto"
+                                    AdaptiveUIMode="AdaptiveMode.Mobile"
+                                    EnableAdaptiveUI="true"
+                                    RowRenderingMode="RowDirection.Vertical"
+                                    @ref="paymentSummaryGrid"
+                                    Query="QueryData" AllowGrouping="true">
+                                <GridPageSettings PageSize="500" />
+                                <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(PaymentSummaryAdaptor)"
+                                                                      Adaptor="Adaptors.CustomAdaptor" />
+                                <GridColumns>
+                                    <GridColumn Field=@nameof(PaymentSummaryDto.CollectorName) Width="100"></GridColumn>
+                                    <GridColumn Field=@nameof(PaymentSummaryDto.Amount) Width="100px"></GridColumn>
+                                </GridColumns>
+
+                                <GridTemplates>
+
+                                    <DetailTemplate Context="dateContext">
+                                        @{
+                                            var row = dateContext as PaymentSummaryDto;
+                                        }
+                                        <SfGrid TValue="PaymentSummaryListByDateDto" DataSource="row.PaymentSummaryListByDate">
+                                            <GridColumns>
+                                                <GridTemplates>
+                                                    <DetailTemplate Context="listContext">
+                                                        @{
+                                                            var list = listContext as PaymentSummaryListByDateDto;
+                                                        }
+                                                        <SfGrid TValue="PaymentSummaryListDto" DataSource="list.PaymentSummaryList">
+                                                            <GridColumns>
+                                                                <GridTemplates>
+
+                                                                </GridTemplates>
+                                                                <GridColumn Field=@nameof(PaymentSummaryListDto.PaymentDate) HeaderText="Date" Width="110"></GridColumn>
+                                                                <GridColumn Field=@nameof(PaymentSummaryListDto.PaymentAmount) HeaderText="Amount" Width="110"></GridColumn>
+                                                            </GridColumns>
+                                                        </SfGrid>
+                                                    </DetailTemplate>
+                                                </GridTemplates>
+                                                <GridColumn Field=@nameof(PaymentSummaryListByDateDto.PaymentDate) HeaderText="Date" Width="110"></GridColumn>
+                                                <GridColumn Field=@nameof(PaymentSummaryListByDateDto.Amount) HeaderText="Amount" Width="110"></GridColumn>
+                                            </GridColumns>
+                                        </SfGrid>
+                                    </DetailTemplate>
+                                </GridTemplates>
+
+                            </SfGrid>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+@code {
+    private SfGrid<PaymentSummaryDto> paymentSummaryGrid;
+
+    public string Collector { get; set; }
+    public DateTime? DateFrom { get; set; }
+    public DateTime? DateTo { get; set; }
+    public Query QueryData { get; set; } = new();
+
+    private async Task Search()
+    {
+        QueryData.AddParams("CreatorUserId", Collector);
+        QueryData.AddParams("DateFrom", DateFrom);
+        QueryData.AddParams("DateTo", DateTo);
+
+        await paymentSummaryGrid.Refresh();
+    }
+
+}

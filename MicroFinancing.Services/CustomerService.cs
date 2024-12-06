@@ -1,5 +1,5 @@
 ﻿using Hangfire;
-using MicroFinancing.Core.Common;
+
 using MicroFinancing.Core.Enumeration;
 using MicroFinancing.Interfaces.Services;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +26,7 @@ public class CustomerService : ICustomerService
 
     public IQueryable<CustomerGridDTM> GetCustomer()
     {
-        return _customerRepository.Entity.Select(x => new CustomerGridDTM
+        return _customerRepository.Entity.Where(c => !c.IsDeleted).Select(x => new CustomerGridDTM
         {
             FirstName = x.FirstName,
             MiddleName = x.MiddleName,
@@ -98,7 +98,7 @@ public class CustomerService : ICustomerService
             PhoneNumber = x.PhoneNumber,
             TotalAmountPaid = x.Payments.Where(c => c.Lending.IsActive && c.PaymentType != PaymentEnum.PaymentType.System).Sum(p => p.PaymentAmount),
             TotalDebt = x.Lending
-                         .Where(c=>c.IsActive)
+                         .Where(c => c.IsActive)
                          .Where(c => !c.IsRestruct).Sum(l => l.TotalCredit),
             TotalBalance = x.Lending.Where(c => c.IsActive)
                 .Select(l => l.TotalCredit - l.Payments.Sum(p => p.PaymentAmount)).FirstOrDefault(),

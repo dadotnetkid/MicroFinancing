@@ -1,9 +1,10 @@
 ﻿using System.Text.Json;
+
 using MicroFinancing.DataTransferModel;
-using MicroFinancing.Entities;
 using MicroFinancing.Interfaces.Services;
-using MicroFinancing.WebAssembly.Common;
+
 using Microsoft.AspNetCore.Mvc;
+
 using Syncfusion.Blazor;
 
 namespace MicroFinancing.Controllers;
@@ -20,8 +21,7 @@ public class PaymentController : ControllerBase
     }
 
     [HttpPost(nameof(GetPaymentForApproval))]
-    public async Task<ActionResult<DataResultDto<PaymentForApprovalDto>>> GetPaymentForApproval(
-        [FromBody] string payload)
+    public async Task<ActionResult<DataResultDto<PaymentForApprovalDto>>> GetPaymentForApproval([FromBody] string payload)
     {
         var dm = JsonSerializer.Deserialize<DataManagerRequest>(payload);
 
@@ -32,8 +32,7 @@ public class PaymentController : ControllerBase
     }
 
     [HttpPost(nameof(PaymentApproval))]
-    public async Task<ActionResult<BaseResultDto<bool>>> PaymentApproval(
-        [FromBody] PaymentsForApprovalByDateDto payload)
+    public async Task<ActionResult<BaseResultDto<bool>>> PaymentApproval([FromBody] PaymentsForApprovalByDateDto payload)
     {
         try
         {

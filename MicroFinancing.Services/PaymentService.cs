@@ -1,7 +1,6 @@
 ﻿using Hangfire;
 using MediatR;
 
-using MicroFinancing.Core.Common;
 using MicroFinancing.Core.Enumeration;
 using MicroFinancing.Interfaces.Services;
 
