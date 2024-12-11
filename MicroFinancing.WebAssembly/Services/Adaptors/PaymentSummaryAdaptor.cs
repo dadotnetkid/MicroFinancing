@@ -31,7 +31,7 @@ public class PaymentSummaryAdaptor : DataAdaptor
         return new DataResult()
         {
             Result = res.Result,
-            Count = res.Count
+            Count = res.Count ?? 0
         };
     }
 }

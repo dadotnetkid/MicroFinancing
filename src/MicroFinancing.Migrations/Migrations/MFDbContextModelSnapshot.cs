@@ -718,6 +718,60 @@ namespace MicroFinancing.DataMigrations.Migrations
                     b.ToTable("Payments");
                 });
 
+            modelBuilder.Entity("MicroFinancing.Entities.RefreshToken", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatorUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("DeleterUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTimeOffset?>("DeletionAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("Expires")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifierUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("UpdateAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("DeleterUserId");
+
+                    b.HasIndex("LastModifierUserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshToken");
+                });
+
             modelBuilder.Entity("MicroFinancing.Entities.Term", b =>
                 {
                     b.Property<long>("Id")
@@ -1040,6 +1094,38 @@ namespace MicroFinancing.DataMigrations.Migrations
                     b.Navigation("Lending");
                 });
 
+            modelBuilder.Entity("MicroFinancing.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("MicroFinancing.Entities.ApplicationUser", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MicroFinancing.Entities.ApplicationUser", "DeleterUser")
+                        .WithMany()
+                        .HasForeignKey("DeleterUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MicroFinancing.Entities.ApplicationUser", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MicroFinancing.Entities.ApplicationUser", "User")
+                        .WithMany("RefreshToken")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("DeleterUser");
+
+                    b.Navigation("LastModifier");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("MicroFinancing.Entities.Term", b =>
                 {
                     b.HasOne("MicroFinancing.Entities.ApplicationUser", "Creator")
@@ -1074,6 +1160,8 @@ namespace MicroFinancing.DataMigrations.Migrations
             modelBuilder.Entity("MicroFinancing.Entities.ApplicationUser", b =>
                 {
                     b.Navigation("Payments");
+
+                    b.Navigation("RefreshToken");
 
                     b.Navigation("UserClaims");
 

@@ -24,7 +24,7 @@ public class PermissionAdaptor : DataAdaptor
         return new DataResult()
         {
             Result = res.Result,
-            Count = res.Count
+            Count = res.Count ?? 0
         };
     }
 }

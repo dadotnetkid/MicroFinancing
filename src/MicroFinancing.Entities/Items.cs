@@ -13,7 +13,7 @@ public sealed class Items : BaseEntity<long>
     [MaxLength(255)]
     public string? Name { get; set; }
 
-  //  public ICollection<ItemPrice> Prices { get; set; } = new HashSet<ItemPrice>();
+    //  public ICollection<ItemPrice> Prices { get; set; } = new HashSet<ItemPrice>();
 }
 
 public sealed class ItemPrice : BaseEntity<long>

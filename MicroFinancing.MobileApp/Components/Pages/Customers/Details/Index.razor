@@ -1,0 +1,109 @@
+﻿@page "/Customers/Details/{Id:long}"
+
+<PageTitle>Details</PageTitle>
+
+<DialogContainer />
+
+<CascadingValue Name="MainPage" Value="this">
+
+    @if (model != null)
+    {
+        <div class="card">
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-1 mr-1">
+                        <div class="symbol symbol-circle symbol-60 ">
+                            <span class="symbol-label font-size-h6">
+                                @model.FirstName[0] @model.LastName[0]
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col mr-1">
+                        <div class="row">
+                            <div class="col">
+                                <a style="cursor:pointer" class="text-dark font-weight-bold text-hover-primary font-size-h4 mb-0">@model.FullName</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <small class="text-muted font-weight-bold">@model.Address</small>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <hr />
+                <div class="row pr-5 pl-5">
+                    <div class=" col-sm-12  col-lg-4 ">
+                        <div class="row">
+                            <div class="col-2">
+                                <i class="fas fa-money-bill fa-2x mt-1 mr-1"></i>
+                            </div>
+                            <div class="col">
+                                <h5 class="text-muted mb-1 font-weight-bolder">
+                                    Total Balance
+                                </h5>
+                                <b class="text-muted">₱ @model.TotalBalance?.ToString("n2")</b>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12  col-lg-4">
+                        <div class="row">
+                            <div class="col-2 ">
+                                <i class="far fa-credit-card fa-2x mt-1"></i>
+                            </div>
+                            <div class="col">
+                                <h5 class="text-muted mb-1 font-weight-bolder">
+                                    Total Loan
+                                </h5>
+                                <b class="text-muted">₱ @model.TotalDebt?.ToString("n2")</b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12  col-lg-4">
+                        <div class="row">
+                            <div class="col-2 "><i class="fas fa-cash-register fa-2x mt-1"></i></div>
+                            <div class="col">
+                                <h5 class="text-muted mb-1 font-weight-bolder">
+                                    Total Amount Paid
+                                </h5>
+                                <b class="text-muted">₱ @model.TotalAmountPaid?.ToString("n2")</b>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        /*cards*/
+        <Payments />
+    }
+
+</CascadingValue>
+
+@code {
+    [Inject] ICustomersClient customersClient { get; set; }
+
+    [Parameter] public long Id { get; set; }
+    private void OnAddClick(MouseEventArgs obj)
+    {
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var res = await customersClient.GetCustomerIdAsync(Id);
+
+        model = res.Data;
+
+        await base.OnInitializedAsync();
+
+        StateHasChanged();
+    }
+
+    public CustomerDetailDTM model { get; set; } 
+
+}

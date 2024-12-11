@@ -4,7 +4,8 @@
 @using MicroFinancing.Components.DialogComponent
 @using MicroFinancing.Core.Common
 @using MicroFinancing.Services
-@using MicroFinancing.WebAssembly.Services.Client
+@using Microfinancing.WebApiClient.Services.Client
+
 <div class="card">
     <div class="card-header">
         <div class="float-left">
@@ -25,16 +26,16 @@
                     <DetailTemplate Context="paymentContext">
 
                         @{
-                            var row = paymentContext as PaymentForApprovalDto;
-                        }
+                                                                                                             var row = paymentContext as PaymentForApprovalDto;
+                                                                                                             }
                         <SfGrid TValue="PaymentsForApprovalByDateDto" DataSource="row.PaymentByDate">
                             <GridColumns>
                                 <GridTemplates>
 
                                     <DetailTemplate Context="rowContext">
                                         @{
-                                            var dateRows = rowContext as PaymentsForApprovalByDateDto;
-                                        }
+                                                                                                                                                                                     var dateRows = rowContext as PaymentsForApprovalByDateDto;
+                                                                                                                                                                                     }
                                         <SfGrid TValue="PaymentsForApprovalDto" DataSource="dateRows.Payments">
                                             <GridColumns>
                                                 <GridColumn Field=@nameof(PaymentsForApprovalDto.LendingNumber) Width="110"></GridColumn>

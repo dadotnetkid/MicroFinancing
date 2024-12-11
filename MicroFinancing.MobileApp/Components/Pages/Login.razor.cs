@@ -1,5 +1,4 @@
 ﻿using MicroFinancing.MobileApp.Providers;
-using MicroFinancing.MobileApp.Services.Client;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -8,7 +7,7 @@ namespace MicroFinancing.MobileApp.Components.Pages;
 
 public partial class Login
 {
-    [Inject] private IAccountClient AccountClient { get; set; }
+    [Inject] private ISecurityClient AccountClient { get; set; }
     [Inject] private CustomAuthenticationStateProvider AuthenticationStateProvider { get; set; }
 
     public LoginModel LoginModel { get; set; } = new();
@@ -19,7 +18,8 @@ public partial class Login
         try
         {
             var res = await AccountClient.LoginAsync(LoginModel);
-            await AuthenticationStateProvider.Login(res);
+
+            await AuthenticationStateProvider.Login(res.Data);
         }
         catch (Exception e)
         {

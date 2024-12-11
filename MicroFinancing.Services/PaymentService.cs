@@ -221,4 +221,27 @@ public sealed class PaymentService : IPaymentService
 
         }
     }
+
+    public async Task<List<PaymentGridDTM>> GetPaymentByCollectorId(string? userId)
+    {
+
+        return await _repository.Entity
+                                .Where(c => c.CreatorUserId == userId)
+                                .Select(x => new PaymentGridDTM
+                                {
+                                    CreatedAt = x.CreatedAt,
+                                    CreatedBy = x.Creator.FullName,
+                                    CustomerName = x.Customers.FullName,
+                                    CustomerId = x.CustomerId,
+                                    Id = x.Id,
+                                    PaymentAmount = x.PaymentAmount,
+                                    PaymentDate = x.PaymentDate,
+                                    PaymentType = x.PaymentType,
+                                    Reason = x.Reason,
+                                    Override = x.Override,
+                                    CreatedByUserId = x.CreatorUserId,
+                                    LendingNumber = x.Lending.LendingNumber,
+                                    IsApproved = x.IsApproved
+                                }).ToListAsync();
+    }
 }

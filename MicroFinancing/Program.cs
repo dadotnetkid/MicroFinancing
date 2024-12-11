@@ -15,6 +15,8 @@ using Microsoft.EntityFrameworkCore;
 using Syncfusion.Blazor;
 using Syncfusion.Blazor.Data;
 using System.Net;
+using System.Text;
+
 using MicroFinancing.Core.Common;
 using MicroFinancing.Interfaces.Services;
 using MicroFinancing.Providers;
@@ -28,6 +30,10 @@ using MicroFinancing.Core;
 using MicroFinancing.Infrastructure;
 using MicroFinancing.Services.Handlers;
 using MicroFinancing.WebAssembly.Services;
+
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 using Serilog.Events;
 using Serilog;
@@ -59,6 +65,7 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
     .AddDefaultUI()
     .AddDefaultTokenProviders()
     .AddEntityFrameworkStores<MFDbContext>();
+
 
 builder.Services.AddTransient<IUserClaimsPrincipalFactory<ApplicationUser>, ClaimsPrincipalFactory>();
 

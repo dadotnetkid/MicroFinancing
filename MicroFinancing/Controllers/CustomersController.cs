@@ -54,5 +54,18 @@ namespace MicroFinancing.Controllers
             return Ok(BaseResultDto<List<BranchDto>>.Success(res));
         }
 
+
+        [HttpGet]
+        public async Task<ActionResult<BaseResultDto<CustomerDetailDTM>>> GetCustomerId(long customerId)
+        {
+            if (customerId == 0)
+            {
+                return NotFound();
+            }
+
+            var res = await _customerService.GetCustomerDetail(customerId);
+
+            return Ok(BaseResultDto<CustomerDetailDTM>.Success(res));
+        }
     }
 }

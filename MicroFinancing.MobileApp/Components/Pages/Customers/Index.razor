@@ -1,0 +1,87 @@
+﻿@attribute [Authorize]
+@page "/"
+@using MicroFinancing.MobileApp.Services
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Grids
+
+
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-header">
+                <h4>Customer</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-9">
+                        <input type="text" class="form-control" placeholder="search" @bind-value="Search" />
+                    </div>
+                    <div class="col-3">
+                        <button type="button" class="btn btn-primary" @onclick="OnSearch">Search</button>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col">
+
+                        <SfGrid AllowPaging="true" AllowFiltering="true" TValue="CustomerGridDTM"
+                                Query="@Query"
+                                EnableAdaptiveUI="true"
+                                AdaptiveUIMode="AdaptiveMode.Both"
+                                RowRenderingMode="RowDirection.Vertical"
+                                @ref="customerGrid" AllowMultiSorting="true" AllowSorting="true">
+                            <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(CustomerClientAdaptor)"
+                                                                  Adaptor="Adaptors.CustomAdaptor"/>
+                            <GridPageSettings PageSize="20"></GridPageSettings>
+                            <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
+                            <GridEditSettings AllowAdding="true" AllowDeleting="false" AllowEditing="false" Mode="EditMode.Normal"></GridEditSettings>
+                            <GridSortSettings>
+                                <GridSortColumns>
+                                    <GridSortColumn Field="@nameof(CustomerGridDTM.FirstName)" Direction="SortDirection.Ascending"></GridSortColumn>
+                                </GridSortColumns>
+                            </GridSortSettings>
+                            <GridColumns>
+                                <GridColumn Field=@nameof(CustomerGridDTM.FirstName) Width="100" AllowSorting="true">
+                                    <Template>
+                                        @{
+                                            var row = (CustomerGridDTM)context;
+                                        }
+                                        <a href="@($"/Customers/Details/{row.Id}")">@row.FullName</a>
+                                    </Template>
+                                    <EditTemplate>
+                                        @{
+                                            var item = (context as CustomerGridDTM) ?? new();
+                                        }
+                                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@item.FirstName" Placeholder="First Name"
+                                                                            CssClass="e-outline"
+                                                                            FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto"/>
+                                    </EditTemplate>
+                                </GridColumn>
+                                <GridColumn Field=@nameof(CustomerGridDTM.LastName) Width="100">
+                                    <EditTemplate>
+                                        @{
+                                            var item = (context as CustomerGridDTM) ?? new();
+                                        }
+                                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@item.LastName" Placeholder="First Name"
+                                                                            CssClass="e-outline"
+                                                                            FloatLabelType="Syncfusion.Blazor.Inputs.FloatLabelType.Auto"/>
+                                    </EditTemplate>
+                                </GridColumn>
+                                <GridColumn Field=@nameof(CustomerGridDTM.PhoneNumber) Width="100">
+
+                                </GridColumn>
+                                <GridColumn Field=@nameof(CustomerGridDTM.TotalDebt) Width="100">
+
+                                </GridColumn>
+                                <GridColumn Field=@nameof(CustomerGridDTM.TotalAmountPaid) Width="100">
+
+                                </GridColumn>
+
+                            </GridColumns>
+
+                        </SfGrid>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

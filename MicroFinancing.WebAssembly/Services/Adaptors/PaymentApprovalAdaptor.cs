@@ -24,7 +24,7 @@ public sealed class PaymentApprovalAdaptor : DataAdaptor
             return new DataResult()
             {
                 Result = result.Result,
-                Count = result.Count
+                Count = result.Count ?? 0
             };
         }
         catch (Exception e)

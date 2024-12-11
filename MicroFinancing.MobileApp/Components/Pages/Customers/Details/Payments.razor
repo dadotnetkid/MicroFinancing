@@ -1,0 +1,108 @@
+﻿@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Grids
+
+<div class="row mt-2">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="float-left">
+                    <b class="text-muted">Payments</b>
+                </div>
+                <div class="float-right">
+
+                    <button class="btn btn-primary" @onclick="OnAddClick">
+                        <span class="fas fa-plus"></span>
+                    </button>
+
+                </div>
+            </div>
+            <div class="card-body">
+                <SfGrid AllowPaging="true" TValue="PaymentGridDTM" @ref="paymentGrid" DataSource="DataSource" AllowSorting="true" EnableAdaptiveUI="true"
+                        AdaptiveUIMode="AdaptiveMode.Both"
+                        RowRenderingMode="RowDirection.Vertical">
+
+                    <GridSortSettings>
+                        <GridSortColumns>
+                            <GridSortColumn Field="@nameof(PaymentGridDTM.PaymentDate)" Direction="SortDirection.Descending"></GridSortColumn>
+                        </GridSortColumns>
+                    </GridSortSettings>
+                    <GridColumns>
+                        <GridColumn Field=@nameof(PaymentGridDTM.LendingNumber) Width="80">
+                        </GridColumn>
+                        <GridColumn Field=@nameof(PaymentGridDTM.CreatedBy) Width="100">
+                            <Template>
+                                @{
+                                    var row = context as PaymentGridDTM;
+                                }
+                                @if (row.Override == true)
+                                {
+                                    <span>@row.CreatedBy (Override)</span>
+                                    <br />
+                                    <small class="text-muted">@row.Reason</small>
+                                }
+                                else
+                                {
+                                    <span>@row.CreatedBy</span>
+                                }
+                                <br />
+                                <small class="badge @(row.IsApproved==true? " badge-success":"badge-danger") font-weight-light">
+                                    @(row.IsApproved == true ? "Approved" : "For submission")
+                                </small>
+                            </Template>
+                        </GridColumn>
+                        <GridColumn Field=@nameof(PaymentGridDTM.PaymentAmount) Width="75">
+                            <Template>
+                                @{
+                                    var row = context as PaymentGridDTM;
+                                }
+                                @if (row.Override == true)
+                                {
+                                    <span class="badge badge-danger p-1">@row.PaymentAmount?.ToString("n2")</span>
+                                }
+                                else
+                                {
+                                    <span>@row.PaymentAmount?.ToString("n2")</span>
+                                }
+                            </Template>
+                        </GridColumn>
+
+
+                        <GridColumn Field=@nameof(PaymentGridDTM.PaymentDate) Width="100"></GridColumn>
+
+                    </GridColumns>
+
+                </SfGrid>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@code {
+
+    private SfGrid<PaymentGridDTM>? paymentGrid;
+    private Query queryData = new();
+    [Inject] IPaymentClient paymentClient { get; set; }
+    [Inject] NavigationManager NavigationManager { get; set; }
+    [Parameter] public long Id { get; set; }
+    public List<PaymentGridDTM> DataSource { get; set; } = [];
+    public AddPayment AddPaymentRef { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        var res = await paymentClient.GetPaymentByCollectorIdAsync();
+
+        DataSource = res.Data;
+
+        await base.OnInitializedAsync();
+
+        StateHasChanged();
+    }
+
+    private void OnAddClick()
+    {
+        NavigationManager.NavigateTo($"/AddPayment/{Id}");
+    }
+
+}

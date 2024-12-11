@@ -69,7 +69,7 @@
       "wrapResponseMethods": [],
       "generateResponseClasses": true,
       "responseClass": "SwaggerResponse",
-      "namespace": "MicroFinancing.WebAssembly.Services.Client",
+      "namespace": "Microfinancing.WebApiClient.Services.Client",
       "requiredPropertiesMustBeDefined": true,
       "dateType": "System.DateTimeOffset",
       "jsonConverters": null,
@@ -98,12 +98,12 @@
       "inlineNamedTuples": true,
       "inlineNamedAny": false,
       "generateDtoTypes": true,
-      "generateOptionalPropertiesAsNullable": false,
+      "generateOptionalPropertiesAsNullable": true,
       "generateNullableReferenceTypes": false,
       "templateDirectory": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "../MicroFinancing.WebAssembly/Services/Client/ApiClient.cs",
+      "output": "../Microfinancing.WebApiClient/Services/Client/ApiClient.cs",
       "newLineBehavior": "Auto"
     }
   }

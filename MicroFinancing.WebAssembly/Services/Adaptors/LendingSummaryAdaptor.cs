@@ -38,7 +38,7 @@ public sealed class LendingSummaryAdaptor : DataAdaptor
 
         return new DataResult()
         {
-            Count = query.Count,
+            Count = query.Count ?? 0,
             Result = query.Result
         };
     }

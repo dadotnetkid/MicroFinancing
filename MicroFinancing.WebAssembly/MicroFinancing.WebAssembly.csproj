@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MicroFinancing.Components\MicroFinancing.Components.csproj" />
+    <ProjectReference Include="..\Microfinancing.WebApiClient\Microfinancing.WebApiClient.csproj" />
     <ProjectReference Include="..\src\MicroFinancing.Core\MicroFinancing.Core.csproj" />
   </ItemGroup>
 

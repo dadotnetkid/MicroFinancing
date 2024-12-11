@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 
+using MicroFinancing.Core.Common;
 using MicroFinancing.DataTransferModel;
 using MicroFinancing.Interfaces.Services;
 
@@ -9,7 +10,7 @@ using Syncfusion.Blazor;
 
 namespace MicroFinancing.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/[controller]/[action]")]
 [ApiController]
 public class PaymentController : ControllerBase
 {
@@ -44,5 +45,29 @@ public class PaymentController : ControllerBase
         {
             return Ok(BaseResultDto<bool>.Fail(e.Message));
         }
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<BaseResultDto<long>>> AddPayment([FromBody] CreatePaymentDTM item)
+    {
+        var payment = await _paymentService.AddPayment(item);
+
+        return Ok(BaseResultDto<long>.Success(payment.Id));
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<BaseResultDto<bool>>> UploadSignature([FromBody] UploadSignaturePayload payload)
+    {
+        await _paymentService.UploadFile(payload.UploadFiles, payload.PaymentId);
+
+        return Ok(BaseResultDto<bool>.Success(true));
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<BaseResultDto<List<PaymentGridDTM>>>> GetPaymentByCollectorId()
+    {
+        var res = await _paymentService.GetPaymentByCollectorId(User.GetUserId());
+
+        return Ok(BaseResultDto<List<PaymentGridDTM>>.Success(res));
     }
 }

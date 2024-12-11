@@ -27,7 +27,7 @@ namespace MicroFinancing.WebAssembly.Services.Adaptors
                 return new DataResult()
                 {
                     Result = res.Result,
-                    Count = res.Count
+                    Count = res.Count ?? 0
                 };
             }
             catch (Exception e)

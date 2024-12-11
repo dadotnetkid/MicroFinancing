@@ -1,7 +1,7 @@
 ﻿@page "/"
 @using MicroFinancing.Core.Enumeration
 @using MicroFinancing.Interfaces.Services
-@using MicroFinancing.WebAssembly.Services.Client
+
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize]
 @rendermode InteractiveWebAssembly
@@ -55,7 +55,7 @@
 
                 <div class="info-box-content">
                     <span class="info-box-text">Total Balance</span>
-                    <span class="info-box-number">₱ @dashboardDTM?.TotalBalance.ToString("n2")</span>
+                    <span class="info-box-number">₱ @dashboardDTM?.TotalBalance?.ToString("n2")</span>
                 </div>
 
             </div>

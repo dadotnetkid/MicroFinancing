@@ -11,26 +11,26 @@
             <EditForm Model="user">
                 <div class="row mt-2">
                     <div class="col-12">
-                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@user.FirstName" Placeholder="First Name" CssClass="e-outline" FloatLabelType="FloatLabelType.Auto"/>
-                        <ValidationMessage For="@(() => user.FirstName)" TValue="string"/>
+                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@user.FirstName" Placeholder="First Name" CssClass="e-outline" FloatLabelType="FloatLabelType.Auto" />
+                        <ValidationMessage For="@(() => user.FirstName)" TValue="string" />
                     </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col-12">
-                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@user.LastName" Placeholder="Last Name" CssClass="e-outline" FloatLabelType="FloatLabelType.Auto"/>
-                        <ValidationMessage For="@(() => user.LastName)" TValue="string"/>
+                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@user.LastName" Placeholder="Last Name" CssClass="e-outline" FloatLabelType="FloatLabelType.Auto" />
+                        <ValidationMessage For="@(() => user.LastName)" TValue="string" />
                     </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col-12">
-                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@user.Email" Enabled="@string.IsNullOrEmpty(user.UserId)" Placeholder="Email" CssClass="e-outline" FloatLabelType="FloatLabelType.Auto"/>
-                        <ValidationMessage For="@(() => user.Email)" TValue="string"/>
+                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@user.Email" Enabled="@string.IsNullOrEmpty(user.UserId)" Placeholder="Email" CssClass="e-outline" FloatLabelType="FloatLabelType.Auto" />
+                        <ValidationMessage For="@(() => user.Email)" TValue="string" />
                     </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col-12">
-                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@user.UserName" Enabled="@string.IsNullOrEmpty(user.UserId)" Placeholder="UserName" CssClass="e-outline" FloatLabelType="FloatLabelType.Auto"/>
-                        <ValidationMessage For="@(() => user.UserName)" TValue="string"/>
+                        <Syncfusion.Blazor.Inputs.SfTextBox @bind-Value="@user.UserName" Enabled="@string.IsNullOrEmpty(user.UserId)" Placeholder="UserName" CssClass="e-outline" FloatLabelType="FloatLabelType.Auto" />
+                        <ValidationMessage For="@(() => user.UserName)" TValue="string" />
                     </div>
                 </div>
 
@@ -43,7 +43,7 @@
                                         TItem="BranchDto" CssClass="e-outline" Placeholder="Branch">
                             <DropDownListFieldSettings Value="@nameof(BranchDto.Branch)" Text="@nameof(BranchDto.BranchName)"></DropDownListFieldSettings>
                         </SfDropDownList>
-                        <ValidationMessage For="@(() => user.Branch)" TValue="Branch"/>
+                        <ValidationMessage For="@(() => user.Branch)" TValue="Branch?" />
                     </div>
                 </div>
 
@@ -51,13 +51,12 @@
                     <div class="col-12">
 
                         <SfMultiSelect TValue="List<string>" @bind-Value="@user.UserRole" TItem="PermissionGridDTM" CssClass="e-outline" Mode="@VisualMode.Default" Placeholder="User Roles"
-                        EnableVirtualization="true"
-                                       >
-                            <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(PermissionAdaptor)" Adaptor="Adaptors.CustomAdaptor"/>
-                            
+                                       EnableVirtualization="true">
+                            <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(PermissionAdaptor)" Adaptor="Adaptors.CustomAdaptor" />
+
                             <MultiSelectFieldSettings Text="Name" Value="Name"></MultiSelectFieldSettings>
                         </SfMultiSelect>
-                        <ValidationMessage For="@(() => user.UserRole)" TValue="IEnumerable<string>"/>
+                        <ValidationMessage For="@(() => user.UserRole)" TValue="IEnumerable<string>" />
                     </div>
                 </div>
                 <div class="row mt-2">
@@ -66,7 +65,7 @@
                     </div>
                 </div>
 
-                @if (user.IsEmployee)
+                @if (user.IsEmployee == true)
                 {
                     <div class="row mt-2">
                         <div class="col-12">
@@ -78,7 +77,7 @@
                         <div class="col-12">
                             <SfComboBox TValue="UserGridDTM" TItem="UserGridDTM" CssClass="e-outline" Mode="@VisualMode.Default" Placeholder="Inviter">
                                 <ComboBoxFieldSettings Value="Id" Text="FullName"></ComboBoxFieldSettings>
-                                <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(UserAdaptor)" Adaptor="Adaptors.CustomAdaptor"/>
+                                <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(UserAdaptor)" Adaptor="Adaptors.CustomAdaptor" />
                             </SfComboBox>
                         </div>
                     </div>
@@ -88,8 +87,8 @@
                     <div class="row mt-2">
                         <div class="col-12">
                             <Syncfusion.Blazor.Inputs.SfTextBox Type="InputType.Password" @bind-Value="@user.Password"
-                                                                Placeholder="Password" CssClass="e-outline" FloatLabelType="FloatLabelType.Auto"/>
-                            <ValidationMessage For="@(() => user.Password)" TValue="string"/>
+                                                                Placeholder="Password" CssClass="e-outline" FloatLabelType="FloatLabelType.Auto" />
+                            <ValidationMessage For="@(() => user.Password)" TValue="string" />
                         </div>
                     </div>
                 }

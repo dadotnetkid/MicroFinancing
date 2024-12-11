@@ -23,4 +23,6 @@ public interface IPaymentService
     Task<object> GetPaymentForApproval(DataManagerRequest dm);
 
     Task PaymentApproval(PaymentsForApprovalByDateDto item);
+
+    Task<List<PaymentGridDTM>> GetPaymentByCollectorId(string? userId);
 }

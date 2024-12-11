@@ -13,6 +13,7 @@ public sealed class ApplicationUser : IdentityUser, ISoftDeletable
         UserLogins = new HashSet<ApplicationUserLogin>();
         UserClaims = new HashSet<ApplicationUserClaims>();
         Payments = new HashSet<Payment>();
+        RefreshToken = new HashSet<RefreshToken>();
     }
 
     public string? FirstName { get; set; }
@@ -30,4 +31,5 @@ public sealed class ApplicationUser : IdentityUser, ISoftDeletable
     public decimal? BasicPay { get; set; }
 
     public string? Inviter { get; set; }
+    public ICollection<RefreshToken>? RefreshToken { get; set; }
 }
