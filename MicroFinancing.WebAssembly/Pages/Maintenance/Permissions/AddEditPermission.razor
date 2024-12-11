@@ -21,15 +21,15 @@
                 <div class="row mt-2">
                     <div class="col-12">
 
-                        <SfMultiSelect TValue="string[]" TItem="ClaimsLookup" Mode="@VisualMode.Default"
+                        <SfMultiSelect TValue="List<string>" TItem="ClaimsLookup" Mode="@VisualMode.Default"
                                        CssClass="e-outline"
                                        FloatLabelType="FloatLabelType.Auto"
-                                       @bind-Value="Scopes"
+                                       @bind-Value="permission.Scopes"
                                        Placeholder="Permissions" DataSource="@claimsValueModels" AllowFiltering="true">
                             <MultiSelectFieldSettings Text="@nameof(ClaimsLookup.Name)"
                                                       Value="@nameof(ClaimsLookup.Value)"/>
                         </SfMultiSelect>
-                        <ValidationMessage For="@(() => Scopes)" TValue="string[]"/>
+                        <ValidationMessage For="@(() => permission.Scopes)" TValue="List<string>" />
                     </div>
                 </div>
             </EditForm>
@@ -87,8 +87,6 @@
         {
             return;
         }
-
-        permission.Scopes = Scopes.ToList();
 
         if (string.IsNullOrEmpty(permission.Id))
         {

@@ -1,23 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MicroFinancing.Core.Common
+namespace MicroFinancing.Core.Common;
+
+public static class PrincipalHelper
 {
-    public static class PrincipalHelper
+    public static string? GetUserFullName(this ClaimsPrincipal principal)
     {
-        public static string? GetUserFullName(this ClaimsPrincipal principal)
+        return principal.FindFirst("FullName")
+                        ?.Value;
+    }
+
+    public static string? GetUserId(this ClaimsPrincipal principal)
+    {
+        return principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)
+                        ?.Value;
+    }
+
+    public static bool IsAuthorized(this ClaimsPrincipal principal,
+                                    string policy)
+    {
+        var authorization = DependencyHelper.GetRequiredService<IAuthorizationService>();
+
+        var result = authorization.AuthorizeAsync(principal, policy)
+                                  .ConfigureAwait(false)
+                                  .GetAwaiter()
+                                  .GetResult();
+
+        return result.Succeeded;
+    }
+
+    public static bool IsAuthorized(this ClaimsPrincipal principal,
+                                    params string[] policies)
+    {
+        var authorization = DependencyHelper.GetRequiredService<IAuthorizationService>();
+
+        foreach (var policy in policies)
         {
-            return principal.FindFirst("FullName")?.Value;
+            var result = authorization.AuthorizeAsync(principal, policy)
+                                      .ConfigureAwait(false)
+                                      .GetAwaiter()
+                                      .GetResult();
+
+            if (result.Succeeded)
+            {
+                return true;
+            }
         }
 
-        public static string? GetUserId(this ClaimsPrincipal principal)
-        {
-            return principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-        }
+        return false;
     }
 }

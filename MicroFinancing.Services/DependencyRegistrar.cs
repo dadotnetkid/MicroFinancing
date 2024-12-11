@@ -187,6 +187,10 @@ public static class DependencyRegistrar
             //Print Print
             options.AddPolicy(ClaimsConstant.Customer.Print,
                               policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.Print));
+
+            //Print Print
+            options.AddPolicy(ClaimsConstant.Reports.ViewCollectionSummaryReport,
+                              policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Reports.ViewCollectionSummary));
         });
 
         return services;

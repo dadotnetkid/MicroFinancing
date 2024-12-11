@@ -1,6 +1,8 @@
 ﻿@page "/collection-summary-report"
 @using MicroFinancing.WebAssembly.Services.Adaptors
 @using Syncfusion.Blazor.Calendars
+
+@attribute [Authorize(ClaimsConstant.Reports.ViewCollectionSummaryReport)]
 @rendermode InteractiveServer
 <div class="card">
     <div class="card-header">
@@ -46,8 +48,7 @@
                                     EnableAdaptiveUI="true"
                                     RowRenderingMode="RowDirection.Vertical"
                                     @ref="customerGrid"
-                                    Query="QueryData" AllowGrouping="true"
-                                    >
+                                    Query="QueryData" AllowGrouping="true">
                                 <GridPageSettings PageSize="500" />
                                 <Syncfusion.Blazor.Data.SfDataManager AdaptorInstance="typeof(CollectionSummaryReportAdaptor)"
                                                                       Adaptor="Adaptors.CustomAdaptor" />

@@ -9,6 +9,7 @@ namespace MicroFinancing.Core.Common
     public static class ClaimsConstant
     {
         public const string Administrator = "Administrator";
+        public const string ViewReport = "ViewReport";
         public const string ClaimType = "Permission";
         public static class Users
         {
@@ -41,12 +42,20 @@ namespace MicroFinancing.Core.Common
             public const string ViewAllCustomer = "View All Customer";
         }
 
+        public static class Reports
+        {
+            public const string ViewCollectionSummaryReport = "View Collection Summary Report";
+            public const string ViewCollectorClientReport = "View Collector Client Report";
+            public const string ViewReport = "View Report";
+            public const string ClaimType = "Permission";
+        }
+
         public static class Policy
         {
             public static class Customer
             {
                 public static string[] Manage => new[] { ClaimsConstant.Customer.Manage, Administrator };
-                
+
                 public static string[] ManageLoan => new[] { ClaimsConstant.Customer.ManageLoan, ClaimsConstant.Customer.Manage, Administrator };
                 public static string[] ManagePayment => new[] { ClaimsConstant.Customer.ManagePayment, ClaimsConstant.Customer.Manage, Administrator };
                 public static string[] OverridePayment => new[] { ClaimsConstant.Customer.OverridePayment, ClaimsConstant.Customer.ManagePayment, ClaimsConstant.Customer.Manage, Administrator };
@@ -54,11 +63,11 @@ namespace MicroFinancing.Core.Common
                 public static string[] ViewAllCustomer => new[] { ClaimsConstant.Customer.ViewAllCustomer, ClaimsConstant.Customer.Manage, Administrator };
 
                 public static string[] Print => new[] { ClaimsConstant.Customer.Print, ClaimsConstant.Customer.Manage, Administrator };
-                public static string[] View => new[] { ClaimsConstant.Customer.View, ClaimsConstant.Customer.Manage, ClaimsConstant.Customer.AddPayment, Administrator };
+                public static string[] View => new[] { ClaimsConstant.Customer.View, ClaimsConstant.Customer.Manage, Administrator };
                 public static string[] Add => new[] { ClaimsConstant.Customer.View, ClaimsConstant.Customer.Add, ClaimsConstant.Customer.Manage, Administrator };
                 public static string[] SetFlag => new[] { ClaimsConstant.Customer.SetFlag, ClaimsConstant.Customer.Manage, Administrator };
                 public static string[] AddLoan => new[] { ClaimsConstant.Customer.AddLoan, ClaimsConstant.Customer.Manage, ClaimsConstant.Customer.ManageLoan, Administrator };
-                public static string[] AddPayment => new[] { ClaimsConstant.Customer.View, ClaimsConstant.Customer.AddPayment, ClaimsConstant.Customer.ManagePayment, ClaimsConstant.Customer.Manage, Administrator };
+                public static string[] AddPayment => new[] {  ClaimsConstant.Customer.AddPayment, ClaimsConstant.Customer.ManagePayment,  Administrator };
             }
             public static class Users
             {
@@ -70,6 +79,12 @@ namespace MicroFinancing.Core.Common
             {
                 public static string[] Manage => new[] { ClaimsConstant.Roles.Manage, Administrator };
                 public static string[] View => new[] { ClaimsConstant.Roles.View, ClaimsConstant.Roles.Manage, Administrator };
+            }
+
+            public static class Reports
+            {
+                public static string[] ViewCollectionSummary => new[] { ClaimsConstant.Reports.ViewCollectionSummaryReport, Administrator, ViewReport };
+                public static string[] ViewCollectorClientReport => new[] { ClaimsConstant.Reports.ViewCollectorClientReport, Administrator, ViewReport };
             }
         }
 

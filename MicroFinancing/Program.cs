@@ -216,7 +216,7 @@ app.UseHangfireDashboard("/hangfire", new DashboardOptions
         new  HangfireAuthorizationFilter("admin")
     }
 });
-
+app.Services.Instantiate();
 app.MapAdditionalIdentityEndpoints();
 
 //RecurringJob.AddOrUpdate<ReConstructHandler>("ReconstructLending", x => x.Handle(), Cron.Daily);

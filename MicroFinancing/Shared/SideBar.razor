@@ -85,7 +85,8 @@
                     </li>
                 }
 
-                @if (user?.IsInRole("Administrator") == true)
+                @if (user?.IsAuthorized(ClaimsConstant.Reports.ViewCollectionSummaryReport, 
+                                        ClaimsConstant.Reports.ViewCollectorClientReport) == true)
                 {
                     <li class="nav-item has-treeview">
                         <a class="nav-link">
@@ -95,31 +96,44 @@
                                 <i class="fas fa-angle-left right"></i>
                             </p>
                         </a>
+                        
+                       
                         <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="/collection-summary-report" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Collection Summary</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/clients-by-collector-summary" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Collector's Clients</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/top-sales-chart-report" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Top Sales Chart Report</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/reports/payment-summary" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Payment Summary</p>
-                                </a>
-                            </li>
+                            @if (user?.IsAuthorized(ClaimsConstant.Reports.ViewCollectionSummaryReport) == true)
+                            {
+                                <li class="nav-item">
+                                    <a href="/collection-summary-report" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Collection Summary</p>
+                                    </a>
+                                </li>
+                            }
+
+                            @if (user?.IsAuthorized(ClaimsConstant.Reports.ViewCollectionSummaryReport) == true)
+                            {
+                                <li class="nav-item">
+                                    <a href="/clients-by-collector-summary" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Collector's Clients</p>
+                                    </a>
+                                </li>
+                            }
+
+                            @if (user.IsInRole("Administrator"))
+                            {
+                                <li class="nav-item">
+                                    <a href="/top-sales-chart-report" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Top Sales Chart Report</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/reports/payment-summary" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Payment Summary</p>
+                                    </a>
+                                </li>
+                            }
                         </ul>
                     </li>
                 }

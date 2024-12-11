@@ -121,6 +121,20 @@ namespace MicroFinancing.DataTransferModel
                     Value = ClaimsConstant.Customer.ViewAllCustomer,
                     Description=ClaimsConstant.Customer.ViewAllCustomer
                 },
+                new()
+                {
+                    Name = ClaimsConstant.Reports.ViewCollectionSummaryReport,
+                    ClaimType = ClaimsConstant.Reports.ClaimType,
+                    Value = ClaimsConstant.Reports.ViewCollectionSummaryReport,
+                    Description=ClaimsConstant.Reports.ViewCollectionSummaryReport
+                },
+                new()
+                {
+                    Name = ClaimsConstant.Reports.ViewCollectorClientReport,
+                    ClaimType = ClaimsConstant.Reports.ClaimType,
+                    Value = ClaimsConstant.Reports.ViewCollectorClientReport,
+                    Description=ClaimsConstant.Reports.ViewCollectorClientReport
+                },
             };
         }
 
