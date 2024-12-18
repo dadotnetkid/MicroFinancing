@@ -149,14 +149,14 @@
         }
         if (e.Item.Id == GenericDropdownItem.Edit.ToString())
         {
-            if (await userService.IsAuthorizeAsync(ClaimsConstant.Customer.Manage))
+            if (await userService.IsAuthorizeAsync(ClaimsConstant.Customer.Edit))
             {
                 await editCustomer?.Show(context.Id);
             }
         }
         if (e.Item.Id == GenericDropdownItem.Delete.ToString())
         {
-            if (await userService.IsAuthorizeAsync(ClaimsConstant.Customer.Manage))
+            if (await userService.IsAuthorizeAsync(ClaimsConstant.Customer.Delete))
             {
                 var res = await dialogService.ShowDialog("Delete",
                                                 "Delete this Item");

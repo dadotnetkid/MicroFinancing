@@ -179,6 +179,12 @@ public static class DependencyRegistrar
             //Print Add Loan
             options.AddPolicy(ClaimsConstant.Customer.AddPayment,
                               policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.AddPayment));
+            //Print Add Loan
+            options.AddPolicy(ClaimsConstant.Customer.Edit,
+                              policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.EditCustomer));
+            //Print Add Loan
+            options.AddPolicy(ClaimsConstant.Customer.Delete,
+                              policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.DeleteCustomer));
 
             //Print Set Flag
             options.AddPolicy(ClaimsConstant.Customer.SetFlag,
@@ -188,9 +194,12 @@ public static class DependencyRegistrar
             options.AddPolicy(ClaimsConstant.Customer.Print,
                               policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Customer.Print));
 
-            //Print Print
+           //Reports
             options.AddPolicy(ClaimsConstant.Reports.ViewCollectionSummaryReport,
                               policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Reports.ViewCollectionSummary));
+     
+            options.AddPolicy(ClaimsConstant.Reports.ViewCollectorClientReport,
+                              policy => policy.RequireClaim(ClaimsConstant.ClaimType, ClaimsConstant.Policy.Reports.ViewCollectorClientReport));
         });
 
         return services;

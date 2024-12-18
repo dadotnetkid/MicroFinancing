@@ -10,8 +10,8 @@ namespace MicroFinancing.Components
     {
         public static IServiceCollection AddComponents(this IServiceCollection services)
         {
-            services.AddSingleton<IDialogService, DialogComponentService>();
-            services.AddSingleton<IToasts, ToastComponentService>();
+            services.AddScoped<IDialogService, DialogComponentService>();
+            services.AddScoped<IToasts, ToastComponentService>();
 
             services.AddScoped<SfDialogService>();
             return services;

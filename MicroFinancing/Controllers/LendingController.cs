@@ -41,4 +41,13 @@ public class LendingController : ControllerBase
 
         return Ok(res);
     }
+
+
+    [HttpPost]
+    public async Task<ActionResult<DataResultDto<bool>>> AddLending([FromBody] CreateLendingDTM payload)
+    {
+        await _lendingService.AddLending(payload);
+
+        return Ok(BaseResultDto<bool>.Success(true));
+    }
 }

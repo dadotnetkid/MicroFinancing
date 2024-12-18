@@ -50,4 +50,22 @@ public static class PrincipalHelper
 
         return false;
     }
+
+    public static async Task<bool> IsAuthorizedAsync(this ClaimsPrincipal principal,
+                                                     params string[] policies)
+    {
+        var authorization = DependencyHelper.GetRequiredService<IAuthorizationService>();
+
+        foreach (var policy in policies)
+        {
+            var result = await authorization.AuthorizeAsync(principal, policy);
+
+            if (result.Succeeded)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

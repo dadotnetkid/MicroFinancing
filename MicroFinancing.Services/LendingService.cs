@@ -56,7 +56,6 @@ namespace MicroFinancing.Services
 
             });
 
-
         }
 
         public async Task AddLending(CreateLendingDTM model)
@@ -75,7 +74,7 @@ namespace MicroFinancing.Services
                 LendingDate = Convert.ToDateTime(model.LendingDate.Value.ToShortDateString()),
                 Collector = model.Collector ?? string.Empty,
                 Interest = interestValue,
-                TotalCredit = interestValue + model.Amount + model.ItemAmount,
+                TotalCredit = GetTotalCredit(model, interestValue),
                 InterestRate = interestRate,
                 IsDeleted = false,
                 IsActive = true,
@@ -84,6 +83,16 @@ namespace MicroFinancing.Services
                 PaymentDays = model.Duration == LendingEnumeration.Duration.FortyDays ? 36 : (numberOfDays - sundays),
                 Duration = model.Duration
             });
+        }
+
+        private decimal GetTotalCredit(BaseLendingDTM model,
+                                       decimal interestValue)
+        {
+            var subTotal = model.Amount + model.ItemAmount;
+
+            var dsTax = (subTotal / 200.0M) * 1.5M;
+
+            return interestValue + subTotal + dsTax;
         }
 
         public async Task<object> GetSummary(DataManagerRequest dm,
@@ -143,7 +152,7 @@ namespace MicroFinancing.Services
             res.ItemAmount = model.ItemAmount;
             res.LendingDate = model.LendingDate.GetValueOrDefault();
             res.Interest = interestValue;
-            res.TotalCredit = interestValue + model.Amount + model.ItemAmount;
+            res.TotalCredit = GetTotalCredit(model, interestValue);
             res.NumberOfDays = numberOfDays;
             res.InterestRate = interestRate;
             res.PaymentDays = model.Duration == LendingEnumeration.Duration.FortyDays ? 36 : (numberOfDays - sundays);
@@ -153,7 +162,7 @@ namespace MicroFinancing.Services
             await _repository.SaveChangesAsync();
         }
 
-        private static int CalculateInterest(BaseLendingDTM model,
+        private int CalculateInterest(BaseLendingDTM model,
                                              out int sundays,
                                              out decimal interestRate,
                                              out decimal interestValue)

@@ -40,6 +40,8 @@ namespace MicroFinancing.Core.Common
             public const string ClaimType = "Permission";
 
             public const string ViewAllCustomer = "View All Customer";
+            public const string Delete = "Delete Customer";
+            public const string Edit = "Edit Customer";
         }
 
         public static class Reports
@@ -68,6 +70,8 @@ namespace MicroFinancing.Core.Common
                 public static string[] SetFlag => new[] { ClaimsConstant.Customer.SetFlag, ClaimsConstant.Customer.Manage, Administrator };
                 public static string[] AddLoan => new[] { ClaimsConstant.Customer.AddLoan, ClaimsConstant.Customer.Manage, ClaimsConstant.Customer.ManageLoan, Administrator };
                 public static string[] AddPayment => new[] {  ClaimsConstant.Customer.AddPayment, ClaimsConstant.Customer.ManagePayment,  Administrator };
+                public static string[] DeleteCustomer => new[] {  ClaimsConstant.Customer.Delete, ClaimsConstant.Customer.Manage,  Administrator };
+                public static string[] EditCustomer => new[] {  ClaimsConstant.Customer.Edit, ClaimsConstant.Customer.Manage,  Administrator };
             }
             public static class Users
             {

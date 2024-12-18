@@ -119,7 +119,7 @@ builder.Services.AddHangfire(configuration => configuration
 builder.Services.AddHttpClient("HttpClientWithSSLUntrusted",
                                client =>
                                {
-                                   client.BaseAddress = new Uri("http://sms-api.interworx.app");
+                                   client.BaseAddress = new Uri("https://sms-api.interworx.app");
 
 
                                }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler

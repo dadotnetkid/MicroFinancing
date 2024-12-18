@@ -96,12 +96,17 @@ public class CustomerService : ICustomerService
             Address = x.Address,
             Id = x.Id,
             PhoneNumber = x.PhoneNumber,
-            TotalAmountPaid = x.Payments.Where(c => c.Lending.IsActive && c.PaymentType != PaymentEnum.PaymentType.System).Sum(p => p.PaymentAmount),
+            TotalAmountPaid = x.Payments
+                               .Where(c => c.IsApproved)
+                               .Where(c => c.Lending.IsActive && c.PaymentType != PaymentEnum.PaymentType.System).Sum(p => p.PaymentAmount),
             TotalDebt = x.Lending
                          .Where(c => c.IsActive)
                          .Where(c => !c.IsRestruct).Sum(l => l.TotalCredit),
-            TotalBalance = x.Lending.Where(c => c.IsActive)
-                .Select(l => l.TotalCredit - l.Payments.Sum(p => p.PaymentAmount)).FirstOrDefault(),
+            TotalBalance = x.Lending
+                            .Where(c => c.IsActive)
+                            .Select(l => l.TotalCredit - l.Payments
+                                                          .Where(c => c.IsApproved)
+                                                          .Sum(p => p.PaymentAmount)).FirstOrDefault(),
             CustomerFlag = x.Flag,
             HasActiveLoan = x.Lending.Any(x => !x.IsPaid && x.IsActive),
             DailyDueAmount = x.Lending

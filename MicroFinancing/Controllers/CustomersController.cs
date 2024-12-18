@@ -56,7 +56,7 @@ namespace MicroFinancing.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<BaseResultDto<CustomerDetailDTM>>> GetCustomerId(long customerId)
+        public async Task<ActionResult<BaseResultDto<CustomerDetailDTM>>> GetCustomerDetail(long customerId)
         {
             if (customerId == 0)
             {

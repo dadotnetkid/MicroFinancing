@@ -85,8 +85,7 @@
                     </li>
                 }
 
-                @if (user?.IsAuthorized(ClaimsConstant.Reports.ViewCollectionSummaryReport, 
-                                        ClaimsConstant.Reports.ViewCollectorClientReport) == true)
+                @if (hasReportAccess)
                 {
                     <li class="nav-item has-treeview">
                         <a class="nav-link">
@@ -96,10 +95,10 @@
                                 <i class="fas fa-angle-left right"></i>
                             </p>
                         </a>
-                        
-                       
+
+
                         <ul class="nav nav-treeview">
-                            @if (user?.IsAuthorized(ClaimsConstant.Reports.ViewCollectionSummaryReport) == true)
+                            @if (user.IsAuthorized(ClaimsConstant.Reports.ViewCollectionSummaryReport))
                             {
                                 <li class="nav-item">
                                     <a href="/collection-summary-report" class="nav-link">
@@ -109,7 +108,7 @@
                                 </li>
                             }
 
-                            @if (user?.IsAuthorized(ClaimsConstant.Reports.ViewCollectionSummaryReport) == true)
+                            @if (user.IsAuthorized(ClaimsConstant.Reports.ViewCollectionSummaryReport))
                             {
                                 <li class="nav-item">
                                     <a href="/clients-by-collector-summary" class="nav-link">
@@ -190,7 +189,13 @@
     {
         var authState = await authenticationState?.GetAuthenticationStateAsync()!;
         user = authState.User;
+
+        hasReportAccess =await user.IsAuthorizedAsync(ClaimsConstant.Reports.ViewCollectionSummaryReport,
+                                                   ClaimsConstant.Reports.ViewCollectorClientReport);
+
+
     }
 
     private ClaimsPrincipal? user;
+    private bool hasReportAccess;
 }
