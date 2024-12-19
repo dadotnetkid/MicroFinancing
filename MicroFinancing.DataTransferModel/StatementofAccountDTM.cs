@@ -1,11 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MicroFinancing.DataTransferModel;
+﻿namespace MicroFinancing.DataTransferModel;
 
 public sealed class StatementofAccountDTM
 {
@@ -20,6 +13,8 @@ public sealed class StatementofAccountDTM
     public decimal TotalCredit { get; set; }
     public List<PaymentDateDTM> PaymentDates { get; set; } = new();
     public string CustomerName { get; set; }
+
+    public decimal DSTax => (MoneyAmount + ItemsAmount / 200M) * 1.5M;
 }
 
 public sealed class PaymentDateDTM
@@ -29,6 +24,4 @@ public sealed class PaymentDateDTM
     public string Notes { get; set; }
     public bool IsApproved { get; set; }
     public string AmountPaidWithNotes => $"₱ {AmountPaid:n2} {Notes}";
-
-  
 }

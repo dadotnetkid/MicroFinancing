@@ -86,6 +86,8 @@ namespace MicroFinancing.Reporting
             this.xrPictureBox1 = new DevExpress.XtraReports.UI.XRPictureBox();
             this.xrLabel20 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel19 = new DevExpress.XtraReports.UI.XRLabel();
+            this.xrLabel21 = new DevExpress.XtraReports.UI.XRLabel();
+            this.xrLabel22 = new DevExpress.XtraReports.UI.XRLabel();
             ((System.ComponentModel.ISupportInitialize)(this.objectDataSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable3)).BeginInit();
@@ -132,6 +134,8 @@ namespace MicroFinancing.Reporting
             // GroupHeader1
             // 
             this.GroupHeader1.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
+            this.xrLabel21,
+            this.xrLabel22,
             this.xrLabel18,
             this.xrLabel17,
             this.xrLabel16,
@@ -150,7 +154,7 @@ namespace MicroFinancing.Reporting
             this.xrLabel3,
             this.xrLabel2,
             this.xrLabel1});
-            this.GroupHeader1.HeightF = 115F;
+            this.GroupHeader1.HeightF = 138F;
             this.GroupHeader1.Name = "GroupHeader1";
             // 
             // xrLabel18
@@ -174,7 +178,7 @@ namespace MicroFinancing.Reporting
             // 
             this.xrLabel17.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
             new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[TotalCredit]")});
-            this.xrLabel17.LocationFloat = new DevExpress.Utils.PointFloat(700F, 92.00001F);
+            this.xrLabel17.LocationFloat = new DevExpress.Utils.PointFloat(700F, 115F);
             this.xrLabel17.Multiline = true;
             this.xrLabel17.Name = "xrLabel17";
             this.xrLabel17.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -185,7 +189,7 @@ namespace MicroFinancing.Reporting
             // xrLabel16
             // 
             this.xrLabel16.Font = new DevExpress.Drawing.DXFont("Calibri", 11.25F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.xrLabel16.LocationFloat = new DevExpress.Utils.PointFloat(582.375F, 92.00001F);
+            this.xrLabel16.LocationFloat = new DevExpress.Utils.PointFloat(582.375F, 115F);
             this.xrLabel16.Multiline = true;
             this.xrLabel16.Name = "xrLabel16";
             this.xrLabel16.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
@@ -702,6 +706,32 @@ namespace MicroFinancing.Reporting
             this.xrLabel19.Text = "Cash Credit Company";
             this.xrLabel19.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             // 
+            // xrLabel21
+            // 
+            this.xrLabel21.Font = new DevExpress.Drawing.DXFont("Calibri", 11.25F, DevExpress.Drawing.DXFontStyle.Bold);
+            this.xrLabel21.LocationFloat = new DevExpress.Utils.PointFloat(582.3749F, 92.00001F);
+            this.xrLabel21.Multiline = true;
+            this.xrLabel21.Name = "xrLabel21";
+            this.xrLabel21.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.xrLabel21.SizeF = new System.Drawing.SizeF(115.625F, 23F);
+            this.xrLabel21.StylePriority.UseFont = false;
+            this.xrLabel21.StylePriority.UseTextAlignment = false;
+            this.xrLabel21.Text = "DS Tax";
+            this.xrLabel21.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
+            // 
+            // xrLabel22
+            // 
+            this.xrLabel22.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[DSTax]")});
+            this.xrLabel22.LocationFloat = new DevExpress.Utils.PointFloat(699.9999F, 92.00001F);
+            this.xrLabel22.Multiline = true;
+            this.xrLabel22.Name = "xrLabel22";
+            this.xrLabel22.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.xrLabel22.SizeF = new System.Drawing.SizeF(100F, 23F);
+            this.xrLabel22.Text = "xrLabel17";
+            this.xrLabel22.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopRight;
+            this.xrLabel22.TextFormatString = "{0:N2}";
+            // 
             // rptStatementofAccount
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -788,5 +818,7 @@ namespace MicroFinancing.Reporting
         private DevExpress.XtraReports.UI.DetailBand detailBand1;
         private DevExpress.XtraReports.UI.BottomMarginBand bottomMarginBand1;
         private DevExpress.XtraReports.UI.XRPictureBox xrPictureBox1;
+        private DevExpress.XtraReports.UI.XRLabel xrLabel21;
+        private DevExpress.XtraReports.UI.XRLabel xrLabel22;
     }
 }
