@@ -39,7 +39,8 @@ public sealed class ReportingService : IReportingService
             CustomerName = x.Customers.FirstName + " " + x.Customers.LastName,
             TotalCredit = x.TotalCredit,
             DailyPayment = x.TotalCredit / x.PaymentDays,
-            Interest = x.Interest
+            Interest = x.Interest,
+            DSTax = x.DsTax,
         }).FirstOrDefaultAsync();
 
         var payments = _paymentRepository.Entity.Where(x => x.CustomerId == customerId);
@@ -82,7 +83,8 @@ public sealed class ReportingService : IReportingService
             CustomerName = x.Customers.FirstName + " " + x.Customers.LastName,
             TotalCredit = x.TotalCredit,
             DailyPayment = x.TotalCredit / x.PaymentDays,
-            Interest = x.Interest
+            Interest = x.Interest,
+            DSTax = x.DsTax,
         }).FirstOrDefaultAsync();
 
         var payments = _paymentRepository.Entity

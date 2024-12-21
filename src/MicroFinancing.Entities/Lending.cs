@@ -50,4 +50,5 @@ public sealed class Lending : BaseEntity<long>
     public long ParentLendingId { get; set; }
     public bool IsRestruct { get; set; }
     public string LendingNumber { get; set; }
+    public decimal? DsTax { get; set; }
 }

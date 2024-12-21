@@ -279,11 +279,11 @@ namespace Microfinancing.WebApiClient.Services.Client
         System.Threading.Tasks.Task<BaseResultDtoOfListOfBranchDto> GetBranchesAsync(System.Threading.CancellationToken cancellationToken);
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<BaseResultDtoOfCustomerDetailDTM> GetCustomerIdAsync(long? customerId);
+        System.Threading.Tasks.Task<BaseResultDtoOfCustomerDetailDTM> GetCustomerDetailAsync(long? customerId);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<BaseResultDtoOfCustomerDetailDTM> GetCustomerIdAsync(long? customerId, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<BaseResultDtoOfCustomerDetailDTM> GetCustomerDetailAsync(long? customerId, System.Threading.CancellationToken cancellationToken);
 
     }
 
@@ -553,14 +553,14 @@ namespace Microfinancing.WebApiClient.Services.Client
         }
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<BaseResultDtoOfCustomerDetailDTM> GetCustomerIdAsync(long? customerId)
+        public virtual System.Threading.Tasks.Task<BaseResultDtoOfCustomerDetailDTM> GetCustomerDetailAsync(long? customerId)
         {
-            return GetCustomerIdAsync(customerId, System.Threading.CancellationToken.None);
+            return GetCustomerDetailAsync(customerId, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<BaseResultDtoOfCustomerDetailDTM> GetCustomerIdAsync(long? customerId, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<BaseResultDtoOfCustomerDetailDTM> GetCustomerDetailAsync(long? customerId, System.Threading.CancellationToken cancellationToken)
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -573,8 +573,8 @@ namespace Microfinancing.WebApiClient.Services.Client
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "api/Customers/GetCustomerId"
-                    urlBuilder_.Append("api/Customers/GetCustomerId");
+                    // Operation Path: "api/Customers/GetCustomerDetail"
+                    urlBuilder_.Append("api/Customers/GetCustomerDetail");
                     urlBuilder_.Append('?');
                     if (customerId != null)
                     {
@@ -1240,8 +1240,8 @@ namespace Microfinancing.WebApiClient.Services.Client
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "api/Lending"
-                    urlBuilder_.Append("api/Lending");
+                    // Operation Path: "api/Lending/GetSummary"
+                    urlBuilder_.Append("api/Lending/GetSummary");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -4974,6 +4974,9 @@ namespace Microfinancing.WebApiClient.Services.Client
 
         [Newtonsoft.Json.JsonProperty("lendingNumber", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string LendingNumber { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("dsTax", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public decimal? DsTax { get; set; }
 
     }
 

@@ -1,39 +1,23 @@
-using System.Diagnostics;
-using FluentValidation;
-using MicroFinancing.Areas.Identity;
 using MicroFinancing.DataTransferModel;
 using MicroFinancing.Entities;
-using MicroFinancing.Interfaces.Repositories;
-using MicroFinancing.Repositories;
 using MicroFinancing.Services;
-using Microsoft.AspNetCore.Components;
+
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Syncfusion.Blazor;
-using Syncfusion.Blazor.Data;
-using System.Net;
-using System.Text;
 
 using MicroFinancing.Core.Common;
-using MicroFinancing.Interfaces.Services;
 using MicroFinancing.Providers;
 using MicroFinancing.Validators;
 using MicroFinancing.Components;
-using DevExpress.Blazor.Reporting;
+
 using Hangfire;
 
 using MicroFinancing;
 using MicroFinancing.Core;
-using MicroFinancing.Infrastructure;
 using MicroFinancing.Services.Handlers;
 using MicroFinancing.WebAssembly.Services;
-
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 
 using Serilog.Events;
 using Serilog;
@@ -221,4 +205,10 @@ app.MapAdditionalIdentityEndpoints();
 
 //RecurringJob.AddOrUpdate<ReConstructHandler>("ReconstructLending", x => x.Handle(), Cron.Daily);
 //await BuilderFix.Run(app.Services);
+
+using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+{
+    var context = serviceScope.ServiceProvider.GetRequiredService<MFDbContext>();
+    context.Database.Migrate();
+}
 app.Run();

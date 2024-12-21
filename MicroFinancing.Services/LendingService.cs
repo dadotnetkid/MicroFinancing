@@ -79,10 +79,16 @@ namespace MicroFinancing.Services
                 IsDeleted = false,
                 IsActive = true,
                 IsPaid = false,
+                DsTax = GetDsTax(model),
                 NumberOfDays = numberOfDays,
                 PaymentDays = model.Duration == LendingEnumeration.Duration.FortyDays ? 36 : (numberOfDays - sundays),
                 Duration = model.Duration
             });
+        }
+
+        private decimal? GetDsTax(CreateLendingDTM model)
+        {
+            return ((model.ItemAmount + model.Amount) / 200M) * 1.5M;
         }
 
         private decimal GetTotalCredit(BaseLendingDTM model,

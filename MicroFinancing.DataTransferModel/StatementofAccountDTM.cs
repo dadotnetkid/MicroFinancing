@@ -14,7 +14,7 @@ public sealed class StatementofAccountDTM
     public List<PaymentDateDTM> PaymentDates { get; set; } = new();
     public string CustomerName { get; set; }
 
-    public decimal DSTax => (MoneyAmount + ItemsAmount / 200M) * 1.5M;
+    public decimal? DSTax { get; set; }
 }
 
 public sealed class PaymentDateDTM

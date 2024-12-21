@@ -9,7 +9,7 @@ using Syncfusion.Blazor.Data;
 
 namespace MicroFinancing.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/[controller]/[action]")]
 [ApiController]
 public class LendingController : ControllerBase
 {
@@ -42,12 +42,4 @@ public class LendingController : ControllerBase
         return Ok(res);
     }
 
-
-    [HttpPost]
-    public async Task<ActionResult<DataResultDto<bool>>> AddLending([FromBody] CreateLendingDTM payload)
-    {
-        await _lendingService.AddLending(payload);
-
-        return Ok(BaseResultDto<bool>.Success(true));
-    }
 }
