@@ -1,11 +1,15 @@
-﻿using System.Text.Json;
-using MicroFinancing.Core.Common;
+﻿using MicroFinancing.Core.Common;
 using MicroFinancing.DataTransferModel;
 using MicroFinancing.Interfaces.Services;
 using MicroFinancing.WebAssembly.Common;
 using Microsoft.AspNetCore.Mvc;
+
+using Newtonsoft.Json;
+
 using Syncfusion.Blazor;
 using Syncfusion.Blazor.Data;
+
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace MicroFinancing.Controllers;
 
@@ -40,6 +44,17 @@ public class LendingController : ControllerBase
             .ToDataResultDto<LendingSummaryGridDTM>();
 
         return Ok(res);
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<DataResultDto<LendingForApprovalGridDTM>>> GetLendingNotApproved([FromBody] string item)
+    {
+        var dm = JsonConvert.DeserializeObject<DataManagerRequest>(item);
+
+        var query = (await _lendingService.GetLendingNotApproved())
+            .ToDataResultDto<LendingGridDTM>();
+
+        return Ok(query);
     }
 
 }

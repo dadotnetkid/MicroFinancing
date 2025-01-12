@@ -1,45 +1,42 @@
 ﻿using MicroFinancing.Interfaces.Services;
+
 using Syncfusion.Blazor;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MicroFinancing.Services
+namespace MicroFinancing.Services;
+
+public sealed class CustomerAdaptor : DataAdaptor
 {
-    public sealed class CustomerAdaptor : DataAdaptor
+    private readonly ICustomerService _customerService;
+    private readonly IUserService _userService;
+
+    public CustomerAdaptor(ICustomerService customerService,
+                           IUserService userService)
     {
-        private readonly ICustomerService _customerService;
-        private readonly IUserService _userService;
+        _customerService = customerService;
+        _userService = userService;
+    }
 
-        public CustomerAdaptor(ICustomerService customerService,
-                               IUserService userService)
+    public override async Task<object> ReadAsync(DataManagerRequest dm,
+                                                 string? key = null)
+    {
+        try
         {
-            _customerService = customerService;
-            _userService = userService;
+            if (await _userService.IsAuthorizeAsync(ClaimsConstant.Customer.ViewAllCustomer, false))
+            {
+                var a = await _customerService.GetCustomer()
+                                              .ToDataResult(dm);
+
+                return a;
+            }
+
+            var res = await _customerService.GetCustomerByCollector(await _userService.GetUserId())
+                                            .ToDataResult(dm);
+
+            return res;
         }
-        public override async Task<object> ReadAsync(DataManagerRequest dm, string? key = null)
+        catch (Exception e)
         {
-            try
-            {
-                if (await _userService.IsAuthorizeAsync(ClaimsConstant.Customer.ViewAllCustomer, false))
-                {
-                    var a = await _customerService.GetCustomer()
-                                                 .ToDataResult(dm);
-
-                    return a;
-                }
-
-                var res = await _customerService.GetCustomerByCollector(await _userService.GetUserId())
-                                             .ToDataResult(dm);
-
-                return res;
-            }
-            catch (Exception e)
-            {
-                return new DataManager() { };
-            }
+            return new DataManager();
         }
     }
 }

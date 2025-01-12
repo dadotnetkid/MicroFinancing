@@ -25,4 +25,9 @@ public interface IPaymentService
     Task PaymentApproval(PaymentsForApprovalByDateDto item);
 
     Task<List<PaymentGridDTM>> GetPaymentByCollectorId(string? userId);
+
+    Task MarkAsPaid(long lendingId,
+                    decimal totalCredit,
+                    string creatorId,
+                    long customerId);
 }

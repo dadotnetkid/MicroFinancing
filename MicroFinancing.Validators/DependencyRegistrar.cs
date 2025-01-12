@@ -17,6 +17,7 @@ public static class DependencyRegistrar
         services.AddTransient<IValidator<CreatePaymentDTM>, CreatePaymentDTMValidator>();
         services.AddTransient<IValidator<CreateLendingDTM>, CreateLendingDTMValidator>();
         services.AddTransient<IValidator<EditLendingDTM>, EditLendingDTMValidator>();
+        services.AddTransient<IValidator<CreateLendingForApprovalDTM>, CreateLendingForApprovalDTMValidator>();
 
         return services;
     }

@@ -7,9 +7,6 @@ using MicroFinancing.Interfaces.Services;
 
 using Microsoft.AspNetCore.Components;
 
-using Syncfusion.Blazor.Calendars;
-using Syncfusion.Blazor.DropDowns;
-
 namespace MicroFinancing.Pages.Customers.Details;
 
 public partial class AddLending

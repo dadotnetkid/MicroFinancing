@@ -4,8 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using AutoMapper;
+
+using MediatR;
+
 using MicroFinancing.Core.Enumeration;
 using MicroFinancing.Interfaces.Services;
+using MicroFinancing.Services.Handlers.PaymentCommands;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,16 +25,25 @@ namespace MicroFinancing.Services
         private readonly IRepository<Customers, long> _customersRepository;
         private readonly IUserService _userService;
         private readonly IServiceScopeFactory _scopeFactory;
+        private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
+        private readonly IRepository<LendingForApproval, long> _lendingForApprovalRepository;
 
         public LendingService(IRepository<Lending, long> repository,
                               IRepository<Customers, long> customersRepository,
                               IUserService userService,
-                              IServiceScopeFactory scopeFactory)
+                              IServiceScopeFactory scopeFactory,
+                              IMediator mediator,
+                              IMapper mapper,
+                              IRepository<LendingForApproval, long> lendingForApprovalRepository)
         {
             _repository = repository;
             _customersRepository = customersRepository;
             _userService = userService;
             _scopeFactory = scopeFactory;
+            _mediator = mediator;
+            _mapper = mapper;
+            _lendingForApprovalRepository = lendingForApprovalRepository;
         }
 
         public IQueryable<LendingGridDTM> Get()
@@ -74,7 +88,7 @@ namespace MicroFinancing.Services
                 LendingDate = Convert.ToDateTime(model.LendingDate.Value.ToShortDateString()),
                 Collector = model.Collector ?? string.Empty,
                 Interest = interestValue,
-                TotalCredit = GetTotalCredit(model, interestValue),
+                TotalCredit = GetTotalCredit(model, interestValue) ?? 0M,
                 InterestRate = interestRate,
                 IsDeleted = false,
                 IsActive = true,
@@ -86,17 +100,17 @@ namespace MicroFinancing.Services
             });
         }
 
-        private decimal? GetDsTax(CreateLendingDTM model)
+        private decimal? GetDsTax(BaseLendingDTM model)
         {
-            return ((model.ItemAmount + model.Amount) / 200M) * 1.5M;
+            return ((model.Amount + model.ItemAmount)) * 0.00125M;
         }
 
-        private decimal GetTotalCredit(BaseLendingDTM model,
+        private decimal? GetTotalCredit(BaseLendingDTM model,
                                        decimal interestValue)
         {
             var subTotal = model.Amount + model.ItemAmount;
 
-            var dsTax = (subTotal / 200.0M) * 1.5M;
+            var dsTax = GetDsTax(model);
 
             return interestValue + subTotal + dsTax;
         }
@@ -158,7 +172,7 @@ namespace MicroFinancing.Services
             res.ItemAmount = model.ItemAmount;
             res.LendingDate = model.LendingDate.GetValueOrDefault();
             res.Interest = interestValue;
-            res.TotalCredit = GetTotalCredit(model, interestValue);
+            res.TotalCredit = GetTotalCredit(model, interestValue) ?? 0;
             res.NumberOfDays = numberOfDays;
             res.InterestRate = interestRate;
             res.PaymentDays = model.Duration == LendingEnumeration.Duration.FortyDays ? 36 : (numberOfDays - sundays);
@@ -222,6 +236,64 @@ namespace MicroFinancing.Services
             res.IsRestruct = false;
 
             await _repository.SaveChangesAsync();
+        }
+
+        public async Task MarkAsPaid(long lendingId, string creatorUserId)
+        {
+            var lending = await _repository.Entity.FirstOrDefaultAsync(x => x.Id == lendingId);
+
+            await _mediator.Send(new MarkAsPaidCommand()
+            {
+                LendingId = lending.Id,
+                CustomerId = lending.CustomerId,
+                CreatorId = creatorUserId,
+                TotalCredit = lending.TotalCredit
+            });
+        }
+
+        public async Task<List<LendingForApprovalGridDTM>> GetLendingNotApproved()
+        {
+            var res = _lendingForApprovalRepository.Entity
+                                                   .Where(c => !c.IsApproved);
+
+            var dto = _mapper.ProjectTo<LendingForApprovalGridDTM>(res);
+
+            return await dto.ToListAsync();
+        }
+
+        public async Task AddLendingForApproval(CreateLendingForApprovalDTM model)
+        {
+            var entity = _mapper.Map<LendingForApproval>(model);
+
+            var numberOfDays = CalculateInterest(model, out var sundays, out var interestRate, out var interestValue);
+
+            entity.CreatedAt = DateTime.Now;
+            entity.CreatorUserId = await _userService.GetUserId();
+            entity.CreatedBy = await _userService.GetUserId();
+            entity.NumberOfDays = numberOfDays;
+            entity.PaymentDays = model.Duration == LendingEnumeration.Duration.FortyDays ? 36 : (numberOfDays - sundays);
+            entity.InterestRate = interestRate;
+            entity.Interest = interestValue;
+            entity.TotalCredit = GetTotalCredit(model, interestValue) ?? 0;
+
+            await _lendingForApprovalRepository.AddAsync(entity);
+        }
+
+        public async Task Release(LendingForApprovalGridDTM? item)
+        {
+            var lendingForApproval = await _lendingForApprovalRepository.Entity.FirstOrDefaultAsync(c => c.Id == item.Id);
+
+            var res = _mapper.Map<Lending>(lendingForApproval);
+
+            res.Id = 0;
+
+            await _repository.AddAsync(res);
+
+            lendingForApproval.IsApproved = true;
+
+            await _lendingForApprovalRepository.SaveChangesAsync();
+
+
         }
     }
 }

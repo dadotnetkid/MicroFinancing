@@ -13,9 +13,9 @@ public sealed class LendingConfiguration : IEntityTypeConfiguration<Lending>
         entity.HasMany(x => x.Payments).WithOne(x => x.Lending).HasForeignKey(x => x.LendingId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        entity.HasIndex(c => new { c.IsDeleted, c.CustomerId, c.Collector }).IsUnique(false);
+        entity.HasIndex(c => new { c.IsDeleted, c.CustomerId, c.Collector, c.IsActive }).IsUnique(false);
 
-        entity.HasIndex(c => new { c.LendingNumber}).IsUnique(true);
+        entity.HasIndex(c => new { c.LendingNumber }).IsUnique(true);
 
         entity.HasQueryFilter(c => !c.IsDeleted);
 

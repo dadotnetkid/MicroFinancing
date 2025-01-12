@@ -10,7 +10,7 @@
 <PageTitle>Details</PageTitle>
 
 <DialogContainer />
-<ToastContainer/>
+<ToastContainer />
 
 <CascadingValue Name="MainPage" Value="this">
 
@@ -34,7 +34,18 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <small class="text-muted font-weight-bold">@model.Address</small>
+                                <small class="text-muted font-weight-bold">
+                                    <span class="fas fa-address-book"></span>
+                                    <a href="tel:@model.PhoneNumber">@model.PhoneNumber</a>
+                                </small>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <small class="text-muted font-weight-bold">
+                                    <span class="fas fa-map"></span>
+                                    @model.Address
+                                </small>
                             </div>
                         </div>
 
@@ -146,6 +157,6 @@
 </CascadingValue>
 
 @code {
- 
+
 
 }

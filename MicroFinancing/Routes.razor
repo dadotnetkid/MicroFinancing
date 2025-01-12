@@ -1,4 +1,7 @@
-﻿@using Microsoft.AspNetCore.Components.Authorization
+﻿@using MicroFinancing.Components.DialogComponent
+@using Microsoft.AspNetCore.Components.Authorization
+
+<DialogContainer/>
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(Program).Assembly" AdditionalAssemblies="new[] { typeof(MicroFinancing.WebAssembly._Imports).Assembly }">
         <Found Context="routeData">

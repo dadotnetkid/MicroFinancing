@@ -36,6 +36,7 @@ public sealed class LendingGridDTM : BaseLendingDTM
     public bool IsActive { get; set; }
     public string LendingNumber { get; set; }
 }
+
 public sealed class LendingSummaryGridDTM : BaseLendingDTM
 {
     [DisplayFormat(DataFormatString = "n2")]

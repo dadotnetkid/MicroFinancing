@@ -18,4 +18,13 @@ public interface ILendingService
     EditLendingDTM GetLendingDetailsForEdit(long id);
 
     Task SetActiveLoan(long id);
+
+    Task MarkAsPaid(long lendingId,
+                    string creatorUserId);
+
+    Task<List<LendingForApprovalGridDTM>> GetLendingNotApproved();
+
+    Task AddLendingForApproval(CreateLendingForApprovalDTM model);
+
+    Task Release(LendingForApprovalGridDTM? item);
 }

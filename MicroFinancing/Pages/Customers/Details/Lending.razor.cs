@@ -37,6 +37,22 @@ public partial class Lending
         {
             await PreviewSOA(context);
         }
+        if (menuEventArgs.Item.Id == GenericDropdownItem.MarkAsPaid.ToString())
+        {
+            await MarkAsPaid(context);
+        }
+    }
+
+    private async Task MarkAsPaid(LendingGridDTM context)
+    {
+        var res = await userService.IsAuthorizeAsync(ClaimsConstant.Customer.ManageLoan);
+        if (!res) return;
+
+        var result = await DialogService.ShowDialog("Mark as Paid",
+                                                    "Do you want to mark this as paid?");
+        if (!result) return;
+
+        await lendingService.MarkAsPaid(context.Id, await userService.GetUserId());
     }
 
     private async Task PreviewSOA(LendingGridDTM context)
@@ -92,7 +108,7 @@ public partial class Lending
             return;
         }
 
-        var res= await DialogService.ShowDialog("Delete",
+        var res = await DialogService.ShowDialog("Delete",
                                      "Do you want to delete this item");
 
         if (!res)

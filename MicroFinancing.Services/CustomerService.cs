@@ -190,4 +190,16 @@ public class CustomerService : ICustomerService
         customer.IsDeleted = true;
         await _customerRepository.SaveChangesAsync();
     }
+
+    public decimal? GetCustomerBalance(long dataId)
+    {
+        var balance = _customerRepository.Entity
+                                         .Where(x => x.Id == dataId)
+                                         .Select(x => x.Lending.Where(c => !c.IsPaid).Sum(c => c.TotalCredit) - x.Payments
+                                                     .Where(c => !c.Lending.IsPaid)
+                                                                                           .Where(c => c.IsApproved)
+                                                                                           .Sum(c => c.PaymentAmount))
+                                         .FirstOrDefault();
+        return balance;
+    }
 }

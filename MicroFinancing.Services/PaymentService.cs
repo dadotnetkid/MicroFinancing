@@ -244,4 +244,43 @@ public sealed class PaymentService : IPaymentService
                                     IsApproved = x.IsApproved
                                 }).ToListAsync();
     }
+
+    public async Task MarkAsPaid(long lendingId,
+                                 decimal totalCredit,
+                                 string creatorId,
+                                 long customerId)
+    {
+
+        try
+        {
+            var payments = _repository.Entity.Where(c => c.LendingId == lendingId)
+                                      .AsNoTracking();
+
+            var totalPaid = payments.Sum(c => c.PaymentAmount);
+
+            var payment = new Payment()
+            {
+                CustomerId = customerId,
+                LendingId = lendingId,
+                PaymentType = PaymentEnum.PaymentType.Cash,
+                CreatorUserId = creatorId,
+                IsApproved = true,
+                CreatedAt = DateTimeOffset.Now,
+                PaymentAmount = totalCredit - totalPaid,
+                Attachment = string.Empty,
+                Reason = "Mark as paid",
+                PaymentDate = DateTime.Now
+            };
+
+            await _repository.AddAsync(payment);
+
+            await _mediator.Send(payment);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+
+            throw;
+        }
+    }
 }

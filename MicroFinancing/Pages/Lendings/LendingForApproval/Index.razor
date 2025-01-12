@@ -1,0 +1,53 @@
+﻿@using MicroFinancing.Components.DialogComponent
+@using Syncfusion.Blazor.Buttons
+@attribute [Authorize(Roles = "Administrator")]
+@rendermode InteractiveServer
+@page "/lendings/for-approval"
+
+<div class="card">
+    <div class="card-header">
+        <div class="float-left">
+            <h5>Bulk Loan Creation</h5>
+
+        </div>
+        <div class="float-right">
+            <SfButton @onclick="AddLoan">Add Loan</SfButton>
+        </div>
+    </div>
+    <div class="card-body">
+        <SfGrid AllowPaging="true" AllowFiltering="true" TValue="LendingForApprovalGridDTM" DataSource="LoanForApprovals" @ref="LendingGridRef">
+            <GridPageSettings PageSize="Int32.MaxValue"></GridPageSettings>
+
+            <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
+            <GridColumns>
+                <GridColumn Field=@nameof(LendingForApprovalGridDTM.Collector) Width="75"></GridColumn>
+                <GridColumn Field=@nameof(LendingForApprovalGridDTM.CustomerName) Width="75"></GridColumn>
+                <GridColumn Field=@nameof(LendingForApprovalGridDTM.PreviousBalance) Width="75"></GridColumn>
+                <GridColumn Field=@nameof(LendingForApprovalGridDTM.DueDate) Width="75"></GridColumn>
+                <GridColumn Field=@nameof(LendingForApprovalGridDTM.Duration) Width="75">
+                    <Template>
+                        @{
+                            var row = context as LendingForApprovalGridDTM;
+                        }
+
+                        @row.Duration.GetDescription()
+                    </Template>
+                </GridColumn>
+                <GridColumn Field=@nameof(LendingForApprovalGridDTM.Amount) Width="75"></GridColumn>
+                <GridColumn Field=@nameof(LendingForApprovalGridDTM.ItemAmount) Width="75"></GridColumn>
+                <GridColumn Field=@nameof(LendingForApprovalGridDTM.TotalCredit) Width="75"></GridColumn>
+                <GridColumn Field=@nameof(LendingForApprovalGridDTM.AvailableAmountToRelease) Width="75"></GridColumn>
+                <GridColumn Field="Action" Width="75">
+                    <Template>
+                        <SfButton @onclick="@(()=>Release(context as LendingForApprovalGridDTM))">Release</SfButton>
+                    </Template>
+                </GridColumn>
+            </GridColumns>
+        </SfGrid>
+    </div>
+
+</div>
+
+<AddLendingForApproval OnSubmitSuccess="OnSubmitSuccess" @ref="AddLendingRef" />
+
+<DialogContainer/>

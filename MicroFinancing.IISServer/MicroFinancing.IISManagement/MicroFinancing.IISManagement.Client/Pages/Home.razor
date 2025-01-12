@@ -1,0 +1,69 @@
+﻿@page "/"
+@using MicroFinancing.IISManagement.Client.Clients
+@using MicroFinancing.IISManagement.Client.Contracts
+@inject IAppPoolClient AppPoolClient
+<p>This web page is to start and stop the ccc.interworx.app</p>
+
+@if (AppPoolStatus == ObjectState.Stopped)
+{
+    <button @onclick="StartAppPool" class="btn btn-primary"> Start Application </button>
+}
+else if (AppPoolStatus == ObjectState.Started)
+{
+    <button @onclick="StopAppPool" class="btn btn-danger"> Stop Application </button>
+}
+else
+{
+        <button class="btn btn-default">Application status is loading please wait</button>
+}
+
+
+@code
+{
+    private ObjectState AppPoolStatus = ObjectState.Unknown;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await GetApplicationStatus();
+        }
+    }
+
+    private async Task GetApplicationStatus()
+    {
+        var apiResponse = await AppPoolClient.GetApplicationPoolStatus(new()
+            {
+                AppPoolName = "ccc.interworx.app"
+            });
+
+        if (!apiResponse.IsSuccessStatusCode)
+        {
+            return;
+        }
+
+        AppPoolStatus = apiResponse.Content;
+
+        StateHasChanged();
+    }
+
+    private async Task StopAppPool()
+    {
+        await AppPoolClient.StopApplicationPool(new AppPoolPayloadRequest()
+            {
+                AppPoolName = "ccc.interworx.app"
+            });
+
+        await GetApplicationStatus();
+    }
+
+    private async Task StartAppPool()
+    {
+        await AppPoolClient.StartApplicationPool(new AppPoolPayloadRequest()
+        {
+            AppPoolName = "ccc.interworx.app"
+        });
+
+        await GetApplicationStatus();
+    }
+}

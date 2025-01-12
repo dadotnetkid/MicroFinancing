@@ -30,6 +30,8 @@ namespace MicroFinancing.Core.Common
         SetActiveLoan,
         [Description("Preview SOA")]
         PreviewSOA,
+        [Description("Mark As Paid")]
+        MarkAsPaid,
     }
 
    

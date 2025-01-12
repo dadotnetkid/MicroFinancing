@@ -42,6 +42,7 @@
                         <DropDownMenuItem Id="@GenericDropdownItem.Delete.ToString()" Text="@GenericDropdownItem.Delete.ToString()" IconCss="fas fa-trash"></DropDownMenuItem>
                         <DropDownMenuItem Id="@GenericDropdownItem.SetActiveLoan.ToString()" Text="@GenericDropdownItem.SetActiveLoan.GetDescription()" IconCss="fas fa-check"></DropDownMenuItem>
                         <DropDownMenuItem Id="@GenericDropdownItem.PreviewSOA.ToString()" Text="@GenericDropdownItem.PreviewSOA.GetDescription()" IconCss="fas fa-print"></DropDownMenuItem>
+                        <DropDownMenuItem Id="@GenericDropdownItem.MarkAsPaid.ToString()" Text="@GenericDropdownItem.MarkAsPaid.GetDescription()" IconCss="fas fa-cash"></DropDownMenuItem>
                     </DropDownMenuItems>
                     <DropDownButtonEvents ItemSelected="@((e)=>OnDropdownSelectedMenu(e,(LendingGridDTM)context))" />
                 </SfDropDownButton>

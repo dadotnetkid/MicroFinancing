@@ -638,9 +638,120 @@ namespace MicroFinancing.DataMigrations.Migrations
                     b.HasIndex("LendingNumber")
                         .IsUnique();
 
-                    b.HasIndex("IsDeleted", "CustomerId", "Collector");
+                    b.HasIndex("IsDeleted", "CustomerId", "Collector", "IsActive");
 
                     b.ToTable("Lendings");
+                });
+
+            modelBuilder.Entity("MicroFinancing.Entities.LendingForApproval", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Category")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Collector")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatorUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<long>("CustomerId")
+                        .HasColumnType("bigint");
+
+                    b.Property<decimal?>("DailyDueAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("DeleterUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTimeOffset?>("DeletionAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<decimal?>("DsTax")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Interest")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("InterestRate")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("ItemAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("LastModifierUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("LendingDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("NumberOfDays")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PaymentDays")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("PreviousBalance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("TotalCredit")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTimeOffset?>("UpdateAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Collector");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("DeleterUserId");
+
+                    b.HasIndex("LastModifierUserId");
+
+                    b.HasIndex("IsDeleted", "CustomerId", "Collector", "IsActive");
+
+                    b.ToTable("LendingForApproval");
                 });
 
             modelBuilder.Entity("MicroFinancing.Entities.Payment", b =>
@@ -1032,6 +1143,46 @@ namespace MicroFinancing.DataMigrations.Migrations
 
                     b.HasOne("MicroFinancing.Entities.Customers", "Customers")
                         .WithMany("Lending")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MicroFinancing.Entities.ApplicationUser", "DeleterUser")
+                        .WithMany()
+                        .HasForeignKey("DeleterUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MicroFinancing.Entities.ApplicationUser", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("CollectorUser");
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("Customers");
+
+                    b.Navigation("DeleterUser");
+
+                    b.Navigation("LastModifier");
+                });
+
+            modelBuilder.Entity("MicroFinancing.Entities.LendingForApproval", b =>
+                {
+                    b.HasOne("MicroFinancing.Entities.ApplicationUser", "CollectorUser")
+                        .WithMany()
+                        .HasForeignKey("Collector")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MicroFinancing.Entities.ApplicationUser", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MicroFinancing.Entities.Customers", "Customers")
+                        .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();

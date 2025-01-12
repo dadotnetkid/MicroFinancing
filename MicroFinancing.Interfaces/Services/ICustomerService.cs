@@ -16,4 +16,6 @@ public interface ICustomerService
     Task<EditCustomerDTM?> GetCustomerDetailForEdit(long customerId);
 
     Task DeleteCustomer(long contextId);
+
+    decimal? GetCustomerBalance(long dataId);
 }

@@ -85,6 +85,16 @@
                     </li>
                 }
 
+                @if (user?.IsInRole("Administrator") == true)
+                {
+                    <li class="nav-item">
+                        <a href="/lendings/for-approval" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Lendings for Approval</p>
+                        </a>
+                    </li>
+                }
+
                 @if (hasReportAccess)
                 {
                     <li class="nav-item has-treeview">
