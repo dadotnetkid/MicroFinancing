@@ -68,7 +68,8 @@ namespace MicroFinancing.Services
                 IsActive = x.IsActive,
                 LendingNumber = x.LendingNumber
 
-            });
+            }).IgnoreQueryFilters()
+            .Where(c => c.IsDeleted == false);
 
         }
 

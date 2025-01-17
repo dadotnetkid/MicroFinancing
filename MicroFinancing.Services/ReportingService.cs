@@ -177,21 +177,37 @@ public sealed class ReportingService : IReportingService
             expandoDict.Add("DueDate", customer.Lending.DueDate);
             currentDate = startDate;
 
+            var list = new List<decimal?>();
+
             while (currentDate <= endDate)
             {
                 var curDate = currentDate.ToShortDateString();
-
-                var resValue = customer.Payments
-                    .FirstOrDefault(x => x.PaymentDate.ToShortDateString() == curDate)
+                
+                var payment = customer.Payments
+                                      .FirstOrDefault(x => x.PaymentDate.ToShortDateString() == curDate);
+                
+                var resValue = payment
                     ?.PaymentAmount?.ToString("n2");
 
+                if (payment is not null)
+                {
+                    list.Add(payment.PaymentAmount);
+                }
+
                 if (currentDate < customer.Lending.LendingDate && string.IsNullOrEmpty(resValue))
+                {
                     resValue = "Not Started";
-                else if (string.IsNullOrEmpty(resValue)) resValue = "Not Paid";
+                }
+                else if (string.IsNullOrEmpty(resValue))
+                {
+                    resValue = "Not Paid";
+                }
 
                 expandoDict.Add(curDate, resValue);
+
                 currentDate = currentDate.AddDays(1);
             }
+            expandoDict.Add("Total", list.Sum(c => c)?.ToString("n2"));
 
             expandoList.Add((ExpandoObject)expandoDict);
         }
