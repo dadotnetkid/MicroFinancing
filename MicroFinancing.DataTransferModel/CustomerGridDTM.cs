@@ -51,5 +51,5 @@ public sealed class EditCustomerDTM : CustomerBaseDTM
 
 public sealed class CustomerDetailDTM : CustomerBaseDTM
 {
-    public override string FullName => $"{FirstName} {LastName}";
+    public override string FullName => $"{LastName}, {FirstName} {MiddleName}";
 }

@@ -32,6 +32,7 @@ namespace MicroFinancing.Core.Common
             public const string AddLoan = "Add Loan";
             public const string View = "View Customer";
             public const string Add = "Add Customer";
+            public const string Edit = "Edit Customer";
             public const string ManageLoan = "Manage Loan";
             public const string ManagePayment = "Manage Payment";
             public const string OverridePayment = "Override Payment";
@@ -41,7 +42,6 @@ namespace MicroFinancing.Core.Common
 
             public const string ViewAllCustomer = "View All Customer";
             public const string Delete = "Delete Customer";
-            public const string Edit = "Edit Customer";
         }
 
         public static class Reports

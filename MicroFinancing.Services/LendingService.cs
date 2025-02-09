@@ -60,7 +60,7 @@ namespace MicroFinancing.Services
                 Id = x.Id,
                 IsDeleted = x.IsDeleted,
                 LendingDate = x.LendingDate,
-                CustomerName = $"{x.Customers.FirstName} {x.Customers.LastName}",
+                CustomerName = x.Customers.LastName + ", " + x.Customers.FirstName + " " + x.Customers.MiddleName,
                 Collector = x.CollectorUser.FirstName + " " + x.CollectorUser.LastName,
                 IsRestruct = x.IsRestruct,
                 IsPaid = x.IsPaid,
@@ -130,7 +130,7 @@ namespace MicroFinancing.Services
             var result = await query.Select(x => new LendingSummaryGridDTM()
             {
                 Id = x.Id,
-                CustomerName = x.FirstName + " " + x.LastName,
+                CustomerName = x.LastName + ", " + x.FirstName + " " + x.MiddleName,
                 TotalBalance = x.Lending.Where(c => c.IsActive).Sum(l => l.TotalCredit) - x.Payments
                                                                                                    .Where(c => c.Lending.IsActive)
                                                                                                    .Sum(p => p.PaymentAmount),

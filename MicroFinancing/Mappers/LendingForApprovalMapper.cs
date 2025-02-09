@@ -35,7 +35,7 @@ public class LendingForApprovalMapper : Profile
             .ForMember(dst => dst.Amount
                        , opt => opt.MapFrom(src => src.Amount + src.ItemAmount))
             .ForMember(dst => dst.CustomerName
-                       , opt => opt.MapFrom(src => $"{src.Customers.FirstName} {src.Customers.LastName}"))
+                       , opt => opt.MapFrom(src => $"{src.Customers.LastName}, {src.Customers.FirstName} {src.Customers.MiddleName}"))
             .ForMember(dst => dst.Collector
                        , opt => opt.MapFrom(src => src.CollectorUser.FirstName + " " + src.CollectorUser.LastName));
     }

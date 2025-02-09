@@ -36,7 +36,7 @@ public sealed class ReportingService : IReportingService
             ItemsAmount = x.ItemAmount,
             MoneyAmount = x.Amount,
             ReleaseDate = x.LendingDate,
-            CustomerName = x.Customers.FirstName + " " + x.Customers.LastName,
+            CustomerName = x.Customers.LastName + ", " + x.Customers.FirstName + " " + x.Customers.MiddleName,
             TotalCredit = x.TotalCredit,
             DailyPayment = x.TotalCredit / x.PaymentDays,
             Interest = x.Interest,
@@ -80,7 +80,7 @@ public sealed class ReportingService : IReportingService
             ItemsAmount = x.ItemAmount,
             MoneyAmount = x.Amount,
             ReleaseDate = x.LendingDate,
-            CustomerName = x.Customers.FirstName + " " + x.Customers.LastName,
+            CustomerName = x.Customers.LastName + ", " + x.Customers.FirstName + " " + x.Customers.MiddleName,
             TotalCredit = x.TotalCredit,
             DailyPayment = x.TotalCredit / x.PaymentDays,
             Interest = x.Interest,
@@ -142,7 +142,7 @@ public sealed class ReportingService : IReportingService
         var select = query.Select(x => new CollectionSummaryReportDTM
         {
             EncodedBy = x.Creator.FullName,
-            CustomerName = x.Customers.FirstName + " " + x.Customers.LastName,
+            CustomerName = x.Customers.LastName + ", " + x.Customers.FirstName + " " + x.Customers.MiddleName,
             PaymentAmount = x.PaymentAmount,
             PaymentDate = x.PaymentDate
         });
@@ -182,10 +182,10 @@ public sealed class ReportingService : IReportingService
             while (currentDate <= endDate)
             {
                 var curDate = currentDate.ToShortDateString();
-                
+
                 var payment = customer.Payments
                                       .FirstOrDefault(x => x.PaymentDate.ToShortDateString() == curDate);
-                
+
                 var resValue = payment
                     ?.PaymentAmount?.ToString("n2");
 
