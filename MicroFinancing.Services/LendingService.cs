@@ -103,7 +103,8 @@ namespace MicroFinancing.Services
 
         private decimal? GetDsTax(BaseLendingDTM model)
         {
-            return ((model.Amount + model.ItemAmount)) * 0.00125M;
+            //return ((model.Amount + model.ItemAmount)) * 0.00125M;
+            return 0;
         }
 
         private decimal? GetTotalCredit(BaseLendingDTM model,
