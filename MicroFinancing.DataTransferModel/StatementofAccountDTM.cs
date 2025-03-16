@@ -1,4 +1,6 @@
-﻿namespace MicroFinancing.DataTransferModel;
+﻿using MicroFinancing.Core.Enumeration;
+
+namespace MicroFinancing.DataTransferModel;
 
 public sealed class StatementofAccountDTM
 {
@@ -15,6 +17,7 @@ public sealed class StatementofAccountDTM
     public string CustomerName { get; set; }
 
     public decimal? DSTax { get; set; }
+    public LendingEnumeration.Duration Duration { get; set; }
 }
 
 public sealed class PaymentDateDTM

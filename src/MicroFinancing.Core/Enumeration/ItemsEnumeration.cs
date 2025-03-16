@@ -24,6 +24,12 @@ namespace MicroFinancing.Core.Enumeration
             Both
         }
 
+        public enum PaymentSchedule
+        {
+            Daily = 1,
+            Weekly = 2,
+        }
+
         public enum Duration
         {
             [Description("40 Days")]
@@ -37,6 +43,11 @@ namespace MicroFinancing.Core.Enumeration
             [DefaultValue(30)]
             [Interest("10")]
             ThirtyDays = 3,
+            [Description("60 Days")]
+            [Interest("20")]
+            [DefaultValue(60)]
+            [PaymentSchedule(PaymentSchedule.Weekly)]
+            SixtyDays = 4,
             [Description("Custom")]
             Custom = 1,
         }

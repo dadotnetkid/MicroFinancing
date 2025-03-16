@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using System.Dynamic;
 
+using MicroFinancing.Core.Enumeration;
 using MicroFinancing.Interfaces.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -83,9 +84,18 @@ public sealed class ReportingService : IReportingService
             CustomerName = x.Customers.LastName + ", " + x.Customers.FirstName + " " + x.Customers.MiddleName,
             TotalCredit = x.TotalCredit,
             DailyPayment = x.TotalCredit / x.PaymentDays,
+            Duration = x.Duration,
             Interest = x.Interest,
             DSTax = x.DsTax,
         }).FirstOrDefaultAsync();
+
+
+        var paymentSchedule = list.Duration.GetPaymentSchedule();
+
+        if (paymentSchedule == LendingEnumeration.PaymentSchedule.Weekly)
+        {
+            list.DailyPayment = list.TotalCredit / 8.0M;
+        }
 
         var payments = _paymentRepository.Entity
             .Where(c => c.IsApproved)

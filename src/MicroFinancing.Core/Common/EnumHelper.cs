@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 
 using MicroFinancing.Core.Attributes;
+using MicroFinancing.Core.Enumeration;
 
 namespace MicroFinancing.Core.Common;
 
@@ -57,6 +58,20 @@ public static class EnumHelper
         {
             return attributes.First()
                              .Color;
+        }
+
+        return string.Empty;
+    }
+
+    public static LendingEnumeration.PaymentSchedule GetPaymentSchedule(this Enum enumeration)
+    {
+        var fi = enumeration.GetType()
+                            .GetField(enumeration.ToString());
+
+        if (fi?.GetCustomAttributes(typeof(PaymentScheduleAttribute), false) is PaymentScheduleAttribute[] attributes && attributes.Any())
+        {
+            return attributes.First()
+                             .PaymentSchedule;
         }
 
         return string.Empty;

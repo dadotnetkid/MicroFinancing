@@ -1,4 +1,6 @@
-﻿namespace MicroFinancing.Core.Attributes;
+﻿using MicroFinancing.Core.Enumeration;
+
+namespace MicroFinancing.Core.Attributes;
 
 public class ColorAttribute : Attribute
 {
@@ -16,4 +18,13 @@ public class InterestAttribute : Attribute
         this.Rate = Convert.ToDecimal(Rate);
     }
     public decimal Rate { get; private set; }
+}
+public class PaymentScheduleAttribute : Attribute
+{
+    public PaymentScheduleAttribute(LendingEnumeration.PaymentSchedule PaymentSchedule)
+    {
+        this.PaymentSchedule = PaymentSchedule;
+    }
+
+    public LendingEnumeration.PaymentSchedule PaymentSchedule { get; set; }
 }
