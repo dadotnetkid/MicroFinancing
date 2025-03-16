@@ -74,7 +74,7 @@ public static class EnumHelper
                              .PaymentSchedule;
         }
 
-        return string.Empty;
+        return LendingEnumeration.PaymentSchedule.Daily;
     }
 
     public static List<GenericDropItem<T>> GetDropDown<T>(this Type type)
